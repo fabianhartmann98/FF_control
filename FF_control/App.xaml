@@ -3,28 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-
-        <SolidColorBrush x:Key="BasicForeground" Color="Black"/>
-        <SolidColorBrush x:Key="BasicBackground" Color="#FFF7F7F7"/>
-
-
-        <SolidColorBrush x:Key="ModulBorderBrush" Color="Black"/>
-        <SolidColorBrush x:Key="ModulBackround" Color="White"/>
-        <Color x:Key="ModulShadowColor">#FF222222</Color>
-        <SolidColorBrush x:Key="BasicButton_Background" Color="White"/>
-
-        <SolidColorBrush x:Key="ComboBoxNormalBorderBrush" Color="#e3e9ef" />
-        <SolidColorBrush x:Key="ComboBoxNormalBackgroundBrush" Color="#fff" />
-        <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="#888" />
-        <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="#eee" />
-        <SolidColorBrush x:Key="ComboBoxDisabledBorderBrush" Color="#888" />
-        <SolidColorBrush x:Key="ComboBoxArrowActiveBackgroundBrush" Color="WhiteSmoke"/>
-        <SolidColorBrush x:Key="ComboBoxArrowCheckedFill" Color="#FF8D979E"/>
-        <SolidColorBrush x:Key="ComboBoxPopUpBackground" Color="White"/>
-
-        <SolidColorBrush x:Key="MainTabItemSelectedBackground" Color="#FFE1E1E1"/>
-        <SolidColorBrush x:Key="MainTabItemNotSelectedBackground" Color="#FFF7F7F7"/>
-        <SolidColorBrush x:Key="TabControlBackground" Color="#FFF7F7F7"/>
-
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary x:Name="ThemeDictionary">
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="Visual/Themes/Theme_white.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
     </Application.Resources>
 </Application>
