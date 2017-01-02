@@ -24,5 +24,11 @@ namespace FF_control
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var app = App.Current as App;
+            app.ChangeToDarkTheme();
+        }
     }
 }

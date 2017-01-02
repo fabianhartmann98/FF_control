@@ -4,18 +4,18 @@
     <Style x:Key="ControlBaseStyle" TargetType="{x:Type Control}">
         <Setter Property="FontFamily" Value="Times New Roman"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="{StaticResource BasicForeground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BasicForeground}"/>
         <Setter Property="Margin" Value="5"/>
     </Style>
     
     <Style TargetType="Window">
-        <Setter Property="Background" Value="{StaticResource BasicBackground}"/>
+        <Setter Property="Background" Value="{DynamicResource BasicBackground}"/>
     </Style>
 
     <Style x:Key="Style_ModulBorder" TargetType="Border">
         <Setter Property="BorderThickness" Value="0.5"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ModulBorderBrush}"/>
-        <Setter Property="Background" Value="{StaticResource ModulBackround}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ModulBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ModulBackround}"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="CornerRadius" Value="3"/>
         <Setter Property="Height" Value="auto"/>
@@ -37,7 +37,7 @@
     </Style>
 
     <Style TargetType="Button" BasedOn="{StaticResource ControlBaseStyle}"> 
-        <Setter Property="Background" Value="{StaticResource BasicButton_Background}"/>    
+        <Setter Property="Background" Value="{DynamicResource BasicButton_Background}"/>    
     </Style>
 
     <!-- Flat ComboBox -->
@@ -48,12 +48,12 @@
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
             <Border Grid.ColumnSpan="2" Name="Border"
-              BorderBrush="{StaticResource ComboBoxNormalBorderBrush}" 
+              BorderBrush="{DynamicResource ComboBoxNormalBorderBrush}" 
               CornerRadius="0" BorderThickness="1, 1, 1, 1" 
-              Background="{StaticResource ComboBoxNormalBackgroundBrush}" />
+              Background="{DynamicResource ComboBoxNormalBackgroundBrush}" />
             <Border Grid.Column="1" Margin="1, 1, 1, 1" BorderBrush="#444" Name="ButtonBorder"
               CornerRadius="0, 0, 0, 0" BorderThickness="0, 0, 0, 0" 
-              Background="{StaticResource ComboBoxNormalBackgroundBrush}" />
+              Background="{DynamicResource ComboBoxNormalBackgroundBrush}" />
 
             <Path Name="Arrow" Grid.Column="1" 
             Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z"
@@ -62,17 +62,17 @@
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="UIElement.IsMouseOver" Value="True">
-                <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{StaticResource ComboBoxArrowActiveBackgroundBrush}"/>
+                <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{DynamicResource ComboBoxArrowActiveBackgroundBrush}"/>
             </Trigger>
             <Trigger Property="ToggleButton.IsChecked" Value="True">
-                <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{StaticResource ComboBoxArrowActiveBackgroundBrush}"/>
-                <Setter Property="Shape.Fill" TargetName="Arrow" Value="{StaticResource ComboBoxArrowCheckedFill}"/>
+                <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{DynamicResource ComboBoxArrowActiveBackgroundBrush}"/>
+                <Setter Property="Shape.Fill" TargetName="Arrow" Value="{DynamicResource ComboBoxArrowCheckedFill}"/>
             </Trigger>
             <Trigger Property="UIElement.IsEnabled" Value="False">
-                <Setter Property="Panel.Background" TargetName="Border" Value="{StaticResource ComboBoxDisabledBackgroundBrush}"/>
-                <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{StaticResource ComboBoxDisabledBackgroundBrush}"/>
-                <Setter Property="Border.BorderBrush" TargetName="ButtonBorder" Value="{StaticResource ComboBoxDisabledBorderBrush}"/>
-                <Setter Property="TextElement.Foreground" Value="{StaticResource ComboBoxDisabledForegroundBrush}"/>
+                <Setter Property="Panel.Background" TargetName="Border" Value="{DynamicResource ComboBoxDisabledBackgroundBrush}"/>
+                <Setter Property="Panel.Background" TargetName="ButtonBorder" Value="{DynamicResource ComboBoxDisabledBackgroundBrush}"/>
+                <Setter Property="Border.BorderBrush" TargetName="ButtonBorder" Value="{DynamicResource ComboBoxDisabledBorderBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource ComboBoxDisabledForegroundBrush}"/>
                 <Setter Property="Shape.Fill" TargetName="Arrow" Value="#999"/>
             </Trigger>
         </ControlTemplate.Triggers>
@@ -95,7 +95,7 @@
                         <ToggleButton Name="ToggleButton" Grid.Column="2"
                             ClickMode="Press" Focusable="False"
                             IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                            Template="{StaticResource ComboBoxToggleButtonTemplate}"/>
+                            Template="{DynamicResource ComboBoxToggleButtonTemplate}"/>
 
                         <ContentPresenter Name="ContentSite" Margin="5, 3, 23, 3" IsHitTestVisible="False"
                               HorizontalAlignment="Left" VerticalAlignment="Center"                              
@@ -123,7 +123,7 @@
                                 MaxHeight="{TemplateBinding ComboBox.MaxDropDownHeight}">
                                 <Border Name="DropDownBorder" Background="{DynamicResource ComboBoxPopUpBackground}" Margin="0, 1, 0, 0"
                                     CornerRadius="0" BorderThickness="1,1,1,1" 
-                                    BorderBrush="{StaticResource ComboBoxNormalBorderBrush}"/>
+                                    BorderBrush="{DynamicResource ComboBoxNormalBorderBrush}"/>
                                 <ScrollViewer Margin="4" SnapsToDevicePixels="True">
                                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
                                 </ScrollViewer>
@@ -135,7 +135,7 @@
                             <Setter Property="FrameworkElement.MinHeight" TargetName="DropDownBorder" Value="95"/>
                         </Trigger>
                         <Trigger Property="UIElement.IsEnabled" Value="False">
-                            <Setter Property="TextElement.Foreground" Value="{StaticResource ComboBoxDisabledForegroundBrush}"/>
+                            <Setter Property="TextElement.Foreground" Value="{DynamicResource ComboBoxDisabledForegroundBrush}"/>
                         </Trigger>
                         <Trigger Property="ItemsControl.IsGrouping" Value="True">
                             <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
@@ -160,7 +160,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border Name="Border" BorderThickness="0,0,0,1" BorderBrush="Gainsboro" Background="{DynamicResource SelectedTab_color}" 
+                    <Border Name="Border" BorderThickness="0,0,0,1" BorderBrush="Gainsboro" Background="{DynamicResource MainTabItemSelectedBackground}" 
                             Margin="0">
                         <ContentPresenter x:Name="ContentSite"
                                         ContentSource="Header"
@@ -168,10 +168,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource MainTabItemSelectedBackground}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MainTabItemSelectedBackground}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource MainTabItemNotSelectedBackground}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MainTabItemNotSelectedBackground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -181,7 +181,7 @@
 
     <Style TargetType="TabControl" BasedOn="{StaticResource ControlBaseStyle}">
         <Setter Property="TabStripPlacement" Value="Left"/>
-        <Setter Property="Background" Value="{StaticResource TabControlBackground}"/>
+        <Setter Property="Background" Value="{DynamicResource TabControlBackground}"/>
         <Setter Property="BorderThickness" Value="0"/>  
         <Setter Property="Margin" Value="0"/>
     </Style>
