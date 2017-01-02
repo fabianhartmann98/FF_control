@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bluetooth
+namespace FF_control.Bluetooth
 {
     public class ReceivedData_EventArgs : EventArgs
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bluetooth
+namespace FF_control.Bluetooth
 {
     public class BT_Protocoll
     {

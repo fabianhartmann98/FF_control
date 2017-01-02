@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
-using Bluetooth;
+using FF_control.Bluetooth;
 
 namespace FF_control.Visual
 {

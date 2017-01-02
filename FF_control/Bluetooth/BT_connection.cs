@@ -8,7 +8,7 @@ using InTheHand.Net.Sockets;
 using System.IO;
 using System.Timers;
 
-namespace Bluetooth
+namespace FF_control.Bluetooth
 {
     public class BT_connection
     {
@@ -70,7 +70,6 @@ namespace Bluetooth
             staying_alive_timer.Elapsed += staying_alive_timer_Elapsed;
             staying_alive_timer.Start();
         }
-        #endregion
 
         void staying_alive_timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -81,10 +80,11 @@ namespace Bluetooth
             }
             SendStayingAlive();
         }
+        #endregion
 
         public BT_connection()
         {
-            //DeletLogger();
+            DeletLogger();
             crc_CreateTable(); 
             //startStayingAliveTimer();
 
@@ -93,8 +93,6 @@ namespace Bluetooth
             lastupdated_status = 0xFF;
             maxgap = -1; 
         }        
-
-
         
         /// <summary>
         /// getting al the available Devices in the area 

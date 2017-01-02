@@ -1,7 +1,7 @@
 ﻿<Window x:Class="FF_control.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="500" Width="525"
         Background="{DynamicResource BasicBackground}"
         xmlns:visual="clr-namespace:FF_control.Visual">
     <Window.Resources>
@@ -19,7 +19,7 @@
                 <visual:Connection/>
             </TabItem>
             <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
-                <Label Content="tabsdfg"/>
+                <visual:Plot/>
             </TabItem>
         </TabControl>
     </StackPanel>
