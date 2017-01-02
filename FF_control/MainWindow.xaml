@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525"
-        Background="{DynamicResource BasicBackground}">
+        Background="{DynamicResource BasicBackground}"
+        xmlns:visual="clr-namespace:FF_control.Visual">
     <Window.Resources>
         <ResourceDictionary Source="Visual/Styles_dict.xaml"/>
     </Window.Resources>
@@ -15,7 +16,7 @@
         </ComboBox>
         <TabControl>
             <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
-                <Label Content="tabasdf"/>
+                <visual:Connection/>
             </TabItem>
             <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
                 <Label Content="tabsdfg"/>

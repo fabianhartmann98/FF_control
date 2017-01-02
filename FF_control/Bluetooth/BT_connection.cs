@@ -84,7 +84,7 @@ namespace Bluetooth
 
         public BT_connection()
         {
-            DeletLogger();
+            //DeletLogger();
             crc_CreateTable(); 
             //startStayingAliveTimer();
 
