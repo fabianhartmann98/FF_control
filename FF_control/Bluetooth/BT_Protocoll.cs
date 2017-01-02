@@ -11,7 +11,9 @@ namespace FF_control.Bluetooth
         public static int FrameLengthOverhead = 3;
         public static int PräambleLength = 2;
         public static int FrameLengthLength = 1;
-        public static int CommandLength = 1; 
+        public static int CommandLength = 1;
+
+        public static int ConvertFromMM = 100; 
 
         public static byte[] PräambleBytes = new byte [] {0xCA, 0xFE};
         public static byte CarriageReturn = 0x0D;

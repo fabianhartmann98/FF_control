@@ -31,13 +31,27 @@ namespace FF_control.Bluetooth
 
         }
 
-        public double aim_position;
-        public double lastupdated_position;
-        public byte lastupdated_status;
-        public double maxgap; 
+        private double aim_position;        //saves the gap in mm
+        /// <summary>
+        /// aim position in mm
+        /// </summary>
+        public double Aim_position
+        {
+            get { return aim_position; }
+            set 
+            { 
+                aim_position = value;
+                SendMotorAdjusting(Convert.ToInt32(aim_position * 100));
+            }
+        }
+        
+        public double Lastupdated_position {get; private set;}      //saves the gap in mm
+        public byte Lastupdated_status{get; private set;}
+        public double Maxgap { get; private set; }                                       //saves the max gap in mm
 
-        BluetoothClient bc;                 //the client which it is going to be connected to 
-        BluetoothDeviceInfo[] infos;        //all the available DeviceInfos 
+        public BluetoothClient bc {get; private set;}                 //the client which it is going to be connected to 
+        public BluetoothDeviceInfo[] infos { get; private set; }        //all available DeviceInfos 
+        public BluetoothDeviceInfo ConnectedDevice { get; private set; }         //the deviceInfo of the connected device
         Stream s;                           //the stream to write and read on   
         const int buf_len = 256;            //the buffer Length of the RX
         byte[] RX_buf = new byte[buf_len];  //the buffer for RX 
@@ -48,10 +62,8 @@ namespace FF_control.Bluetooth
          // x8 + x7 + x6 + x4 + x2 + 1
         const byte crc_poly = 0xd5;                     //the key for the crc8 = 111010101=0x1d5
 
-        private BluetoothDeviceInfo deviceinfo;         //the deviceInfo of the connected device
         
         private string pin = "2017";                    //the pin to connect to the BT-Modul
-
         public string Pin
         {
             get { return pin; }
@@ -89,11 +101,12 @@ namespace FF_control.Bluetooth
             //startStayingAliveTimer();
 
             aim_position = -1;
-            lastupdated_position = -1;
-            lastupdated_status = 0xFF;
-            maxgap = -1; 
-        }        
-        
+            Lastupdated_position = -1;
+            Lastupdated_status = 0xFF;
+            Maxgap = -1; 
+        }
+
+        #region DiscoverDeviced
         /// <summary>
         /// getting al the available Devices in the area 
         /// uses DiscoverDevices
@@ -102,7 +115,7 @@ namespace FF_control.Bluetooth
         public string[] GetAvailableDevices()
         {
             bc = new BluetoothClient();
-
+            infos = null;
             infos = bc.DiscoverDevices(255, false, true, true);
             string[] names = new string[infos.Length];
             for (int i = 0; i < infos.Length; i++)
@@ -112,6 +125,25 @@ namespace FF_control.Bluetooth
             return names;
         }
 
+        public void GetAvailableDevicesAsync()
+        {
+            bc = new BluetoothClient();
+            infos = null;
+            bc.BeginDiscoverDevices(255, false, true, true, false, getavailabledevicesasync_calback, bc);
+        }
+
+        private void getavailabledevicesasync_calback(IAsyncResult ar)
+        {
+            if (ar.IsCompleted)
+            {
+                infos = bc.EndDiscoverDevices(ar);
+                OnDiscoverDevicesEnded();
+            }
+        }
+        //event in in region Event
+        #endregion
+
+        #region Reading
         /// <summary>
         /// end the reading and adds up to the rx_tail 
         /// calls DataManager 
@@ -219,6 +251,9 @@ namespace FF_control.Bluetooth
                             Logger("received MeasuredDataCommand");
                             break;                                               
                         case (BT_Protocoll.MotorAdjustingAnswer):
+                            int m_act_pos = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));
+                            int m_aim_pos = Convert.ToInt32((AccessRXBuf(rx_head + 6) << 8) + AccessRXBuf(rx_head + 7));
+                            OnPositionReceived(m_act_pos,m_aim_pos);
                             Logger("received MotorAdjustingAnswer");
                             break;                        
                         case (BT_Protocoll.StatusRequestAnswer):
@@ -275,15 +310,20 @@ namespace FF_control.Bluetooth
 	        }                       
             
         }
-        
+        #endregion
+
+        #region Connecting
         private void Connect_ac(IAsyncResult ar)
         {
             if (ar.IsCompleted)
             {
-                OnDeviceConnected(); //calling the Event DeviceConnected
-                Logger("connected to Device: " + deviceinfo.DeviceName + " with Address " + deviceinfo.DeviceAddress);
-                s = bc.GetStream(); //get the Stream to read and write on
-                s.BeginRead(RX_buf, rx_tail, buf_len - rx_tail, beginRead_cal, s);  //start reading                 
+                if (bc.Connected)
+                {
+                    OnDeviceConnected(); //calling the Event DeviceConnected
+                    Logger("connected to Device: " + ConnectedDevice.DeviceName + " with Address " + ConnectedDevice.DeviceAddress);
+                    s = bc.GetStream(); //get the Stream to read and write on
+                    s.BeginRead(RX_buf, rx_tail, buf_len - rx_tail, beginRead_cal, s);  //start reading    
+                }
             }
         }
 
@@ -297,18 +337,32 @@ namespace FF_control.Bluetooth
             {
                 if (item.DeviceName == DevName)  //if the name of the device has the name we search for
                 {
-                    deviceinfo = item;      //set the deviceinfo of the connected device
-                    BluetoothSecurity.PairRequest(deviceinfo.DeviceAddress, pin);   //pairing with the given pin
+                    ConnectedDevice = item;      //set the deviceinfo of the connected device
+                    BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
 
-                    if (deviceinfo.Authenticated)
+                    if (ConnectedDevice.Authenticated)
                     {
-                        bc.BeginConnect(deviceinfo.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac),deviceinfo); //connect 
+                        bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac),ConnectedDevice); //connect 
                     }
                     break;  //stop looking for other fitting devices 
                 }
             }
         }
 
+        public void ConnectToDevice(BluetoothDeviceInfo DevName)
+        {
+
+            ConnectedDevice = DevName;      //set the deviceinfo of the connected device
+            BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
+
+            if (ConnectedDevice.Authenticated)
+            {
+                bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac), ConnectedDevice); //connect 
+            }
+        }
+        #endregion
+
+        #region CRC
         /// <summary>
         /// creating the table to do crc8
         /// </summary>
@@ -343,8 +397,8 @@ namespace FF_control.Bluetooth
             byte crc = 0;
             if (bytes != null && bytes.Length > 0)
             {        
-                //starting at 2 because the Präamble is not included int crc
-                for (int i = 2; i < bytes.Length-2; i++) //-2 because the last 0 (CRC and CR) shouldn't be used to calculate crc
+                //starting at 2 because the Präamble is not included in crc
+                for (int i = 2; i < bytes.Length-2; i++) //-2 because the last 2 (CRC and CR) shouldn't be used to calculate crc
                     //this works only, when the first one is only done whith the values 
                 {
                     crc = crc_table[crc ^ bytes[i]];
@@ -369,7 +423,8 @@ namespace FF_control.Bluetooth
                 }
             }
             return crc;
-        } 
+        }
+        #endregion
 
         /// <summary>
         /// setting the präamble in the first two bytes
@@ -381,6 +436,7 @@ namespace FF_control.Bluetooth
             b[1] = BT_Protocoll.PräambleBytes[1]; 
         }
 
+        #region Sending
         /// <summary>
         /// sends an Init to the Device with everything (präamble and crc and cr) 
         /// </summary>
@@ -508,6 +564,7 @@ namespace FF_control.Bluetooth
                 s.Write(b, 0, b.Length);
             //s.Write(new byte[] {0x01}, 0, 1);
         }
+        #endregion
 
         #region Events
         public event EventHandler DeviceConnected;
@@ -529,6 +586,16 @@ namespace FF_control.Bluetooth
                 DeviceDisconnected(this, new EventArgs());
         }
 
+        public event EventHandler DiscoverDevicesEnded;
+
+        protected virtual void OnDiscoverDevicesEnded()
+        {
+            if (s != null)
+                s.Close();
+            if (DiscoverDevicesEnded != null)
+                DiscoverDevicesEnded(this, new EventArgs());
+        }
+
         public event EventHandler MeasuredDataReceived;
 
         protected virtual void OnMeasuredDataReceived(double number, double time, double act_value)
@@ -542,25 +609,26 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnStatusReceived(byte status)
         {
-
+            Lastupdated_status = status;
             if (StatusReceived != null)
                 StatusReceived(this, new ReceivedData_EventArgs(status));
         }
 
         public event EventHandler PositionReceived;
 
-        protected virtual void OnPositionReceived(double current_position,  double aim_position)
+        protected virtual void OnPositionReceived(int current_position,  int aim_position)
         {
-
+            Lastupdated_position = current_position / BT_Protocoll.ConvertFromMM;
+            this.aim_position = aim_position / BT_Protocoll.ConvertFromMM;             //not using Property, because it will send new MotorAdjusting
             if (PositionReceived != null)
                 PositionReceived(this, new ReceivedData_EventArgs(current_position, aim_position));
         }
 
         public event EventHandler MaxGapRecieved;
 
-        protected virtual void OnMaxGapRecieved(double maxgap)
+        protected virtual void OnMaxGapRecieved(int maxgap)
         {
-
+            Maxgap = maxgap / BT_Protocoll.ConvertFromMM;
             if (MaxGapRecieved != null)
                 MaxGapRecieved(this, new ReceivedData_EventArgs(maxgap));
         }
