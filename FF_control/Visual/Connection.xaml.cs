@@ -84,5 +84,14 @@ namespace FF_control.Visual
         {
             bt.GetAvailableDevicesAsync();
         }
+
+        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            StackPanel sp = (StackPanel)sender;
+            if (sp.ActualWidth < 600)
+                sp.Orientation = Orientation.Vertical;
+            else
+                sp.Orientation = Orientation.Horizontal;
+        }
     }
 }

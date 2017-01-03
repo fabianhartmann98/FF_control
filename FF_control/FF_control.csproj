@@ -67,6 +67,9 @@
     <Compile Include="Visual\Connection_DeviceModule.xaml.cs">
       <DependentUpon>Connection_DeviceModule.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Visual\Control.xaml.cs">
+      <DependentUpon>Control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visual\Plot.xaml.cs">
       <DependentUpon>Plot.xaml</DependentUpon>
     </Compile>
@@ -98,6 +101,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Visual\Connection_DeviceModule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visual\Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

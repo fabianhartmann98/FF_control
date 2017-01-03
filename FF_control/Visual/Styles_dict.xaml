@@ -191,7 +191,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border Name="Border" BorderThickness="0,0,0,1" BorderBrush="Gainsboro" Background="{DynamicResource MainTabItemSelectedBackground}" 
+                    <Border Name="Border" BorderThickness="0,1,0,1" BorderBrush="{DynamicResource MainTabItemSelectedBackground}" Background="{DynamicResource MainTabItemSelectedBackground}" 
                             Margin="0">
                         <ContentPresenter x:Name="ContentSite"
                                         ContentSource="Header"
@@ -218,7 +218,42 @@
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
-    
+
+    <Style TargetType="TabItem" x:Key="Style_SideTabItem" BasedOn="{StaticResource ControlBaseStyle}">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Border" BorderThickness="1,0,1,0" BorderBrush="{DynamicResource SideTabItemSelectedBackground}" Background="{DynamicResource SideTabItemSelectedBackground}" 
+                            Margin="0">
+                        <ContentPresenter x:Name="ContentSite"
+                                        ContentSource="Header"
+                                        Margin="10,5"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SideTabItemSelectedBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SideTabItemNotSelectedBackground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="TabControl" x:Key="Style_SideTabControl" BasedOn="{StaticResource ControlBaseStyle}">
+        <Setter Property="TabStripPlacement" Value="Top"/>
+        <Setter Property="Background" Value="{DynamicResource SideTabControlBackground}"/>
+        <Setter Property="BorderThickness" Value="1,0,0,0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+
     <Style TargetType="ScrollViewer" BasedOn="{StaticResource ControlBaseStyle}">
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>

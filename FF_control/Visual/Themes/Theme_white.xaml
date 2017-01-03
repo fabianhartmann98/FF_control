@@ -23,6 +23,10 @@
     <SolidColorBrush x:Key="MainTabItemNotSelectedBackground" Color="#FFF7F7F7"/>
     <SolidColorBrush x:Key="TabControlBackground" Color="#FFF7F7F7"/>
 
+    <SolidColorBrush x:Key="SideTabItemSelectedBackground" Color="#FFE1E1E1"/>
+    <SolidColorBrush x:Key="SideTabItemNotSelectedBackground" Color="#FFF7F7F7"/>
+    <SolidColorBrush x:Key="SideTabControlBackground" Color="#FFF7F7F7"/>
+
     <SolidColorBrush x:Key="ConnectButtonBackground" Color="#FF65FF6C"/>
     <SolidColorBrush x:Key="ConnectButtonBorderBrush" Color="Transparent"/>
     <SolidColorBrush x:Key="ConnectButtonHoverBackground" Color="#FF60DA44"/>
