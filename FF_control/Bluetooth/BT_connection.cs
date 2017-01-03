@@ -361,6 +361,13 @@ namespace FF_control.Bluetooth
                 bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac), ConnectedDevice); //connect 
             }
         }
+
+        public void DisconnectFromDevice()
+        {
+            s.Close();
+            bc.Close();
+            staying_alive_timer.Stop();
+        }
         #endregion
 
         #region CRC
@@ -582,7 +589,7 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnDeviceDisconnected()
         {
-
+            DisconnectFromDevice(); 
             if (DeviceDisconnected != null)
                 DeviceDisconnected(this, new EventArgs());
         }

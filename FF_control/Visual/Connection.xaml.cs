@@ -38,10 +38,7 @@ namespace FF_control.Visual
             bt.GetAvailableDevicesAsync();
         }
 
-        void bt_DeviceDisconnected(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         void bt_DiscoverDevicesEnded(object sender, EventArgs e)
         {
@@ -56,20 +53,31 @@ namespace FF_control.Visual
 
                 foreach (var item in bt.infos)
                 {
-                    Connection_DeviceModule cdm = new Connection_DeviceModule(item); 
+                    Connection_DeviceModule cdm = new Connection_DeviceModule(item);
+                    cdm.Dis_ConnectDevice += cdm_Dis_ConnectDevice;
                     stackpanel.Children.Add(cdm);
                 }
             }
         }
 
-        void g_MouseDown(object sender, MouseButtonEventArgs e)
+        void cdm_Dis_ConnectDevice(object sender, RoutedEventArgs e)
         {
-
+            Connection_DeviceModule cdm = (Connection_DeviceModule)((Button)sender).Tag;
+            if (cdm.Device.Connected)
+                bt.DisconnectFromDevice();
+            else
+                bt.ConnectToDevice(cdm.Device);           
         }
 
         void bt_DeviceConnected(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            stackpanel.Children.Clear();
+            stackpanel.Children.Add(new Connection_DeviceModule(bt.ConnectedDevice));
+        }
+
+        void bt_DeviceDisconnected(object sender, EventArgs e)
+        {
+            bt.GetAvailableDevicesAsync();
         }
 
         private void button_refresh_Click(object sender, RoutedEventArgs e)

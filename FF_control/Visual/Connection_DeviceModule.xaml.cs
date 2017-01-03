@@ -28,6 +28,8 @@ namespace FF_control.Visual
         public Connection_DeviceModule(BluetoothDeviceInfo device)
         {
             InitializeComponent();
+            Device = device;
+            button.Tag = this;
             DeviceName = device.DeviceName;
             DeviceAddress = device.DeviceAddress.ToString();
             ClassOfDevice = device.ClassOfDevice.Device.ToString();
@@ -40,11 +42,19 @@ namespace FF_control.Visual
             wp.DataContext = this;
         }
 
-        public string DeviceName { get; set; }
-        public string DeviceAddress { get; set; }
-        public string ClassOfDevice { get; set; }
-        public string Connected { get; set; }
+        public string DeviceName { get;private set; }
+        public string DeviceAddress { get; private set; }
+        public string ClassOfDevice { get; private set; }
+        public string Connected { get; private set; }
+        public BluetoothDeviceInfo Device { get; private set; }
 
+        public event RoutedEventHandler Dis_ConnectDevice
+        {
+            add { button.Click += value; }
+            remove { button.Click -= value; }
+        }
+
+         
        
     }
 }
