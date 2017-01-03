@@ -11,16 +11,19 @@
 
     <Grid MouseDown="Grid_MouseDown">
         <Border Style="{StaticResource Style_ModulBorder}"/>
-        <WrapPanel Name="wp" Margin="10">
-            <Label Name="l_name" Content="{Binding Path=DeviceName}"/>
-            <Label Name="l_address" Content="{Binding Path=DeviceAddress}"/>
-            <Label Name="l_devicetype" Content="{Binding Path=ClassOfDevice}"/>
-            <Label Name="l_connected" Content="{Binding Path=Connected}"/>
-            <StackPanel Width="160" HorizontalAlignment="Right">
-                <Button Visibility="Visible" Content="sadf" Name="button" Width="0" HorizontalAlignment="Right"/>
-            </StackPanel>
-            
-        </WrapPanel>
+        <Grid Name="ConntentGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition  Width="100"/>
+            </Grid.ColumnDefinitions>
+            <WrapPanel Name="wp" Margin="10">
+                <Label Name="l_name" Content="{Binding Path=DeviceName}"/>
+                <Label Name="l_address" Content="{Binding Path=DeviceAddress}"/>
+                <Label Name="l_devicetype" Content="{Binding Path=ClassOfDevice}"/>
+                <Label Name="l_connected" Content="{Binding Path=Connected}"/>
+            </WrapPanel>
+            <Button Grid.Column="1" Content="sadf" Name="button" Style="{StaticResource Style_ConnectButton}" />
+        </Grid>        
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Grid.MouseEnter">
                 <BeginStoryboard>
@@ -28,7 +31,7 @@
                         <DoubleAnimation
                                 Storyboard.TargetName="button"
                                 Storyboard.TargetProperty="Width"
-                                From="{Binding ElementName=button, Path=ActualWidth}" To="150" Duration="0:0:0.5"/>                        
+                                From="{Binding ElementName=button, Path=ActualWidth}" To="90" Duration="0:0:0.5"/>                        
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
