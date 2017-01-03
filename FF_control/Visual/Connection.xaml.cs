@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -55,32 +56,15 @@ namespace FF_control.Visual
 
                 foreach (var item in bt.infos)
                 {
-                    Grid g = new Grid();
-                    Border b = new Border();
-                    //b.Style = (Style)FindResource("Style_ModulBorder");
-                    WrapPanel wp = new WrapPanel();
-                    Label l_name = new Label();
-                    l_name.Content = item.DeviceName;
-                    Label l_address = new Label();
-                    l_address.Content = item.DeviceAddress;
-                    Label l_devicetype = new Label();
-                    l_address.Content = item.ClassOfDevice.Device.ToString();
-                    Label l_connected = new Label();
-                    l_connected.Content = "not connected";
-                    if (item.Connected)
-                        l_connected.Content = "Connected";
-                    wp.Children.Add(l_name);
-                    wp.Children.Add(l_address);
-                    wp.Children.Add(l_devicetype);
-                    wp.Children.Add(l_connected);
-                    wp.Margin = new Thickness(5);
-
-                    g.Children.Add(b);
-                    g.Children.Add(wp);
-
-                    stackpanel.Children.Add(g);
+                    Connection_DeviceModule cdm = new Connection_DeviceModule(item); 
+                    stackpanel.Children.Add(cdm);
                 }
             }
+        }
+
+        void g_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
 
         void bt_DeviceConnected(object sender, EventArgs e)

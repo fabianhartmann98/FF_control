@@ -7,20 +7,30 @@
     <Window.Resources>
         <ResourceDictionary Source="Visual/Styles_dict.xaml"/>
     </Window.Resources>
-    <StackPanel>
-        <Label Content="asdf"/>
-        <Button Content="sdfg" Click="Button_Click"/>
-        <ComboBox>
-            <ComboBoxItem Content="asdf"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Content="asdf" Grid.Row="0"/>
+        <Button Content="sdfg" Click="Button_Click" Grid.Row="1"/>
+        <ComboBox Grid.Row="2">
+            <ComboBoxItem Content="asdf"/> 
             <ComboBoxItem Content="qwer"/>
         </ComboBox>
-        <TabControl>
+        <TabControl Grid.Row="3">
             <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
-                <visual:Connection/>
+                <ScrollViewer>
+                    <visual:Connection/>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
-                <visual:Plot/>
+                <ScrollViewer>
+                    <visual:Plot/>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
-    </StackPanel>
+    </Grid>
 </Window>

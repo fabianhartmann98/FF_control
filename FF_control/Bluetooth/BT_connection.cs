@@ -98,6 +98,7 @@ namespace FF_control.Bluetooth
         {
             DeletLogger();
             crc_CreateTable(); 
+            //todo: activate StayinAliveTimer
             //startStayingAliveTimer();
 
             aim_position = -1;

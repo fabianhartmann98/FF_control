@@ -16,7 +16,7 @@
         <Setter Property="BorderThickness" Value="0.5"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ModulBorderBrush}"/>
         <Setter Property="Background" Value="{DynamicResource ModulBackround}"/>
-        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Margin" Value="5"/>
         <Setter Property="CornerRadius" Value="3"/>
         <Setter Property="Height" Value="auto"/>
         <Setter Property="Width" Value="auto"/>
@@ -184,6 +184,14 @@
         <Setter Property="Background" Value="{DynamicResource TabControlBackground}"/>
         <Setter Property="BorderThickness" Value="0"/>  
         <Setter Property="Margin" Value="0"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    
+    <Style TargetType="ScrollViewer" BasedOn="{StaticResource ControlBaseStyle}">
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
 </ResourceDictionary>
