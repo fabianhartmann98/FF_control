@@ -22,18 +22,7 @@
             <ComboBoxItem Content="qwer"/>
         </ComboBox>
         <DockPanel Grid.Row="3" LastChildFill="False" x:Name="dockpanel">
-            <TabControl DockPanel.Dock="Left" VerticalContentAlignment="Stretch">
-                <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
-                    <Grid>
-                        <Border BorderBrush="Black" BorderThickness="1"/>
-                        <visual:Connection Margin="10"/>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
-                    <visual:Plot/>
-                </TabItem>
-            </TabControl>
-            <TabControl DockPanel.Dock="Right" Style="{StaticResource Style_SideTabControl}" Width="250" Height="{Binding ActualHeight, ElementName=dockpanel}">
+            <TabControl DockPanel.Dock="Right" Style="{StaticResource Style_SideTabControl}" Height="{Binding ActualHeight, ElementName=dockpanel}" >
                 <TabItem Header="asdf" Style="{StaticResource Style_SideTabItem}">
                     <Label Content="qwer" Margin="0,5"/>
                 </TabItem>
@@ -41,6 +30,16 @@
                     <Label Content="wert"/>
                 </TabItem>
             </TabControl>
+            <TabControl DockPanel.Dock="Left" VerticalContentAlignment="Stretch">
+                <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
+                    <Grid>
+                        <visual:Connection />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
+                    <visual:Plot/>
+                </TabItem>
+            </TabControl>       
         </DockPanel>
     </Grid>
 </Window>

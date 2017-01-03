@@ -185,7 +185,7 @@
 
     <Style TargetType="TabItem" x:Key="Style_MainTabItem" BasedOn="{StaticResource ControlBaseStyle}">
         <Setter Property="Width" Value="150"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Template">
@@ -220,7 +220,7 @@
     </Style>
 
     <Style TargetType="TabItem" x:Key="Style_SideTabItem" BasedOn="{StaticResource ControlBaseStyle}">
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Template">
@@ -252,6 +252,7 @@
         <Setter Property="Margin" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Width" Value="250"/>
     </Style>
 
     <Style TargetType="ScrollViewer" BasedOn="{StaticResource ControlBaseStyle}">
