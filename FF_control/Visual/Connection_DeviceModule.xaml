@@ -9,7 +9,7 @@
         <ResourceDictionary Source="Styles_dict.xaml"/>        
     </UserControl.Resources>
 
-    <Grid MouseDown="Grid_MouseDown">
+    <Grid>
         <Border Style="{StaticResource Style_ModulBorder}"/>
         <Grid Name="ConntentGrid">
             <Grid.ColumnDefinitions>

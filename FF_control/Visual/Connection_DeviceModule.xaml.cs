@@ -33,7 +33,10 @@ namespace FF_control.Visual
             ClassOfDevice = device.ClassOfDevice.Device.ToString();
             Connected = "not connected";
             if (device.Connected)
+            {
                 Connected = "Connected";
+                button.Style = (Style)FindResource("Style_DisconnectButton");
+            }
             wp.DataContext = this;
         }
 
@@ -42,9 +45,6 @@ namespace FF_control.Visual
         public string ClassOfDevice { get; set; }
         public string Connected { get; set; }
 
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //((Storyboard)FindResource("sb")).Begin();
-        }
+       
     }
 }

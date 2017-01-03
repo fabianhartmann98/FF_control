@@ -62,6 +62,14 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="Button" x:Key="Style_DisconnectButton" BasedOn="{StaticResource Style_ConnectButton}">
+        <Setter Property="Background" Value="{DynamicResource DisconnectButtonBackground}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource DisonnectButtonHoverBackground}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
     <!-- Flat ComboBox -->
     <ControlTemplate TargetType="ToggleButton" x:Key="ComboBoxToggleButtonTemplate">
