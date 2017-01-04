@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using FF_control.Measure;
+using Microsoft.Win32;
 
 namespace FF_control.Visual
 {
@@ -30,6 +31,21 @@ namespace FF_control.Visual
         private TextBox tb_ymax;
         private Border border_background;
         private Border border_axis;
+
+        private TextBox tb_name0;
+        private Label l_time0;
+        private Label l_saveloc0;
+        private Border border_plot0;
+        private Button b_plot0_remove;
+
+        private TextBox tb_name1;
+        private Label l_time1;
+        private Label l_saveloc1;
+        private Border border_plot1;
+        private Button b_plot1_remove;
+
+
+
         private int selected_tabindex;
 
         Point prevmousePosition;
@@ -50,7 +66,7 @@ namespace FF_control.Visual
             g.addPoint(new MeasurementPoint(new Point(-5, 2)));
             g.addPoint(new MeasurementPoint(new Point(-2, 4)));
             g.addPoint(new MeasurementPoint(new Point(2, -2)));
-            g.addPoint(new MeasurementPoint(new Point(5, 4)));
+            g.addPoint(new MeasurementPoint(new Point(5, 4)));           
             parent.diagram.addGraph(g);
 
             parent.diagram.Grpahs[1].PlotColor = Brushes.Blue;
@@ -61,20 +77,14 @@ namespace FF_control.Visual
             DrawDiagram();
         }
 
-        void Plot_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            SideTabControl.SelectedIndex = 0;
-            if (this.IsVisible)
-                setUpSideTabControl();
-        }
-
         private void setUpSideTabControl()
         {
             selected_tabindex = SideTabControl.SelectedIndex;
             SideTabControl.Items.Clear();
 
+            #region Tab Diagram
             TabItem ti = new TabItem();
-            ti.Header = "Diagramm";
+            ti.Header = "Diagram";
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
             StackPanel mainstack = new StackPanel(); 
@@ -134,7 +144,7 @@ namespace FF_control.Visual
             border_background.BorderBrush = Brushes.Black;
             border_background.BorderThickness = new Thickness(1);
             border_background.Background = can.Background;
-            border_background.MouseUp += lc_MouseUp;
+            border_background.MouseUp += border_MouseUp;
             border_background.Tag = "background";
             wp.Children.Add(l_Background);
             wp.Children.Add(border_background);
@@ -148,8 +158,8 @@ namespace FF_control.Visual
             border_axis.Height = 20;
             border_axis.BorderBrush = Brushes.Black;
             border_axis.BorderThickness = new Thickness(1);
-            border_axis.Background = can.Background;
-            border_axis.MouseUp += lc_MouseUp;
+            border_axis.Background = parent.diagram.AxisLabelColor;
+            border_axis.MouseUp += border_MouseUp;
             border_axis.Tag = "axis";
             wp.Children.Add(l_Axis);
             wp.Children.Add(border_axis);
@@ -157,13 +167,175 @@ namespace FF_control.Visual
 
             ti.Content = mainstack;
             SideTabControl.Items.Add(ti);
+            #endregion
+
+            #region 1. Plot Tab
+            if (parent.diagram.Grpahs.Count >= 1)
+            {
+                ti = new TabItem();
+                ti.Header = "Plot1";
+                ti.Style = (Style)FindResource("Style_SideTabItem");
+
+                mainstack = new StackPanel();
+
+                wp = new WrapPanel();
+                Label ll_name0 = new Label();
+                ll_name0.Content = "Name:";
+                tb_name0 = new TextBox();
+                tb_name0.Text = parent.diagram.Grpahs[0].Name;
+                tb_name0.LostFocus += tb_name_LostFocus;
+                tb_name0.Tag = 0;
+                wp.Children.Add(ll_name0);
+                wp.Children.Add(tb_name0);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_time0 = new Label();
+                ll_time0.Content = "Time:";
+                l_time0 = new Label(); 
+                l_time0.Content=parent.diagram.Grpahs[0].MeasurementTime.ToString();
+                wp.Children.Add(ll_time0);
+                wp.Children.Add(l_time0);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_saveloc0 = new Label();
+                ll_saveloc0.Content = "Save Location:";
+                l_saveloc0 = new Label();
+                l_saveloc0.Content = parent.diagram.Grpahs[0].SaveLocation;
+                l_saveloc0.MouseUp += l_saveloc_MouseUp;
+                wp.Children.Add(ll_saveloc0);
+                wp.Children.Add(l_saveloc0);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_plot0 = new Label();
+                ll_plot0.Content = "Color:";
+                border_plot0 = new Border();
+                border_plot0.Width = 50;
+                border_plot0.Height = 20;
+                border_plot0.BorderBrush = Brushes.Black;
+                border_plot0.BorderThickness = new Thickness(1);
+                border_plot0.Background = parent.diagram.Grpahs[0].PlotColor;
+                border_plot0.MouseUp += border_MouseUp;
+                border_plot0.Tag = "plot:0";
+                wp.Children.Add(ll_plot0);
+                wp.Children.Add(border_plot0);
+                mainstack.Children.Add(wp);
+
+                ti.Content = mainstack;
+                SideTabControl.Items.Add(ti);
+
+            }
+            #endregion
+
+            #region Tab Plot2
+            if (parent.diagram.Grpahs.Count >= 2)
+            {
+                ti = new TabItem();
+                ti.Header = "Plot2";
+                ti.Style = (Style)FindResource("Style_SideTabItem");
+
+                mainstack = new StackPanel();
+
+                wp = new WrapPanel();
+                Label ll_name1 = new Label();
+                ll_name1.Content = "Name:";
+                tb_name1 = new TextBox();
+                tb_name1.Text = parent.diagram.Grpahs[1].Name;
+                tb_name1.LostFocus += tb_name_LostFocus;
+                tb_name1.Tag = 1;
+                wp.Children.Add(ll_name1);
+                wp.Children.Add(tb_name1);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_time1 = new Label();
+                ll_time1.Content = "Time:";
+                l_time1 = new Label();
+                l_time1.Content = parent.diagram.Grpahs[1].MeasurementTime.ToString();
+                wp.Children.Add(ll_time1);
+                wp.Children.Add(l_time1);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_saveloc1 = new Label();
+                ll_saveloc1.Content = "Save Location:";
+                l_saveloc1 = new Label();
+                l_saveloc1.Content = parent.diagram.Grpahs[1].SaveLocation;
+                l_saveloc1.MouseUp += l_saveloc_MouseUp;
+                wp.Children.Add(ll_saveloc1);
+                wp.Children.Add(l_saveloc1);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_plot1 = new Label();
+                ll_plot1.Content = "Color:";
+                border_plot1 = new Border();
+                border_plot1.Width = 50;
+                border_plot1.Height = 20;
+                border_plot1.BorderBrush = Brushes.Black;
+                border_plot1.BorderThickness = new Thickness(1);
+                border_plot1.Background = parent.diagram.Grpahs[1].PlotColor;
+                border_plot1.MouseUp += border_MouseUp;
+                border_plot1.Tag = "plot:1";
+                wp.Children.Add(ll_plot1);
+                wp.Children.Add(border_plot1);
+                mainstack.Children.Add(wp);
+
+                ti.Content = mainstack;
+                SideTabControl.Items.Add(ti);
+
+            }
+            #endregion
 
             if (selected_tabindex < SideTabControl.Items.Count)
                 SideTabControl.SelectedIndex = selected_tabindex;
            
         }
 
-        void lc_MouseUp(object sender, MouseButtonEventArgs e)
+        private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Label l = (Label)sender;
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (l != null && "" != l.Content.ToString())
+                sfd.InitialDirectory = l.Content.ToString();
+            sfd.Filter = Graph.FileFilter;
+            if ((bool)sfd.ShowDialog())
+            {
+                l.Content = sfd.FileName;
+                //tode add save
+            }
+        }
+
+        private void DrawDiagram()
+        {
+            can.Children.Clear();
+            parent.diagram.DrawAxis();
+            can = parent.diagram.draw();
+            if (tb_xmin != null)
+            {
+                tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");
+                tb_xmax.Text = parent.diagram.AxisXmax.ToString("F2");
+                tb_ymin.Text = parent.diagram.AxisYmin.ToString("F2");
+                tb_ymax.Text = parent.diagram.AxisYmax.ToString("F2");
+            }
+        }
+
+        void Plot_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            SideTabControl.SelectedIndex = 0;
+            if (this.IsVisible)
+                setUpSideTabControl();
+        }
+
+        private void tb_name_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            parent.diagram.Grpahs[(int)tb.Tag].Name = tb.Text;
+        }
+
+        void border_MouseUp(object sender, MouseButtonEventArgs e)
         {
             System.Windows.Forms.ColorDialog cd = new System.Windows.Forms.ColorDialog();
             cd.SolidColorOnly=true;
@@ -182,6 +354,7 @@ namespace FF_control.Visual
                     case "axis":
                         parent.diagram.AxisColor = b;
                         parent.diagram.AxisLabelColor = b;
+                        DrawDiagram();
                         break;
                     default:
                         break;
@@ -211,27 +384,11 @@ namespace FF_control.Visual
             DrawDiagram();
         }
 
-
-
         private void can_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             parent.diagram.Scrole(e.GetPosition(can), e.Delta);
             DrawDiagram();
 
-        }
-
-        private void DrawDiagram()
-        {
-            can.Children.Clear();
-            parent.diagram.DrawAxis();
-            can = parent.diagram.draw();
-            if (tb_xmin != null)
-            {
-                tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");
-                tb_xmax.Text = parent.diagram.AxisXmax.ToString("F2");
-                tb_ymin.Text = parent.diagram.AxisYmin.ToString("F2");
-                tb_ymax.Text = parent.diagram.AxisYmax.ToString("F2");
-            }
         }
 
         private void can_MouseMove(object sender, MouseEventArgs e)

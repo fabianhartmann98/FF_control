@@ -12,9 +12,12 @@ namespace FF_control.Measure
 {
     public class Graph
     {
-        public List<MeasurementPoint> mps { get; set; }
 
-        #region Fullprop
+        #region Prop
+        public List<MeasurementPoint> mps { get; set; }
+        public string SaveLocation { get; set; }
+        public static string FileFilter ="H2B2 (*.b2h2)|*.b2h2|All Files (*.*)|*.*";
+
         private string name;            //name of the measurementrow
         private Brush plotColor;        //the color which is going to be displayed
         private double plotStrokeThickness; //how thick is the grpah going to be
@@ -130,6 +133,8 @@ namespace FF_control.Measure
             mps = new List<MeasurementPoint>();
             plotStrokeThickness = 3;
             PlotColor = Brushes.Black;
+            SaveLocation="";
+            name = "";
         }
 
         /// <summary>
@@ -137,7 +142,7 @@ namespace FF_control.Measure
         /// </summary>
         /// <param name="mp">the row of measurement points</param>
         /// <param name="name">the name of the graph</param>
-        public Graph(List<MeasurementPoint> mp, string name = "")
+        public Graph(List<MeasurementPoint> mp, string name = "") : this()
         {
             mps = mp;
             Name = name;

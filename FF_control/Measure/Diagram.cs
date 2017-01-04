@@ -235,7 +235,7 @@ namespace FF_control.Measure
         #region addGraph
         public void addGraph()
         {
-            graphs.Add(new Graph());
+            graphs.Add(new Graph());            
         }
 
         public void addGraph(Graph g)
