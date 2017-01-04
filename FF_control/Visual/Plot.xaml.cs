@@ -137,7 +137,7 @@ namespace FF_control.Visual
 
             wp = new WrapPanel();
             Label l_Background = new Label();
-            l_Background.Content = "BackgroundColor:";
+            l_Background.Content = "Background Color:";
             border_background = new Border();
             border_background.Width = 50;
             border_background.Height = 20;
@@ -152,7 +152,7 @@ namespace FF_control.Visual
 
             wp = new WrapPanel();
             Label l_Axis = new Label();
-            l_Axis.Content = "BackgroundColor:";
+            l_Axis.Content = "Axis Color:";
             border_axis = new Border();
             border_axis.Width = 50;
             border_axis.Height = 20;
@@ -204,6 +204,7 @@ namespace FF_control.Visual
                 l_saveloc0 = new Label();
                 l_saveloc0.Content = parent.diagram.Grpahs[0].SaveLocation;
                 l_saveloc0.MouseUp += l_saveloc_MouseUp;
+                l_saveloc0.Tag = 0;
                 wp.Children.Add(ll_saveloc0);
                 wp.Children.Add(l_saveloc0);
                 mainstack.Children.Add(wp);
@@ -264,6 +265,7 @@ namespace FF_control.Visual
                 l_saveloc1 = new Label();
                 l_saveloc1.Content = parent.diagram.Grpahs[1].SaveLocation;
                 l_saveloc1.MouseUp += l_saveloc_MouseUp;
+                l_saveloc1.Tag = 1;
                 wp.Children.Add(ll_saveloc1);
                 wp.Children.Add(l_saveloc1);
                 mainstack.Children.Add(wp);
@@ -297,15 +299,10 @@ namespace FF_control.Visual
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Label l = (Label)sender;
-            SaveFileDialog sfd = new SaveFileDialog();
-            if (l != null && "" != l.Content.ToString())
-                sfd.InitialDirectory = l.Content.ToString();
-            sfd.Filter = Graph.FileFilter;
-            if ((bool)sfd.ShowDialog())
-            {
-                l.Content = sfd.FileName;
-                //tode add save
-            }
+            
+
+            parent.diagram.Grpahs[(int)l.Tag].Save();
+            l.Content = parent.diagram.Grpahs[(int)l.Tag].SaveLocation;
         }
 
         private void DrawDiagram()
@@ -345,8 +342,8 @@ namespace FF_control.Visual
                 System.Drawing.Color c= cd.Color;
                 Brush b = new SolidColorBrush(Color.FromArgb(c.A, c.R, c.G, c.B));
                 ((Border)sender).Background=b;
-
-                switch (((Border)sender).Tag.ToString().Split(':')[0])
+                String s = ((Border)sender).Tag.ToString();
+                switch (s.Split(':')[0])
                 {
                     case "background":
                         can.Background = b;
@@ -354,6 +351,10 @@ namespace FF_control.Visual
                     case "axis":
                         parent.diagram.AxisColor = b;
                         parent.diagram.AxisLabelColor = b;
+                        DrawDiagram();
+                        break;
+                    case "plot":
+                        parent.diagram.Grpahs[Convert.ToInt32(s.Split(':')[1])].PlotColor = b;
                         DrawDiagram();
                         break;
                     default:

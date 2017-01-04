@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -173,6 +174,18 @@ namespace FF_control.Measure
                 pl.Points.Add(scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,can.Height));   //editing the points to fit to Canvas an plot 
             }
             can.Children.Add(pl);
+        }
+
+        public void Save()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (SaveLocation != null && "" != SaveLocation)
+                sfd.InitialDirectory =SaveLocation;
+            sfd.Filter = Graph.FileFilter;
+            if ((bool)sfd.ShowDialog())
+            {
+                SaveLocation = sfd.FileName;
+            }
         }
 
         private Point scalingPoint(Point p, double offsetX,double offsetY, double scaleX, double scaleY, double plotheight)
