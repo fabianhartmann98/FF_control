@@ -28,8 +28,8 @@ namespace FF_control.Visual
         private TextBox tb_xmax;
         private TextBox tb_ymin;
         private TextBox tb_ymax;
-        private Rectangle rec_background;
-        private Rectangle rec_axis;
+        private Border border_background;
+        private Border border_axis;
         private int selected_tabindex;
 
         Point prevmousePosition;
@@ -125,6 +125,35 @@ namespace FF_control.Visual
             wp.Children.Add(tb_ymax);
             mainstack.Children.Add(wp);
 
+            wp = new WrapPanel();
+            Label l_Background = new Label();
+            l_Background.Content = "BackgroundColor:";
+            border_background = new Border();
+            border_background.Width = 50;
+            border_background.Height = 20;
+            border_background.BorderBrush = Brushes.Black;
+            border_background.BorderThickness = new Thickness(1);
+            border_background.Background = can.Background;
+            border_background.MouseUp += lc_MouseUp;
+            border_background.Tag = "background";
+            wp.Children.Add(l_Background);
+            wp.Children.Add(border_background);
+            mainstack.Children.Add(wp);
+
+            wp = new WrapPanel();
+            Label l_Axis = new Label();
+            l_Axis.Content = "BackgroundColor:";
+            border_axis = new Border();
+            border_axis.Width = 50;
+            border_axis.Height = 20;
+            border_axis.BorderBrush = Brushes.Black;
+            border_axis.BorderThickness = new Thickness(1);
+            border_axis.Background = can.Background;
+            border_axis.MouseUp += lc_MouseUp;
+            border_axis.Tag = "axis";
+            wp.Children.Add(l_Axis);
+            wp.Children.Add(border_axis);
+            mainstack.Children.Add(wp);
 
             ti.Content = mainstack;
             SideTabControl.Items.Add(ti);
@@ -132,6 +161,32 @@ namespace FF_control.Visual
             if (selected_tabindex < SideTabControl.Items.Count)
                 SideTabControl.SelectedIndex = selected_tabindex;
            
+        }
+
+        void lc_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.Forms.ColorDialog cd = new System.Windows.Forms.ColorDialog();
+            cd.SolidColorOnly=true;
+            
+            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                System.Drawing.Color c= cd.Color;
+                Brush b = new SolidColorBrush(Color.FromArgb(c.A, c.R, c.G, c.B));
+                ((Border)sender).Background=b;
+
+                switch (((Border)sender).Tag.ToString().Split(':')[0])
+                {
+                    case "background":
+                        can.Background = b;
+                        break;
+                    case "axis":
+                        parent.diagram.AxisColor = b;
+                        parent.diagram.AxisLabelColor = b;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         void tb_LostFocus(object sender, RoutedEventArgs e)
