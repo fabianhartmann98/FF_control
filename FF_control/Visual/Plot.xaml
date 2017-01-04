@@ -8,7 +8,7 @@
     <Grid>
         <Canvas Name="can" MouseWheel="can_MouseWheel"
                 MouseRightButtonDown="can_MouseRightButtonDown"
-                MouseRightButtonUp="can_MouseRightButtonUp"
+                MouseMove="can_MouseMove"
                 Background="AliceBlue"
                 Height="300"
                 Width="300"

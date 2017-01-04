@@ -434,6 +434,15 @@ namespace FF_control.Measure
             ymax -= DiffPerScrolePercent / 100 * (ymax - ymin) * TopToAll * delta;
             OffsetScaleCalculation();  //scale new offset and scale
         }
+
+        public void Shift(double dx, double dy)
+        {
+            xmin += dx / scaleX;
+            xmax += dx / scaleX;
+            ymax += dy / scaleY;
+            ymin += dy / scaleY;
+            OffsetScaleCalculation();  //scale new offset and scale
+        }
         #endregion
         
         #region private methods 
