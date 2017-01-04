@@ -501,18 +501,18 @@ namespace FF_control.Bluetooth
         /// <summary>
         /// sends a MotorAdustingCommand
         /// </summary>
-        /// <param name="gap">the gap in 1/100 mm</param>
-        public void SendMotorAdjusting(int gap)
+        /// <param name="gap">the gap in  mm</param>
+        public void SendMotorAdjusting(double gap)
         {
             int packetlength = BT_Protocoll.MotorAdjustingLength + BT_Protocoll.FrameLengthOverhead;
-
+            int i_gap = Convert.ToInt32(Math.Round(gap * 100));
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
             b[2] = (byte)BT_Protocoll.MotorAdjustingLength;
             b[3] = BT_Protocoll.MotorAdjustingCommand;
 
-            b[4] = (byte)(gap >> 8);
-            b[5] = (byte)(gap&0xFF);
+            b[4] = (byte)(i_gap >> 8);
+            b[5] = (byte)(i_gap&0xFF);
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;

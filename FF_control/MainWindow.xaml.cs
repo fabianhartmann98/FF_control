@@ -31,12 +31,20 @@ namespace FF_control
         {            
             InitializeComponent();
             Connection_grid.Children.Add(new Connection(this, SideTabControl));
+            Control_grid.Children.Add(new FF_control.Visual.Control(this, SideTabControl));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var app = App.Current as App;
             app.ChangeToDarkTheme();
+        }
+
+        private void TabControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Connection_grid.Width = dockpanel.ActualWidth - 250 - 150;
+            Control_grid.Width = dockpanel.ActualWidth - 250 - 150;
+
         }
     }
 }

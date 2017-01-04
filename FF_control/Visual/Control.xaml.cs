@@ -20,9 +20,63 @@ namespace FF_control.Visual
     /// </summary>
     public partial class Control : UserControl
     {
-        public Control()
+        public MainWindow parent { get; set; }
+        public TabControl SideTabControl { get; set; }
+
+        public Control(MainWindow p, TabControl sidetab)
         {
+            parent = p;
+            SideTabControl = sidetab; 
             InitializeComponent();
+            parent.bt_connection.MaxGapRecieved += bt_connection_MaxGapRecieved;
+            parent.bt_connection.PositionReceived += bt_connection_PositionReceived;
+            parent.bt_connection.StatusReceived += bt_connection_StatusReceived;
+        }
+
+        void bt_connection_StatusReceived(object sender, EventArgs e)
+        {
+            //switch (parent.bt_connection.Lastupdated_status)
+            //{
+            //    case 0x01:
+            //        break;
+            //    case 0x02:
+            //        break;
+            //    case 0x03:
+            //        break;
+            //    default:
+            //        break;
+            //}
+            l_laststatus.Content =((int)parent.bt_connection.Lastupdated_status).ToString();
+        }
+
+        void bt_connection_PositionReceived(object sender, EventArgs e)
+        {
+            l_lasposition.Content = parent.bt_connection.Lastupdated_position;
+        }
+
+        void bt_connection_MaxGapRecieved(object sender, EventArgs e)
+        {
+            l_laststatus.Content = parent.bt_connection.Maxgap;
+        }
+
+        private void b_gap_approve_Click(object sender, RoutedEventArgs e)
+        {
+            parent.bt_connection.SendMotorAdjusting(Math.Round(slider_gap.Value, 2));
+        }
+
+        private void b_refernez_Click(object sender, RoutedEventArgs e)
+        {
+            //todo: implement Referenz 
+        }
+
+        private void b_status_Click(object sender, RoutedEventArgs e)
+        {
+            parent.bt_connection.SendStatusRequest();
+        }
+
+        private void b_maxgap_Click(object sender, RoutedEventArgs e)
+        {
+            parent.bt_connection.SendMaxGapRequest();
         }
     }
 }
