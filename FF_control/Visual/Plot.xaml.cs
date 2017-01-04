@@ -224,6 +224,14 @@ namespace FF_control.Visual
                 wp.Children.Add(border_plot0);
                 mainstack.Children.Add(wp);
 
+                wp = new WrapPanel();
+                b_plot0_remove = new Button();
+                b_plot0_remove.Content = "Remove";
+                b_plot0_remove.Click += b_plot_remove_Click;
+                b_plot0_remove.Tag = 0; 
+                wp.Children.Add(b_plot0_remove);
+                mainstack.Children.Add(wp);
+
                 ti.Content = mainstack;
                 SideTabControl.Items.Add(ti);
 
@@ -285,15 +293,37 @@ namespace FF_control.Visual
                 wp.Children.Add(border_plot1);
                 mainstack.Children.Add(wp);
 
+                wp = new WrapPanel();
+                b_plot1_remove = new Button();
+                b_plot1_remove.Content = "Remove";
+                b_plot1_remove.Click += b_plot_remove_Click;
+                b_plot1_remove.Tag = 1;
+                wp.Children.Add(b_plot1_remove);
+                mainstack.Children.Add(wp);
+
                 ti.Content = mainstack;
                 SideTabControl.Items.Add(ti);
 
+            }
+            #endregion
+            #region Add Plot
+            else
+            { 
+                
             }
             #endregion
 
             if (selected_tabindex < SideTabControl.Items.Count)
                 SideTabControl.SelectedIndex = selected_tabindex;
            
+        }
+
+        private void b_plot_remove_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = (Button)sender;
+            parent.diagram.Grpahs.RemoveAt((int)b.Tag);
+            setUpSideTabControl();
+            DrawDiagram(); 
         }
 
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
