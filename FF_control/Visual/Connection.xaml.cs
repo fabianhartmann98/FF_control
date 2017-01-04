@@ -38,10 +38,47 @@ namespace FF_control.Visual
             parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
             parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;
 
+            this.IsVisibleChanged += Connection_IsVisibleChanged;
+
             parent.bt_connection.GetAvailableDevicesAsync();
         }
 
-        
+        void Connection_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.IsVisible)
+                setUpSideTabControl();
+        }
+
+        private void setUpSideTabControl()
+        {
+            SideTabControl.Items.Clear();
+
+            TabItem ti = new TabItem();
+            ti.Header = "1st Header";
+            ti.Style = (Style)FindResource("Style_SideTabItem");
+
+            WrapPanel wp = new WrapPanel();
+            Label l = new Label();
+            l.Content = "1st TabItem Content from Connection";
+            wp.Children.Add(l);
+
+            ti.Content = wp;
+            SideTabControl.Items.Add(ti);
+
+
+            ti = new TabItem();
+            ti.Header = "2nd Header";
+            ti.Style = (Style)FindResource("Style_SideTabItem");
+
+            wp = new WrapPanel();
+            l = new Label();
+            l.Content = "2nd TabItem Content from Connection";
+            wp.Children.Add(l);
+
+            ti.Content = wp;
+
+            SideTabControl.Items.Add(ti);
+        }
 
         void bt_DiscoverDevicesEnded(object sender, EventArgs e)
         {

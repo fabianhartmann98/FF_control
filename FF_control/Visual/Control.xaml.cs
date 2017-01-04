@@ -31,6 +31,45 @@ namespace FF_control.Visual
             parent.bt_connection.MaxGapRecieved += bt_connection_MaxGapRecieved;
             parent.bt_connection.PositionReceived += bt_connection_PositionReceived;
             parent.bt_connection.StatusReceived += bt_connection_StatusReceived;
+
+            this.IsVisibleChanged += Control_IsVisibleChanged;
+        }
+
+        void Control_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.IsVisible)
+                setUpSideTabControl();
+        }
+
+        private void setUpSideTabControl()
+        {
+            SideTabControl.Items.Clear();
+
+            TabItem ti = new TabItem();
+            ti.Header = "1st Control Header";
+            ti.Style = (Style)FindResource("Style_SideTabItem");
+
+            WrapPanel wp = new WrapPanel();
+            Label l = new Label();
+            l.Content = "1st TabItem Content from Control";
+            wp.Children.Add(l);
+
+            ti.Content = wp;
+            SideTabControl.Items.Add(ti);
+
+
+            ti = new TabItem();
+            ti.Header = "2nd Control Header";
+            ti.Style = (Style)FindResource("Style_SideTabItem");
+
+            wp = new WrapPanel();
+            l = new Label();
+            l.Content = "2nd TabItem Content from Control";
+            wp.Children.Add(l);
+
+            ti.Content = wp;
+
+            SideTabControl.Items.Add(ti);
         }
 
         void bt_connection_StatusReceived(object sender, EventArgs e)
