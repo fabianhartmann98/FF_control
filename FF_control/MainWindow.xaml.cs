@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using FF_control.Bluetooth;
+using FF_control.Measure;
+using FF_control.Visual; 
+
 namespace FF_control
 {
     /// <summary>
@@ -20,9 +24,13 @@ namespace FF_control
     /// </summary>
     public partial class MainWindow : Window
     {
+        public BT_connection bt_connection { get; set; }
+        public Diagram diagram { get; set; }
+
         public MainWindow()
-        {
+        {            
             InitializeComponent();
+            Connection_grid.Children.Add(new Connection(this, SideTabControl));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

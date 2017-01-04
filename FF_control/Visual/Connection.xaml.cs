@@ -25,17 +25,20 @@ namespace FF_control.Visual
     /// </summary>
     public partial class Connection : UserControl
     {
-        public BT_connection bt;
+        public MainWindow parent { get; set; }
+        public TabControl SideTabControl { get; set; }
 
-        public Connection()
+        public Connection(MainWindow p, TabControl sidetabcontrol)
         {
             InitializeComponent();
-            bt = new BT_connection();
-            bt.DeviceConnected += bt_DeviceConnected;
-            bt.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
-            bt.DeviceDisconnected += bt_DeviceDisconnected;
+            parent = p;
+            SideTabControl = sidetabcontrol;
+            parent.bt_connection = new BT_connection();
+            parent.bt_connection.DeviceConnected += bt_DeviceConnected;
+            parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
+            parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;
 
-            bt.GetAvailableDevicesAsync();
+            parent.bt_connection.GetAvailableDevicesAsync();
         }
 
         
@@ -51,7 +54,7 @@ namespace FF_control.Visual
             {
                 stackpanel.Children.Clear();
 
-                foreach (var item in bt.infos)
+                foreach (var item in parent.bt_connection.infos)
                 {
                     Connection_DeviceModule cdm = new Connection_DeviceModule(item);
                     cdm.Dis_ConnectDevice += cdm_Dis_ConnectDevice;
@@ -64,25 +67,25 @@ namespace FF_control.Visual
         {
             Connection_DeviceModule cdm = (Connection_DeviceModule)((Button)sender).Tag;
             if (cdm.Device.Connected)
-                bt.DisconnectFromDevice();
+                parent.bt_connection.DisconnectFromDevice();
             else
-                bt.ConnectToDevice(cdm.Device);           
+                parent.bt_connection.ConnectToDevice(cdm.Device);           
         }
 
         void bt_DeviceConnected(object sender, EventArgs e)
         {
             stackpanel.Children.Clear();
-            stackpanel.Children.Add(new Connection_DeviceModule(bt.ConnectedDevice));
+            stackpanel.Children.Add(new Connection_DeviceModule(parent.bt_connection.ConnectedDevice));
         }
 
         void bt_DeviceDisconnected(object sender, EventArgs e)
         {
-            bt.GetAvailableDevicesAsync();
+            parent.bt_connection.GetAvailableDevicesAsync();
         }
 
         private void button_refresh_Click(object sender, RoutedEventArgs e)
         {
-            bt.GetAvailableDevicesAsync();
+            parent.bt_connection.GetAvailableDevicesAsync();
         }
 
         private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
