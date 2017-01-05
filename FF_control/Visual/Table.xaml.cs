@@ -24,13 +24,33 @@ namespace FF_control.Visual
         public MainWindow parent { get; set; }
         public TabControl SideTabControl { get; set; }
 
+        private int selected_tabindex; 
+
         public Table(MainWindow p, TabControl sidetab)
         {
             InitializeComponent();
             parent = p;
             SideTabControl = sidetab;
+            selected_tabindex = 0;
+            this.IsVisibleChanged += Table_IsVisibleChanged;                     
+
 
             parent.bt_connection.MeasuredDataReceived += bt_connection_MeasuredDataReceived;
+        }
+
+        private void Table_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.IsVisible)
+                setUpSideTabControl();
+        }
+
+        private void setUpSideTabControl()
+        {
+            TabItem ti = new TabItem();
+            StackPanel mainstack = new StackPanel();
+
+            WrapPanel wp = new WrapPanel(); 
+
         }
 
         void bt_connection_MeasuredDataReceived(object sender, EventArgs e)
@@ -47,6 +67,7 @@ namespace FF_control.Visual
                 parent.diagram.Grpahs.Add(new Measure.Graph());
                 index = parent.diagram.Grpahs.Count - 1;
                 parent.diagram.Grpahs[index].MeasurementTime=DateTime.Now;
+                parent.diagram.Grpahs[index].MeasurementGap = parent.bt_connection.Lastupdated_position;
             }
             parent.diagram.Grpahs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number)));
             parent.v_plot.DrawDiagram();

@@ -252,7 +252,7 @@ namespace FF_control.Visual
         {
             Graph g = Graph.Open();
             if(g!=null)
-            parent.diagram.Grpahs.Add(g);
+                parent.diagram.Grpahs.Add(g);
         }
 
         private void b_plot_remove_Click(object sender, RoutedEventArgs e)
@@ -288,7 +288,6 @@ namespace FF_control.Visual
 
         void Plot_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            SideTabControl.SelectedIndex = 0;
             if (this.IsVisible)
                 setUpSideTabControl();
         }
