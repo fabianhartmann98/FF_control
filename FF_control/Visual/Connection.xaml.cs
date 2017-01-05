@@ -33,7 +33,7 @@ namespace FF_control.Visual
             InitializeComponent();
             parent = p;
             SideTabControl = sidetabcontrol;
-            parent.bt_connection = new BT_connection();
+
             parent.bt_connection.DeviceConnected += bt_DeviceConnected;
             parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
             parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;

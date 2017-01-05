@@ -188,6 +188,20 @@ namespace FF_control.Measure
             }
         }
 
+        public static Graph Open()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.FileName = Graph.FileFilter;
+            if ((bool)ofd.ShowDialog())
+            {
+                Graph g = new Graph();
+                g.SaveLocation = ofd.FileName;
+
+                return g; 
+            }
+            return null;
+        }
+
         private Point scalingPoint(Point p, double offsetX,double offsetY, double scaleX, double scaleY, double plotheight)
         {
             Point q = new Point();

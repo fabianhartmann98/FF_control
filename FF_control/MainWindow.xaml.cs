@@ -26,13 +26,34 @@ namespace FF_control
     {
         public BT_connection bt_connection { get; set; }
         public Diagram diagram { get; set; }
+        public Connection v_connection;
+        public FF_control.Visual.Control v_control;
+        public Plot v_plot;
 
         public MainWindow()
         {            
             InitializeComponent();
-            Connection_grid.Children.Add(new Connection(this, SideTabControl));
-            Control_grid.Children.Add(new FF_control.Visual.Control(this, SideTabControl));
-            Plot_grid.Children.Add(new Plot(this, SideTabControl));
+
+            bt_connection = new BT_connection(); 
+
+            diagram = new Diagram();
+            diagram.addGraph(Diagram.createTestingPlot());
+            Graph g = new Graph();
+            g.addPoint(new MeasurementPoint(new Point(-5, 2)));
+            g.addPoint(new MeasurementPoint(new Point(-2, 4)));
+            g.addPoint(new MeasurementPoint(new Point(2, -2)));
+            g.addPoint(new MeasurementPoint(new Point(5, 4)));
+            diagram.addGraph(g);
+
+            diagram.Grpahs[1].PlotColor = Brushes.Blue;
+            diagram.Grpahs[0].PlotColor = Brushes.Green;
+
+            v_connection = new Connection(this, SideTabControl);
+            Connection_grid.Children.Add(v_connection);
+            v_control = new FF_control.Visual.Control(this, SideTabControl);
+            Control_grid.Children.Add(v_control);
+            v_plot = new Plot(this, SideTabControl);
+            Plot_grid.Children.Add(v_plot);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

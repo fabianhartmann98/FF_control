@@ -38,6 +38,8 @@ namespace FF_control.Visual
         private List<Border> border_plot;
         private List<Button> b_plot_remove;
 
+        private Button b_add;
+
         private int selected_tabindex;
 
         Point prevmousePosition;
@@ -50,19 +52,7 @@ namespace FF_control.Visual
             selected_tabindex = 0;
 
             InitializeComponent();
-            this.IsVisibleChanged += Plot_IsVisibleChanged;
-
-            parent.diagram = new Diagram();
-            parent.diagram.addGraph(Diagram.createTestingPlot());
-            Graph g = new Graph();
-            g.addPoint(new MeasurementPoint(new Point(-5, 2)));
-            g.addPoint(new MeasurementPoint(new Point(-2, 4)));
-            g.addPoint(new MeasurementPoint(new Point(2, -2)));
-            g.addPoint(new MeasurementPoint(new Point(5, 4)));           
-            parent.diagram.addGraph(g);
-
-            parent.diagram.Grpahs[1].PlotColor = Brushes.Blue;
-            parent.diagram.Grpahs[0].PlotColor = Brushes.Green;
+            this.IsVisibleChanged += Plot_IsVisibleChanged;                     
 
             parent.diagram.Can = can;
             parent.diagram.setScalingAuto();
@@ -239,13 +229,30 @@ namespace FF_control.Visual
             ti = new TabItem();
             ti.Header = "Add Plot";
             ti.Style = (Style)FindResource("Style_SideTabItem");
+            mainstack = new StackPanel();
 
-            wp = new WrapPanel();             
+            wp = new WrapPanel();
+            b_add = new Button();
+            b_add.Content = "Hinzufügen";
+            b_add.Click += b_add_Click;
+            wp.Children.Add(b_add);
+            mainstack.Children.Add(wp);
+            ti.Content = mainstack;
+
+            SideTabControl.Items.Add(ti);
+
             #endregion
 
             if (selected_tabindex < SideTabControl.Items.Count)
                 SideTabControl.SelectedIndex = selected_tabindex;
            
+        }
+
+        void b_add_Click(object sender, RoutedEventArgs e)
+        {
+            Graph g = Graph.Open();
+            if(g!=null)
+            parent.diagram.Grpahs.Add(g);
         }
 
         private void b_plot_remove_Click(object sender, RoutedEventArgs e)
@@ -265,7 +272,7 @@ namespace FF_control.Visual
             l.Content = parent.diagram.Grpahs[(int)l.Tag].SaveLocation;
         }
 
-        private void DrawDiagram()
+        public void DrawDiagram()
         {
             can.Children.Clear();
             parent.diagram.DrawAxis();
