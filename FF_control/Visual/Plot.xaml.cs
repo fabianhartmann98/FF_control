@@ -32,19 +32,11 @@ namespace FF_control.Visual
         private Border border_background;
         private Border border_axis;
 
-        private TextBox tb_name0;
-        private Label l_time0;
-        private Label l_saveloc0;
-        private Border border_plot0;
-        private Button b_plot0_remove;
-
-        private TextBox tb_name1;
-        private Label l_time1;
-        private Label l_saveloc1;
-        private Border border_plot1;
-        private Button b_plot1_remove;
-
-
+        private List<TextBox> tb_name;
+        private List<Label> l_time;
+        private List<Label> l_saveloc;
+        private List<Border> border_plot;
+        private List<Button> b_plot_remove;
 
         private int selected_tabindex;
 
@@ -81,6 +73,11 @@ namespace FF_control.Visual
         {
             selected_tabindex = SideTabControl.SelectedIndex;
             SideTabControl.Items.Clear();
+            tb_name = new List<TextBox>();
+            l_time = new List<Label>();
+            l_saveloc = new List<Label>();
+            border_plot = new List<Border>();
+            b_plot_remove = new List<Button>();
 
             #region Tab Diagram
             TabItem ti = new TabItem();
@@ -169,11 +166,11 @@ namespace FF_control.Visual
             SideTabControl.Items.Add(ti);
             #endregion
 
-            #region 1. Plot Tab
-            if (parent.diagram.Grpahs.Count >= 1)
-            {
+            #region  Plot Tab
+            for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
+			{			
                 ti = new TabItem();
-                ti.Header = "Plot1";
+                ti.Header = "Plot"+i.ToString();
                 ti.Style = (Style)FindResource("Style_SideTabItem");
 
                 mainstack = new StackPanel();
@@ -181,55 +178,55 @@ namespace FF_control.Visual
                 wp = new WrapPanel();
                 Label ll_name0 = new Label();
                 ll_name0.Content = "Name:";
-                tb_name0 = new TextBox();
-                tb_name0.Text = parent.diagram.Grpahs[0].Name;
-                tb_name0.LostFocus += tb_name_LostFocus;
-                tb_name0.Tag = 0;
+                tb_name.Add(new TextBox());
+                tb_name[i].Text = parent.diagram.Grpahs[i].Name;
+                tb_name[i].LostFocus += tb_name_LostFocus;
+                tb_name[i].Tag = i;
                 wp.Children.Add(ll_name0);
-                wp.Children.Add(tb_name0);
+                wp.Children.Add(tb_name[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();
                 Label ll_time0 = new Label();
                 ll_time0.Content = "Time:";
-                l_time0 = new Label(); 
-                l_time0.Content=parent.diagram.Grpahs[0].MeasurementTime.ToString();
+                l_time.Add(new Label()); 
+                l_time[i].Content=parent.diagram.Grpahs[i].MeasurementTime.ToString();
                 wp.Children.Add(ll_time0);
-                wp.Children.Add(l_time0);
+                wp.Children.Add(l_time[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();
                 Label ll_saveloc0 = new Label();
                 ll_saveloc0.Content = "Save Location:";
-                l_saveloc0 = new Label();
-                l_saveloc0.Content = parent.diagram.Grpahs[0].SaveLocation;
-                l_saveloc0.MouseUp += l_saveloc_MouseUp;
-                l_saveloc0.Tag = 0;
+                l_saveloc.Add(new Label());
+                l_saveloc[i].Content = parent.diagram.Grpahs[i].SaveLocation;
+                l_saveloc[i].MouseUp += l_saveloc_MouseUp;
+                l_saveloc[i].Tag = i;
                 wp.Children.Add(ll_saveloc0);
-                wp.Children.Add(l_saveloc0);
+                wp.Children.Add(l_saveloc[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();
                 Label ll_plot0 = new Label();
                 ll_plot0.Content = "Color:";
-                border_plot0 = new Border();
-                border_plot0.Width = 50;
-                border_plot0.Height = 20;
-                border_plot0.BorderBrush = Brushes.Black;
-                border_plot0.BorderThickness = new Thickness(1);
-                border_plot0.Background = parent.diagram.Grpahs[0].PlotColor;
-                border_plot0.MouseUp += border_MouseUp;
-                border_plot0.Tag = "plot:0";
+                border_plot.Add(new Border());
+                border_plot[i].Width = 50;
+                border_plot[i].Height = 20;
+                border_plot[i].BorderBrush = Brushes.Black;
+                border_plot[i].BorderThickness = new Thickness(1);
+                border_plot[i].Background = parent.diagram.Grpahs[i].PlotColor;
+                border_plot[i].MouseUp += border_MouseUp;
+                border_plot[i].Tag = "plot:"+i.ToString();
                 wp.Children.Add(ll_plot0);
-                wp.Children.Add(border_plot0);
+                wp.Children.Add(border_plot[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();
-                b_plot0_remove = new Button();
-                b_plot0_remove.Content = "Remove";
-                b_plot0_remove.Click += b_plot_remove_Click;
-                b_plot0_remove.Tag = 0; 
-                wp.Children.Add(b_plot0_remove);
+                b_plot_remove.Add(new Button());
+                b_plot_remove[i].Content = "Remove";
+                b_plot_remove[i].Click += b_plot_remove_Click;
+                b_plot_remove[i].Tag = i;
+                wp.Children.Add(b_plot_remove[i]);
                 mainstack.Children.Add(wp);
 
                 ti.Content = mainstack;
@@ -238,83 +235,12 @@ namespace FF_control.Visual
             }
             #endregion
 
-            #region Tab Plot2
-            if (parent.diagram.Grpahs.Count >= 2)
-            {
-                ti = new TabItem();
-                ti.Header = "Plot2";
-                ti.Style = (Style)FindResource("Style_SideTabItem");
+            #region Add Plot    
+            ti = new TabItem();
+            ti.Header = "Add Plot";
+            ti.Style = (Style)FindResource("Style_SideTabItem");
 
-                mainstack = new StackPanel();
-
-                wp = new WrapPanel();
-                Label ll_name1 = new Label();
-                ll_name1.Content = "Name:";
-                tb_name1 = new TextBox();
-                tb_name1.Text = parent.diagram.Grpahs[1].Name;
-                tb_name1.LostFocus += tb_name_LostFocus;
-                tb_name1.Tag = 1;
-                wp.Children.Add(ll_name1);
-                wp.Children.Add(tb_name1);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();
-                Label ll_time1 = new Label();
-                ll_time1.Content = "Time:";
-                l_time1 = new Label();
-                l_time1.Content = parent.diagram.Grpahs[1].MeasurementTime.ToString();
-                wp.Children.Add(ll_time1);
-                wp.Children.Add(l_time1);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();
-                Label ll_saveloc1 = new Label();
-                ll_saveloc1.Content = "Save Location:";
-                l_saveloc1 = new Label();
-                l_saveloc1.Content = parent.diagram.Grpahs[1].SaveLocation;
-                l_saveloc1.MouseUp += l_saveloc_MouseUp;
-                l_saveloc1.Tag = 1;
-                wp.Children.Add(ll_saveloc1);
-                wp.Children.Add(l_saveloc1);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();
-                Label ll_plot1 = new Label();
-                ll_plot1.Content = "Color:";
-                border_plot1 = new Border();
-                border_plot1.Width = 50;
-                border_plot1.Height = 20;
-                border_plot1.BorderBrush = Brushes.Black;
-                border_plot1.BorderThickness = new Thickness(1);
-                border_plot1.Background = parent.diagram.Grpahs[1].PlotColor;
-                border_plot1.MouseUp += border_MouseUp;
-                border_plot1.Tag = "plot:1";
-                wp.Children.Add(ll_plot1);
-                wp.Children.Add(border_plot1);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();
-                b_plot1_remove = new Button();
-                b_plot1_remove.Content = "Remove";
-                b_plot1_remove.Click += b_plot_remove_Click;
-                b_plot1_remove.Tag = 1;
-                wp.Children.Add(b_plot1_remove);
-                mainstack.Children.Add(wp);
-
-                ti.Content = mainstack;
-                SideTabControl.Items.Add(ti);
-
-            }
-            #endregion
-            #region Add Plot
-            else
-            {
-                ti = new TabItem();
-                ti.Header = "Add Plot";
-                ti.Style = (Style)FindResource("Style_SideTabItem");
-
-                wp = new WrapPanel(); 
-            }
+            wp = new WrapPanel();             
             #endregion
 
             if (selected_tabindex < SideTabControl.Items.Count)
