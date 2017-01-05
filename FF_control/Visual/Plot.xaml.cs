@@ -308,8 +308,12 @@ namespace FF_control.Visual
             #endregion
             #region Add Plot
             else
-            { 
-                
+            {
+                ti = new TabItem();
+                ti.Header = "Add Plot";
+                ti.Style = (Style)FindResource("Style_SideTabItem");
+
+                wp = new WrapPanel(); 
             }
             #endregion
 
