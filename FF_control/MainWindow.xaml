@@ -44,6 +44,10 @@
                     <Grid Name="Plot_grid">                        
                     </Grid>
                 </TabItem>
+                <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
+                    <Grid Name="Table_grid">
+                    </Grid>
+                </TabItem>
             </TabControl>       
         </DockPanel>
     </Grid>

@@ -289,7 +289,10 @@ namespace FF_control.Visual
         void Plot_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (this.IsVisible)
+            {
                 setUpSideTabControl();
+                DrawDiagram();
+            }
         }
 
         private void tb_name_LostFocus(object sender, RoutedEventArgs e)

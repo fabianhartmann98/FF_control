@@ -23,13 +23,20 @@ namespace FF_control.Measure
         private Brush plotColor;        //the color which is going to be displayed
         private double plotStrokeThickness; //how thick is the grpah going to be
         private DateTime measurementTime;   //when was the row measured (start Time) 
+        private double gap;                 //the gap in mm
+
+        public double MeasurementGap
+        {
+            get { return gap; }
+            set { gap = value; }
+        }
+        
 
         public DateTime MeasurementTime
         {
             get { return measurementTime; }
             set { measurementTime = value; }
         }
-
 
         public double PlotStrokeThickness
         {

@@ -29,6 +29,7 @@ namespace FF_control
         public Connection v_connection;
         public FF_control.Visual.Control v_control;
         public Plot v_plot;
+        public FF_control.Visual.Table v_table;
 
         public MainWindow()
         {            
@@ -54,6 +55,8 @@ namespace FF_control
             Control_grid.Children.Add(v_control);
             v_plot = new Plot(this, SideTabControl);
             Plot_grid.Children.Add(v_plot);
+            v_table = new FF_control.Visual.Table(this, SideTabControl);
+            Table_grid.Children.Add(v_table);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

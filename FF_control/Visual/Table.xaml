@@ -6,8 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <DataGrid Name="dg">
-            
-        </DataGrid> 
+        <DataGrid Name="dg" CanUserResizeColumns="True" CanUserAddRows="False" CanUserSortColumns="True" IsReadOnly="True" Height="500" Width="500"/>
+
     </Grid>
 </UserControl>
