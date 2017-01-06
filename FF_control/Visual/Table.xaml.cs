@@ -161,13 +161,12 @@ namespace FF_control.Visual
 
         public void CreateTable()
         {
-            dg.DataContext = parent.diagram;
+            stackpanel_dg.Children.Clear();
             for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
             {
-                DataGridTextColumn dgtc = new DataGridTextColumn();
-                dgtc.Header = "Nr" + i.ToString();
-                dgtc.Binding = new Binding("Graphs[" + i.ToString() + "].mps");
-                dg.Items.Add(dgtc);
+                DataGrid dg = new DataGrid();
+                dg.ItemsSource = parent.diagram.Grpahs[i].mps;
+                stackpanel_dg.Children.Add(dg);
             }
 
         }
