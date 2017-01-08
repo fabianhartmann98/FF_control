@@ -50,7 +50,10 @@ namespace FF_control.Visual
         private void Table_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (this.IsVisible)
+            {
                 setUpSideTabControl();
+                CreateTable();
+            }
         }
 
         private void setUpSideTabControl()
@@ -59,6 +62,7 @@ namespace FF_control.Visual
             SideTabControl.Items.Clear();
             tb_name = new List<TextBox>();
             l_time = new List<Label>();
+            l_gap = new List<Label>();
             l_saveloc = new List<Label>();
             b_plot_remove = new List<Button>();
 
@@ -88,6 +92,15 @@ namespace FF_control.Visual
                 l_time[i].Content = parent.diagram.Grpahs[i].MeasurementTime.ToString();
                 wp.Children.Add(ll_time0);
                 wp.Children.Add(l_time[i]);
+                mainstack.Children.Add(wp);
+
+                wp = new WrapPanel();
+                Label ll_gap0 = new Label();
+                ll_gap0.Content = "Gap:";
+                l_gap.Add(new Label());
+                l_gap[i].Content = parent.diagram.Grpahs[i].MeasurementGap.ToString();
+                wp.Children.Add(ll_gap0);
+                wp.Children.Add(l_gap[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();
@@ -123,6 +136,7 @@ namespace FF_control.Visual
             Button b = (Button)sender;
             parent.diagram.Grpahs.RemoveAt((int)b.Tag);
             setUpSideTabControl();
+            CreateTable();
         }
 
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
