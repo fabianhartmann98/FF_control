@@ -130,7 +130,7 @@ namespace FF_control.Bluetooth
         {
             bc = new BluetoothClient();
             infos = null;
-            bc.BeginDiscoverDevices(255, false, true, true, false, getavailabledevicesasync_calback, bc);
+            bc.BeginDiscoverDevices(255, false, true, true,false, getavailabledevicesasync_calback, bc);
         }
 
         private void getavailabledevicesasync_calback(IAsyncResult ar)
@@ -364,9 +364,13 @@ namespace FF_control.Bluetooth
 
         public void DisconnectFromDevice()
         {
-            s.Close();
-            bc.Close();
-            staying_alive_timer.Stop();
+            try
+            {
+                staying_alive_timer.Stop();
+                s.Close();
+                bc.Close();                
+            }
+            catch { }
         }
         #endregion
 

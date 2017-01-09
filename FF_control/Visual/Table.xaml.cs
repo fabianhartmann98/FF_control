@@ -142,7 +142,7 @@ namespace FF_control.Visual
         {
             Button b = (Button)sender;
             //todo: open SavefileDialog
-            parent.diagram.Grpahs((int)b.Tag); //get the index 
+            parent.diagram.Grpahs[(int)b.Tag].Save(); 
             setUpSideTabControl();
         }
 

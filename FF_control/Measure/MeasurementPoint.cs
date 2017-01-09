@@ -60,7 +60,7 @@ namespace FF_control.Measure
 
         public override string ToString()
         {
-            return String.Format("{0:u}: {1:c2}, {2:c2}",measurementNumber,time,i_value);
+            return String.Format("{0}: {1:c2}, {2:c2}",measurementNumber,time,i_value);
         }
         #endregion
     }
