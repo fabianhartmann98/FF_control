@@ -24,16 +24,17 @@ namespace FF_control.Visual
     /// </summary>
     public partial class Table : UserControl
     {
-        public MainWindow parent { get; set; }
-        public TabControl SideTabControl { get; set; }
+        public MainWindow parent { get; set; }              //saves the parent MainWindow (used to access bt_connection and graph) 
+        public TabControl SideTabControl { get; set; }      //saves the SideTabControl (these are accessed by all Tabs
+                                                            //needs to be changed when this tab get visible
 
-        private int selected_tabindex;
+        private int selected_tabindex;                      //what tabindex was selected, before redoing SideTabItems
 
-        private List<TextBox> tb_name;
-        private List<Label> l_time;
-        private List<Label> l_gap;
-        private List<Label> l_saveloc;
-        private List<Button> b_plot_remove;
+        private List<TextBox> tb_name;                      //saves all Tb where the names of each graph can be modivied
+        private List<Label> l_time;                         //saves all Lables where the time of recording gets displayed
+        private List<Label> l_gap;                          //saves all Labels where the gap gets displayed
+        private List<Label> l_saveloc;                      //saves all Labels where teh savelocation is displayed, there is a click event on them right now
+        private List<Button> b_plot_remove;                 //saves all Buttons where the Plot can be removed, tag is the index
 
         public Table(MainWindow p, TabControl sidetab)
         {
@@ -41,60 +42,60 @@ namespace FF_control.Visual
             parent = p;
             SideTabControl = sidetab;
             selected_tabindex = 0;
-            this.IsVisibleChanged += Table_IsVisibleChanged;
+            this.IsVisibleChanged += Table_IsVisibleChanged; //needed to set up the SideTabControl
 
-            CreateTable();
+            CreateTable();                                  //creats tables (for each graph one)
             parent.bt_connection.MeasuredDataReceived += bt_connection_MeasuredDataReceived;
         }
 
         private void Table_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (this.IsVisible)
+            if (this.IsVisible) //if it is set on visible 
             {
-                setUpSideTabControl();
-                CreateTable();
+                setUpSideTabControl(); //redo or do the TabItems 
+                CreateTable();         //redo or do the Tables
             }
         }
 
         private void setUpSideTabControl()
         {
-            selected_tabindex = SideTabControl.SelectedIndex;
-            SideTabControl.Items.Clear();
-            tb_name = new List<TextBox>();
+            selected_tabindex = SideTabControl.SelectedIndex; //get the last index, set back to it after redoing them
+            SideTabControl.Items.Clear();       //delete all Items 
+            tb_name = new List<TextBox>();      //make an instanze
             l_time = new List<Label>();
             l_gap = new List<Label>();
             l_saveloc = new List<Label>();
             b_plot_remove = new List<Button>();
 
-            for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
+            for (int i = 0; i < parent.diagram.Grpahs.Count; i++)//for each graph, creat an own tab
             {
-                TabItem ti = new TabItem();
-                ti.Header = "Plot" + i.ToString();
-                ti.Style = (Style)FindResource("Style_SideTabItem");
+                TabItem ti = new TabItem(); //creat Tab
+                ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
+                ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
 
                 StackPanel mainstack = new StackPanel();
 
-                WrapPanel wp = new WrapPanel();
+                WrapPanel wp = new WrapPanel();     //creat Wrap Panel for the Name of the Plot
                 Label ll_name0 = new Label();
                 ll_name0.Content = "Name:";
                 tb_name.Add(new TextBox());
-                tb_name[i].Text = parent.diagram.Grpahs[i].Name;
-                tb_name[i].LostFocus += tb_name_LostFocus;
-                tb_name[i].Tag = i;
-                wp.Children.Add(ll_name0);
+                tb_name[i].Text = parent.diagram.Grpahs[i].Name; //set the text
+                tb_name[i].LostFocus += tb_name_LostFocus;      //using Lost_focus so it is not changing when eddeting
+                tb_name[i].Tag = i;                             //Tag is the index (for later use)
+                wp.Children.Add(ll_name0);                      //add those to the Wrappenel
                 wp.Children.Add(tb_name[i]);
-                mainstack.Children.Add(wp);
+                mainstack.Children.Add(wp);                     //add them to the mainstack
 
-                wp = new WrapPanel();
+                wp = new WrapPanel();               //creat WrapPanel for the time of measurement
                 Label ll_time0 = new Label();
                 ll_time0.Content = "Time:";
                 l_time.Add(new Label());
-                l_time[i].Content = parent.diagram.Grpahs[i].MeasurementTime.ToString();
+                l_time[i].Content = parent.diagram.Grpahs[i].MeasurementTime.ToString();    //set the Text
                 wp.Children.Add(ll_time0);
                 wp.Children.Add(l_time[i]);
                 mainstack.Children.Add(wp);
 
-                wp = new WrapPanel();
+                wp = new WrapPanel();               //creat WrapPanel for the gap 
                 Label ll_gap0 = new Label();
                 ll_gap0.Content = "Gap:";
                 l_gap.Add(new Label());
@@ -103,23 +104,21 @@ namespace FF_control.Visual
                 wp.Children.Add(l_gap[i]);
                 mainstack.Children.Add(wp);
 
-                wp = new WrapPanel();
+                wp = new WrapPanel();               //creat WrapPanel for the Save Location
                 Label ll_saveloc0 = new Label();
                 ll_saveloc0.Content = "Save Location:";
                 l_saveloc.Add(new Label());
                 l_saveloc[i].Content = parent.diagram.Grpahs[i].SaveLocation;
-                l_saveloc[i].MouseUp += l_saveloc_MouseUp;
-                l_saveloc[i].Tag = i;
+                l_saveloc[i].MouseUp += l_saveloc_MouseUp;          //open a saveFileDialog if clicked on it
+                l_saveloc[i].Tag = i;                               //Tag is the index (for later use)
                 wp.Children.Add(ll_saveloc0);
                 wp.Children.Add(l_saveloc[i]);
                 mainstack.Children.Add(wp);
 
-
-
-                wp = new WrapPanel();
+                wp = new WrapPanel();           //creat WrapPanel for removing graph
                 b_plot_remove.Add(new Button());
                 b_plot_remove[i].Content = "Remove";
-                b_plot_remove[i].Click += b_plot_remove_Click;
+                b_plot_remove[i].Click += b_plot_remove_Click;  //if click remove plot and redo tab and creatTable
                 b_plot_remove[i].Tag = i;
                 wp.Children.Add(b_plot_remove[i]);
                 mainstack.Children.Add(wp);
@@ -133,53 +132,55 @@ namespace FF_control.Visual
 
         private void b_plot_remove_Click(object sender, RoutedEventArgs e)
         {
-            Button b = (Button)sender;
-            parent.diagram.Grpahs.RemoveAt((int)b.Tag);
-            setUpSideTabControl();
-            CreateTable();
+            Button b = (Button)sender;              //get the button
+            parent.diagram.Grpahs.RemoveAt((int)b.Tag); //get the index for the Graphs in the Tag (need casting)
+            setUpSideTabControl();                  //redo SideTab
+            CreateTable();                          //redo Table
         }
 
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Button b = (Button)sender;
-            parent.diagram.Grpahs.RemoveAt((int)b.Tag);
+            //todo: open SavefileDialog
+            parent.diagram.Grpahs((int)b.Tag); //get the index 
             setUpSideTabControl();
         }
 
         private void tb_name_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox tb = (TextBox)sender;
-            parent.diagram.Grpahs[(int)tb.Tag].Name = tb.Text;
+            TextBox tb = (TextBox)sender; 
+            parent.diagram.Grpahs[(int)tb.Tag].Name = tb.Text; //reset the name
+            setUpSideTabControl();
         }
 
-        void bt_connection_MeasuredDataReceived(object sender, EventArgs e)
+        void bt_connection_MeasuredDataReceived(object sender, EventArgs e) //received a new Data
         {
             ReceivedData_EventArgs args = (ReceivedData_EventArgs)e;
-            double number = (double)args.ArrayL[0];
-            double time = (double)args.ArrayL[1];
-            double actvalue = (double)args.ArrayL[2];
+            double number = (double)args.ArrayL[0];//get number (are saved in ArrayList) (order is importent)
+            double time = (double)args.ArrayL[1];//get time
+            double actvalue = (double)args.ArrayL[2]; //get actual value
 
-            int index = parent.diagram.Grpahs.Count - 1;
+            int index = parent.diagram.Grpahs.Count - 1; //get the index of the graph to be added
 
-            if(number==0)
+            if(number==0) //if number is 0 => new Graph
             {
-                parent.diagram.Grpahs.Add(new Measure.Graph());
-                index = parent.diagram.Grpahs.Count - 1;
-                parent.diagram.Grpahs[index].MeasurementTime=DateTime.Now;
-                parent.diagram.Grpahs[index].MeasurementGap = parent.bt_connection.Lastupdated_position;
+                parent.diagram.Grpahs.Add(new Measure.Graph()); //add Graph
+                index = parent.diagram.Grpahs.Count - 1;        //set index new
+                parent.diagram.Grpahs[index].MeasurementTime=DateTime.Now;  //set the MeasurementTime
+                parent.diagram.Grpahs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
             }
-            parent.diagram.Grpahs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number)));
+            parent.diagram.Grpahs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
             parent.v_plot.DrawDiagram();
         }
 
 
         public void CreateTable()
         {
-            stackpanel_dg.Children.Clear();
+            stackpanel_dg.Children.Clear(); //delete all Grids
             for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
             {
                 DataGrid dg = new DataGrid();
-                dg.ItemsSource = parent.diagram.Grpahs[i].mps;
+                dg.ItemsSource = parent.diagram.Grpahs[i].mps; //add the Itemsource (displaying MeasurementData)
                 stackpanel_dg.Children.Add(dg);
             }
 
