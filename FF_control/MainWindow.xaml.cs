@@ -71,6 +71,11 @@ namespace FF_control
             Control_grid.Width = dockpanel.ActualWidth - 250;
             Plot_grid.Width = dockpanel.ActualWidth - 250;
             Table_grid.Width = dockpanel.ActualWidth - 250;
+
+            Connection_grid.Height = dockpanel.ActualHeight;
+            Control_grid.Height = dockpanel.ActualHeight;
+            Plot_grid.Height = dockpanel.ActualHeight;
+            Table_grid.Height = dockpanel.ActualHeight;
         }
     }
 }

@@ -176,9 +176,11 @@ namespace FF_control.Visual
             stackpanel_dg.Children.Clear(); //delete all Grids
             for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
             {
+                WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
                 dg.ItemsSource = parent.diagram.Grpahs[i].mps; //add the Itemsource (displaying MeasurementData)
-                stackpanel_dg.Children.Add(dg);
+                wp.Children.Add(dg);
+                stackpanel_dg.Children.Add(wp);
             }
 
         }

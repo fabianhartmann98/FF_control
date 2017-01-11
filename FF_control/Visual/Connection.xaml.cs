@@ -104,13 +104,21 @@ namespace FF_control.Visual
             if (cdm.Device.Connected)
                 parent.bt_connection.DisconnectFromDevice();
             else
-                parent.bt_connection.ConnectToDevice(cdm.Device);           
+                parent.bt_connection.ConnectToDevice(cdm.Device.DeviceName);           
         }
 
         void bt_DeviceConnected(object sender, EventArgs e)
         {
-            stackpanel.Children.Clear();
-            stackpanel.Children.Add(new Connection_DeviceModule(parent.bt_connection.ConnectedDevice));
+            if (!stackpanel.Dispatcher.CheckAccess())
+            {
+                stackpanel.Dispatcher.Invoke((Action<object, EventArgs>)bt_DeviceConnected, null, new EventArgs());
+            }
+            else
+            {
+                stackpanel.Children.Clear();
+                stackpanel.Children.Add(new Connection_DeviceModule(parent.bt_connection.ConnectedDevice));
+            }
+ 
         }
 
         void bt_DeviceDisconnected(object sender, EventArgs e)

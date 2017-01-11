@@ -83,17 +83,17 @@ namespace FF_control.Visual
             //    default:
             //        break;
             //}
-            l_laststatus.Content =((int)parent.bt_connection.Lastupdated_status).ToString();
+            LabelUpdate(l_laststatus, ((int)parent.bt_connection.Lastupdated_status).ToString());
         }
 
         void bt_connection_PositionReceived(object sender, EventArgs e)
         {
-            l_lasposition.Content = parent.bt_connection.Lastupdated_position;
+            LabelUpdate(l_lasposition, parent.bt_connection.Lastupdated_position.ToString());
         }
 
         void bt_connection_MaxGapRecieved(object sender, EventArgs e)
         {
-            l_laststatus.Content = parent.bt_connection.Maxgap;
+            LabelUpdate(l_maxgap, parent.bt_connection.Maxgap.ToString());
         }
 
         private void b_gap_approve_Click(object sender, RoutedEventArgs e)
@@ -109,11 +109,22 @@ namespace FF_control.Visual
         private void b_status_Click(object sender, RoutedEventArgs e)
         {
             parent.bt_connection.SendStatusRequest();
+            parent.bt_connection.SendPositionRequest();
         }
 
         private void b_maxgap_Click(object sender, RoutedEventArgs e)
         {
             parent.bt_connection.SendMaxGapRequest();
+        }
+
+        private void LabelUpdate(Label l, string text)
+        {
+            if (!l.Dispatcher.CheckAccess())
+            {
+                l.Dispatcher.Invoke((Action<Label, string>)LabelUpdate, l, text);
+            }
+            else
+                l.Content = text;
         }
     }
 }

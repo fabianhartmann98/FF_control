@@ -40,7 +40,9 @@ namespace FF_control.Measure
         private int LabelMarginLeftX = -10;        //Margin to the Label Marker XAxis
         private int LabelMarginTopY = -10;         //whats the Margin to the Label Marker YAxis
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
-        private double PlottingMargin = 0.2;       //used to  set a small marging (top, bottom, right and left)     
+        private double PlottingMargin = 0.1;       //used to  set a small marging (top, bottom, right and left)    
+
+        private double DefaultPlotHeightWidth = 100; 
         #endregion
 
         #endregion
@@ -95,8 +97,8 @@ namespace FF_control.Measure
                 }
                 else
                 {
-                    plotheight = 100;
-                    plotwidth = 100;
+                    plotheight = DefaultPlotHeightWidth;
+                    plotwidth = DefaultPlotHeightWidth;
                 }
                 OffsetScaleCalculation();
             }
@@ -159,8 +161,8 @@ namespace FF_control.Measure
         public Diagram()
         {
             Grpahs = new List<Graph>();
-            plotheight = 100;
-            plotwidth = 100;
+            plotheight = DefaultPlotHeightWidth;
+            plotwidth = DefaultPlotHeightWidth;
             AxisColor = Brushes.Green;
             AxisLabelColor = Brushes.Black;
             DiffPerScrolePercent = 2;
@@ -186,8 +188,8 @@ namespace FF_control.Measure
             }
             else
             {
-                plotheight = 100;
-                plotwidth = 100;
+                plotheight = DefaultPlotHeightWidth;
+                plotwidth = DefaultPlotHeightWidth;
             }
         }
         #endregion
@@ -327,12 +329,12 @@ namespace FF_control.Measure
                 if (xmin <= 0 && xmax > 0)     //if x = 0 is displayed 
                 {
                     // q    =   count - how many labels do i have to place in negative(xmin/(dif per Label))
-                    double q = (i + Math.Ceiling(xmin / (xmax - xmin) * (xAxisLabelCount - 1)));        //uses Ceiling to round up (-1,2->-1) 
-                    x = q * (xmax - xmin) / (xAxisLabelCount - 1);         //multiplies it with the dif per Label
+                    double q = (i + Math.Ceiling(xmin / (xmax - xmin) * (xAxisLabelCount)));        //uses Ceiling to round up (-1,2->-1) 
+                    x = q * (xmax - xmin) / (xAxisLabelCount);         //multiplies it with the dif per Label
                 }
                 else
                 {
-                    x = i * (xmax - xmin) / (xAxisLabelCount - 1) + xmin; //not displayed, so we start with xmin -> add up dif per Labe each time
+                    x = i * (xmax - xmin) / (xAxisLabelCount) + xmin; //not displayed, so we start with xmin -> add up dif per Labe each time
                 }
 
                 Line l = new Line();        //setting up Label Marker Line
@@ -393,12 +395,12 @@ namespace FF_control.Measure
                 if (ymin <= 0 && ymax > 0)  //if y = 0 is displayed
                 {
                     // q    =   count - how many labels do i have to set in negative (xmin/(dif per label)) 
-                    double q = (i + Math.Ceiling(ymin / (ymax - ymin) * (yAxisLabelCount - 1)));
-                    y = q * (ymax - ymin) / (yAxisLabelCount - 1);
+                    double q = (i + Math.Ceiling(ymin / (ymax - ymin) * (yAxisLabelCount)));
+                    y = q * (ymax - ymin) / (yAxisLabelCount);
                 }
                 else
                 {
-                    y = i * (ymax - ymin) / (yAxisLabelCount - 1) + ymin;    //start at ymin and add dif per label each time
+                    y = i * (ymax - ymin) / (yAxisLabelCount) + ymin;    //start at ymin and add dif per label each time
                 }
                 Line l = new Line();            //setting up Label Marker Line
                 l.Stroke = AxisLabelColor;
