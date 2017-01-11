@@ -32,8 +32,8 @@ namespace FF_control.Measure
 
         #region constants                           
         //constants that are used to do Stuff but are here so it is easy to change
-        private double arrowpercentage = 0.0125; //what percentage is the arrow wide  
-        private double arrowlengthpercentage = 0.025; //how many times longer than wide 
+        private double arrowwidth =2.5; //what percentage is the arrow wide  
+        private double arrowlength = 10; //how many times longer than wide 
         private double LableMarkerLenght = 10; //how long ist the Marker for a lable at a Axis 
         private int AxisStrokeThickness = 1;    //default StrokeThickness for the Axis
         private int LabelMarginTopX = 5;         //whats the Margin to the Label Marker X Axis
@@ -83,11 +83,22 @@ namespace FF_control.Measure
             get { return can; }
             set
             {
-                scaleY = value.Height / plotheight * scaleY;             //addapting scale 
-                scaleX = value.Width / plotwidth * scaleX;
+                var plotheight_old = plotheight;
+                var plotwidth_old = plotwidth;
                 can = value;
-                plotheight = can.Height;                                //setting height and Width
-                plotwidth = can.Width;
+                if (can != null)
+                {
+                    if(can.ActualHeight!=0)
+                        plotheight = can.ActualHeight;                                //setting height and Width
+                    if(can.ActualWidth!=0)
+                        plotwidth = can.ActualWidth;
+                }
+                else
+                {
+                    plotheight = 100;
+                    plotwidth = 100;
+                }
+                OffsetScaleCalculation();
             }
         }
 
@@ -166,8 +177,18 @@ namespace FF_control.Measure
         public Diagram(Canvas ca) : this()                 //calls Plot() first
         {
             can = ca;
-            plotheight = can.Height;
-            plotwidth = can.Width;
+            if (can != null)
+            {
+                if (can.ActualHeight != 0)
+                    plotheight = can.ActualHeight;                                //setting height and Width
+                if (can.ActualWidth != 0)
+                    plotwidth = can.ActualWidth;
+            }
+            else
+            {
+                plotheight = 100;
+                plotwidth = 100;
+            }
         }
         #endregion
 
@@ -186,7 +207,7 @@ namespace FF_control.Measure
             {
                 foreach (var item in graphs)
                 {
-                    item.draw(can, offsetX, offsetY, scaleX, scaleY);
+                    item.draw(can, offsetX, offsetY, scaleX, scaleY,plotheight);
                 }
             }
             return can;
@@ -294,9 +315,9 @@ namespace FF_control.Measure
             pX.Stroke = AxisColor;
             pX.StrokeThickness = AxisStrokeThickness;       //not really needed
             pX.Points.Add(new Point(plotwidth, xAxis.Y1));  //Spike point (at the end and on the level of xAxis) 
-            pX.Points.Add(new Point(plotwidth * (1 - arrowlengthpercentage), xAxis.Y1 - plotheight * arrowpercentage));
+            pX.Points.Add(new Point(plotwidth - arrowlength, xAxis.Y1 - arrowwidth));
             //x = Width*(1-Arrowlengthpercentage); y = Y level of x axis - height*arrowwithpercentage
-            pX.Points.Add(new Point(plotwidth * (1 - arrowlengthpercentage), xAxis.Y1 + plotheight * arrowpercentage));
+            pX.Points.Add(new Point(plotwidth -arrowlength, xAxis.Y1 + arrowwidth));
             can.Children.Add(pX);
 
             //#########Labels##############
@@ -359,9 +380,9 @@ namespace FF_control.Measure
             pY.Stroke = AxisColor;
             pY.StrokeThickness = AxisStrokeThickness;
             pY.Points.Add(new Point(yAxis.X1, 0));   //is at the top and on the level of the yAxis 
-            pY.Points.Add(new Point(plotwidth * arrowpercentage + yAxis.X1, plotheight * arrowlengthpercentage));
+            pY.Points.Add(new Point(arrowwidth + yAxis.X1, arrowlength));
             //x = yAxis.X +- Arrowwidth; y = Arrowlength 
-            pY.Points.Add(new Point(-plotwidth * arrowpercentage + yAxis.X1, plotheight * arrowlengthpercentage));
+            pY.Points.Add(new Point(-arrowwidth + yAxis.X1, arrowlength));
             can.Children.Add(pY);
 
             //#########Labels##############

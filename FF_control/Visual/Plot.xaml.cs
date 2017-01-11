@@ -377,5 +377,11 @@ namespace FF_control.Visual
         {
             prevmousePosition = e.GetPosition(can);
         }
+
+        private void can_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            parent.diagram.Can = can;
+            DrawDiagram();
+        }
     }
 }

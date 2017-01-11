@@ -8,17 +8,15 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <DockPanel LastChildFill="False">
+    <DockPanel LastChildFill="True">
         <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
 
-        <Grid DockPanel.Dock="Left">
-            <Canvas Name="can" MouseWheel="can_MouseWheel"
-                    MouseRightButtonDown="can_MouseRightButtonDown"
-                    MouseMove="can_MouseMove"
-                    Background="AliceBlue"
-                    Height="300"
-                    Width="300"
-                    ClipToBounds="True"/>
-        </Grid>
+        <Canvas DockPanel.Dock="Left"
+            Name="can" MouseWheel="can_MouseWheel"
+            MouseRightButtonDown="can_MouseRightButtonDown"
+            MouseMove="can_MouseMove"
+            Background="AliceBlue"
+            ClipToBounds="True" 
+            SizeChanged="can_SizeChanged"/>
     </DockPanel>
 </UserControl>

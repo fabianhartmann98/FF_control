@@ -170,7 +170,7 @@ namespace FF_control.Measure
         /// <param name="offsetY"></param>
         /// <param name="ScaleX"></param>
         /// <param name="ScaleY"></param>
-        public void draw(Canvas can, double offsetX, double offsetY, double ScaleX, double ScaleY)
+        public void draw(Canvas can, double offsetX, double offsetY, double ScaleX, double ScaleY, double plotheight)
         {
 
             Polyline pl = new Polyline();       //defining new Polyline (Thickness = 3, Color = Black) 
@@ -178,7 +178,7 @@ namespace FF_control.Measure
             pl.Stroke = PlotColor;
             foreach (MeasurementPoint item in mps)       //adding the Point in the list
             {
-                pl.Points.Add(scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,can.Height));   //editing the points to fit to Canvas an plot 
+                pl.Points.Add(scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,plotheight));   //editing the points to fit to Canvas an plot 
             }
             can.Children.Add(pl);
         }
