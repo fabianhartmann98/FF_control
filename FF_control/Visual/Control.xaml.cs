@@ -21,12 +21,10 @@ namespace FF_control.Visual
     public partial class Control : UserControl
     {
         public MainWindow parent { get; set; }
-        public TabControl SideTabControl { get; set; }
 
-        public Control(MainWindow p, TabControl sidetab)
+        public Control(MainWindow p)
         {
             parent = p;
-            SideTabControl = sidetab; 
             InitializeComponent();
             parent.bt_connection.MaxGapRecieved += bt_connection_MaxGapRecieved;
             parent.bt_connection.PositionReceived += bt_connection_PositionReceived;

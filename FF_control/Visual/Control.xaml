@@ -8,58 +8,61 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <ScrollViewer>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="75"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="150"/>
-            </Grid.RowDefinitions>
+    <DockPanel>
+        <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
+        <ScrollViewer>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="75"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
-            <Label Content="Abstand" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center">
-                <Slider Minimum="0" Maximum="{Binding ElementName=l_maxgap, Path=Content}" Value="0" Name="slider_gap"/>
-                <TextBox Text="{Binding ElementName=slider_gap, Path=Value, Mode=TwoWay}" HorizontalAlignment="Center"/>
-            </StackPanel>
-            <Button Content="Bestätigen" Grid.Column="2" Grid.Row="0" Name="b_gap_approve" Click="b_gap_approve_Click"/>
-
-            <Border Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
-            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Label Content="max Gap:"/>
-                <Label Content="50" Name="l_maxgap" Margin="0,5,0,5"/>
-                <Label Content="mm" Margin="0,5,5,5"/>
-                <Button Content="Refresh" Name="b_maxgap" Click="b_maxgap_Click"/>
-            </StackPanel>
-
-            <Border Grid.Row="2" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
-            <Button Grid.Column="1" Grid.Row="2" Content="Referenzsetzung" Name="b_refernez" Click="b_refernez_Click"/>
-
-
-            <Border Grid.ColumnSpan="3" Grid.Row="3"  Style="{StaticResource Style_ModulBorder}"/>
-            <StackPanel  Grid.Row="3" Grid.ColumnSpan="3" Name="stackpanel_laststatus">
-                <Label Content="Letzter Zustand" Margin="5,5,5,0"/>
-                <StackPanel VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center" Margin="0">
-                    <StackPanel Orientation="Horizontal" Margin="0">
-                        <Label Content="Status:" Margin="5,1,0,1"/>
-                        <Label Content="Stehend" Margin="5,1,0,1" Name="l_laststatus"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Position:" Margin="5,1,0,1"/>
-                        <Label Content="0" Margin="0,1,0,1" Name="l_lasposition"/>
-                        <Label Content="mm" Margin="0,1,0,1"/>
-                    </StackPanel>
+                <Border Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
+                <Label Content="Abstand" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center">
+                    <Slider Minimum="0" Maximum="{Binding ElementName=l_maxgap, Path=Content}" Value="0" Name="slider_gap"/>
+                    <TextBox Text="{Binding ElementName=slider_gap, Path=Value, Mode=TwoWay}" HorizontalAlignment="Center"/>
                 </StackPanel>
-                <Button Content="Status Aktualisieren" Name="b_status" Click="b_status_Click"/>
-            </StackPanel>
+                <Button Content="Bestätigen" Grid.Column="2" Grid.Row="0" Name="b_gap_approve" Click="b_gap_approve_Click"/>
+
+                <Border Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Label Content="max Gap:"/>
+                    <Label Content="50" Name="l_maxgap" Margin="0,5,0,5"/>
+                    <Label Content="mm" Margin="0,5,5,5"/>
+                    <Button Content="Refresh" Name="b_maxgap" Click="b_maxgap_Click"/>
+                </StackPanel>
+
+                <Border Grid.Row="2" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
+                <Button Grid.Column="1" Grid.Row="2" Content="Referenzsetzung" Name="b_refernez" Click="b_refernez_Click"/>
 
 
-        </Grid>
-    </ScrollViewer>
+                <Border Grid.ColumnSpan="3" Grid.Row="3"  Style="{StaticResource Style_ModulBorder}"/>
+                <StackPanel  Grid.Row="3" Grid.ColumnSpan="3" Name="stackpanel_laststatus">
+                    <Label Content="Letzter Zustand" Margin="5,5,5,0"/>
+                    <StackPanel VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center" Margin="0">
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <Label Content="Status:" Margin="5,1,0,1"/>
+                            <Label Content="Stehend" Margin="5,1,0,1" Name="l_laststatus"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Position:" Margin="5,1,0,1"/>
+                            <Label Content="0" Margin="0,1,0,1" Name="l_lasposition"/>
+                            <Label Content="mm" Margin="0,1,0,1"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Button Content="Status Aktualisieren" Name="b_status" Click="b_status_Click"/>
+                </StackPanel>
+
+
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

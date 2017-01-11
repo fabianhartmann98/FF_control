@@ -25,8 +25,6 @@ namespace FF_control.Visual
     public partial class Table : UserControl
     {
         public MainWindow parent { get; set; }              //saves the parent MainWindow (used to access bt_connection and graph) 
-        public TabControl SideTabControl { get; set; }      //saves the SideTabControl (these are accessed by all Tabs
-                                                            //needs to be changed when this tab get visible
 
         private int selected_tabindex;                      //what tabindex was selected, before redoing SideTabItems
 
@@ -36,11 +34,10 @@ namespace FF_control.Visual
         private List<Label> l_saveloc;                      //saves all Labels where teh savelocation is displayed, there is a click event on them right now
         private List<Button> b_plot_remove;                 //saves all Buttons where the Plot can be removed, tag is the index
 
-        public Table(MainWindow p, TabControl sidetab)
+        public Table(MainWindow p)
         {
             InitializeComponent();
             parent = p;
-            SideTabControl = sidetab;
             selected_tabindex = 0;
             this.IsVisibleChanged += Table_IsVisibleChanged; //needed to set up the SideTabControl
 

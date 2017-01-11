@@ -26,13 +26,11 @@ namespace FF_control.Visual
     public partial class Connection : UserControl
     {
         public MainWindow parent { get; set; }
-        public TabControl SideTabControl { get; set; }
 
-        public Connection(MainWindow p, TabControl sidetabcontrol)
+        public Connection(MainWindow p)
         {
             InitializeComponent();
             parent = p;
-            SideTabControl = sidetabcontrol;
 
             parent.bt_connection.DeviceConnected += bt_DeviceConnected;
             parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;

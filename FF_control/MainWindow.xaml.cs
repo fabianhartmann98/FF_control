@@ -49,13 +49,13 @@ namespace FF_control
             diagram.Grpahs[1].PlotColor = Brushes.Blue;
             diagram.Grpahs[0].PlotColor = Brushes.Green;
 
-            v_connection = new Connection(this, SideTabControl);
+            v_connection = new Connection(this);
             Connection_grid.Children.Add(v_connection);
-            v_control = new FF_control.Visual.Control(this, SideTabControl);
+            v_control = new FF_control.Visual.Control(this);
             Control_grid.Children.Add(v_control);
-            v_plot = new Plot(this, SideTabControl);
+            v_plot = new Plot(this);
             Plot_grid.Children.Add(v_plot);
-            v_table = new FF_control.Visual.Table(this, SideTabControl);
+            v_table = new FF_control.Visual.Table(this);
             Table_grid.Children.Add(v_table);
         }
 
@@ -67,9 +67,10 @@ namespace FF_control
 
         private void TabControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Connection_grid.Width = dockpanel.ActualWidth - 250 - 150;
-            Control_grid.Width = dockpanel.ActualWidth - 250 - 150;
-
+            Connection_grid.Width = dockpanel.ActualWidth - 250;
+            Control_grid.Width = dockpanel.ActualWidth - 250;
+            Plot_grid.Width = dockpanel.ActualWidth - 250;
+            Table_grid.Width = dockpanel.ActualWidth - 250;
         }
     }
 }

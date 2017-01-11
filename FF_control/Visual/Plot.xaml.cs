@@ -24,7 +24,6 @@ namespace FF_control.Visual
     public partial class Plot : UserControl
     {
         public MainWindow parent { get; set; }
-        public TabControl SideTabControl { get; set; }
         private TextBox tb_xmin;
         private TextBox tb_xmax;
         private TextBox tb_ymin;
@@ -44,11 +43,10 @@ namespace FF_control.Visual
 
         Point prevmousePosition;
 
-        public Plot(MainWindow p , TabControl sidetap)
+        public Plot(MainWindow p)
         {
             InitializeComponent();
             parent = p;
-            SideTabControl = sidetap;
             selected_tabindex = 0;
 
             InitializeComponent();

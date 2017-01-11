@@ -21,16 +21,7 @@
             <ComboBoxItem Content="asdf"/>
             <ComboBoxItem Content="qwer"/>
         </ComboBox>
-        <DockPanel Grid.Row="3" LastChildFill="True" x:Name="dockpanel">
-            <TabControl DockPanel.Dock="Right" Style="{StaticResource Style_SideTabControl}" Height="{Binding ActualHeight, ElementName=dockpanel}" Name="SideTabControl">
-                <TabItem Header="asdf" Style="{StaticResource Style_SideTabItem}">
-                    <Label Content="qwer" Margin="0,5"/>
-                </TabItem>
-                <TabItem Header="sdfg" Style="{StaticResource Style_SideTabItem}">
-                    <Label Content="wert"/>
-                </TabItem>
-            </TabControl>
-            
+        <DockPanel Grid.Row="3" LastChildFill="True" x:Name="dockpanel">                       
             <TabControl DockPanel.Dock="Left" VerticalContentAlignment="Stretch" SizeChanged="TabControl_SizeChanged">
                 <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
                     <Grid Name="Connection_grid">
