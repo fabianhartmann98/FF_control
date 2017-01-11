@@ -30,7 +30,7 @@ namespace FF_control.Visual
             parent.bt_connection.PositionReceived += bt_connection_PositionReceived;
             parent.bt_connection.StatusReceived += bt_connection_StatusReceived;
 
-            this.IsVisibleChanged += Control_IsVisibleChanged;
+            this.IsVisibleChanged += Control_IsVisibleChanged;      //needed to set up the SideTabcontrol
         }
 
         void Control_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -41,9 +41,9 @@ namespace FF_control.Visual
 
         private void setUpSideTabControl()
         {
-            SideTabControl.Items.Clear();
+            SideTabControl.Items.Clear();       //redo all of the TabItems
 
-            TabItem ti = new TabItem();
+            TabItem ti = new TabItem();         //first Tabitem
             ti.Header = "1st Control Header";
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
@@ -56,7 +56,7 @@ namespace FF_control.Visual
             SideTabControl.Items.Add(ti);
 
 
-            ti = new TabItem();
+            ti = new TabItem();                 //secont TabItem
             ti.Header = "2nd Control Header";
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
@@ -70,8 +70,9 @@ namespace FF_control.Visual
             SideTabControl.Items.Add(ti);
         }
 
-        void bt_connection_StatusReceived(object sender, EventArgs e)
+        void bt_connection_StatusReceived(object sender, EventArgs e)           //a new Status was received -> update UI
         {
+            //todo:
             //switch (parent.bt_connection.Lastupdated_status)
             //{
             //    case 0x01:
@@ -83,22 +84,22 @@ namespace FF_control.Visual
             //    default:
             //        break;
             //}
-            LabelUpdate(l_laststatus, ((int)parent.bt_connection.Lastupdated_status).ToString());
+            LabelUpdate(l_laststatus, ((int)parent.bt_connection.Lastupdated_status).ToString());       //call invoker to set toe Status
         }
 
         void bt_connection_PositionReceived(object sender, EventArgs e)
         {
-            LabelUpdate(l_lasposition, parent.bt_connection.Lastupdated_position.ToString());
+            LabelUpdate(l_lasposition, parent.bt_connection.Lastupdated_position.ToString());       //update Lastposition (use Invoker)
         }
 
-        void bt_connection_MaxGapRecieved(object sender, EventArgs e)
+        void bt_connection_MaxGapRecieved(object sender, EventArgs e)       //the Answer to a MaxGapRequest was received -> update UI
         {
-            LabelUpdate(l_maxgap, parent.bt_connection.Maxgap.ToString());
+            LabelUpdate(l_maxgap, parent.bt_connection.Maxgap.ToString());         //update Maxgap (use Invoker)
         }
 
         private void b_gap_approve_Click(object sender, RoutedEventArgs e)
         {
-            parent.bt_connection.SendMotorAdjusting(Math.Round(slider_gap.Value, 2));
+            parent.bt_connection.SendMotorAdjusting(Math.Round(slider_gap.Value, 2)); //round to 2, because thats the most accurate which is going to be sent
         }
 
         private void b_refernez_Click(object sender, RoutedEventArgs e)
@@ -108,23 +109,23 @@ namespace FF_control.Visual
 
         private void b_status_Click(object sender, RoutedEventArgs e)
         {
-            parent.bt_connection.SendStatusRequest();
-            parent.bt_connection.SendPositionRequest();
+            parent.bt_connection.SendStatusRequest();           //ask for a new Status
+            parent.bt_connection.SendPositionRequest();         //ask for the Position (aim and actual)
         }
 
         private void b_maxgap_Click(object sender, RoutedEventArgs e)
         {
-            parent.bt_connection.SendMaxGapRequest();
+            parent.bt_connection.SendMaxGapRequest();           //ask for the maxgap which is able to set
         }
 
-        private void LabelUpdate(Label l, string text)
+        private void LabelUpdate(Label l, string text)      //uses Invoke to get Access to the Label (sets the text, removes the old one)
         {
-            if (!l.Dispatcher.CheckAccess())
+            if (!l.Dispatcher.CheckAccess())        //call invoke if needed
             {
                 l.Dispatcher.Invoke((Action<Label, string>)LabelUpdate, l, text);
             }
             else
-                l.Content = text;
-        }
+                l.Content = text;                   //else, set text
+        }   
     }
 }

@@ -36,9 +36,9 @@ namespace FF_control.Visual
             parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
             parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;
 
-            this.IsVisibleChanged += Connection_IsVisibleChanged;
+            this.IsVisibleChanged += Connection_IsVisibleChanged;           //to set up the SideTabBar again
 
-            parent.bt_connection.GetAvailableDevicesAsync();
+            parent.bt_connection.GetAvailableDevicesAsync();            //get de AvailableDevices Async 
         }
 
         void Connection_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -49,9 +49,9 @@ namespace FF_control.Visual
 
         private void setUpSideTabControl()
         {
-            SideTabControl.Items.Clear();
+            SideTabControl.Items.Clear();       //remove every exsisting Item (redo all of them)
 
-            TabItem ti = new TabItem();
+            TabItem ti = new TabItem();         //creat first Tab item
             ti.Header = "1st Header";
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
@@ -60,11 +60,11 @@ namespace FF_control.Visual
             l.Content = "1st TabItem Content from Connection";
             wp.Children.Add(l);
 
-            ti.Content = wp;
+            ti.Content = wp;                    //set the Wrappanel as the conntent of the TabItem 
             SideTabControl.Items.Add(ti);
 
 
-            ti = new TabItem();
+            ti = new TabItem();                 //creat second Tab item
             ti.Header = "2nd Header";
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
@@ -73,14 +73,14 @@ namespace FF_control.Visual
             l.Content = "2nd TabItem Content from Connection";
             wp.Children.Add(l);
 
-            ti.Content = wp;
+            ti.Content = wp;                //set the Wrappanel as the conntent of the TabItem 
 
-            SideTabControl.Items.Add(ti);
+            SideTabControl.Items.Add(ti);       //add the secont TabItem to the TabControl
         }
 
-        void bt_DiscoverDevicesEnded(object sender, EventArgs e)
+        void bt_DiscoverDevicesEnded(object sender, EventArgs e)        //now able to get the devices 
         {
-            if (!stackpanel.Dispatcher.CheckAccess())
+            if (!stackpanel.Dispatcher.CheckAccess())                   //if invoke needed
             {
                 stackpanel.Dispatcher.Invoke(
                     (Action<object, EventArgs>)bt_DiscoverDevicesEnded, sender, e);
@@ -89,55 +89,47 @@ namespace FF_control.Visual
             {
                 stackpanel.Children.Clear();
 
-                foreach (var item in parent.bt_connection.infos)
+                foreach (var item in parent.bt_connection.infos)        //for each available Device, set up a new connection_DeviceModul
                 {
                     Connection_DeviceModule cdm = new Connection_DeviceModule(item);
-                    cdm.Dis_ConnectDevice += cdm_Dis_ConnectDevice;
-                    stackpanel.Children.Add(cdm);
+                    cdm.Dis_ConnectDevice += cdm_Dis_ConnectDevice;         //get whenn button to connect or disconnect is pressed
+                    stackpanel.Children.Add(cdm);                           //add them to the stackpanel
                 }
             }
         }
 
-        void cdm_Dis_ConnectDevice(object sender, RoutedEventArgs e)
+        void cdm_Dis_ConnectDevice(object sender, RoutedEventArgs e)        //connecting or disconnecting from device
         {
             Connection_DeviceModule cdm = (Connection_DeviceModule)((Button)sender).Tag;
-            if (cdm.Device.Connected)
+            if (cdm.Device == parent.bt_connection.ConnectedDevice && cdm.Device.Connected)        //if it is the same device which is connected to the bt_connection  => disconnect
                 parent.bt_connection.DisconnectFromDevice();
-            else
-                parent.bt_connection.ConnectToDevice(cdm.Device.DeviceName);           
+            if(!cdm.Device.Connected)                                                             // if the device is not connected
+                parent.bt_connection.ConnectToDevice(cdm.Device.DeviceName);                      //connect to the Device if possible  
         }
 
         void bt_DeviceConnected(object sender, EventArgs e)
         {
-            if (!stackpanel.Dispatcher.CheckAccess())
+            if (!stackpanel.Dispatcher.CheckAccess())       //if invoke needed
             {
                 stackpanel.Dispatcher.Invoke((Action<object, EventArgs>)bt_DeviceConnected, null, new EventArgs());
             }
             else
             {
-                stackpanel.Children.Clear();
+                stackpanel.Children.Clear();        //delete all Moduls, add the one which it is connected now
                 stackpanel.Children.Add(new Connection_DeviceModule(parent.bt_connection.ConnectedDevice));
             }
  
         }
 
-        void bt_DeviceDisconnected(object sender, EventArgs e)
+        void bt_DeviceDisconnected(object sender, EventArgs e)          //de connection is lost
         {
-            parent.bt_connection.GetAvailableDevicesAsync();
+            parent.bt_connection.GetAvailableDevicesAsync();        //search for available devices
         }
 
         private void button_refresh_Click(object sender, RoutedEventArgs e)
         {
-            parent.bt_connection.GetAvailableDevicesAsync();
+            parent.bt_connection.GetAvailableDevicesAsync();  //search for available devices
         }
 
-        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            StackPanel sp = (StackPanel)sender;
-            if (sp.ActualWidth < 600)
-                sp.Orientation = Orientation.Vertical;
-            else
-                sp.Orientation = Orientation.Horizontal;
-        }
     }
 }

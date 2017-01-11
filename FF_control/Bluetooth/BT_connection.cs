@@ -252,8 +252,8 @@ namespace FF_control.Bluetooth
                             Logger("received MeasuredDataCommand");
                             break;                                               
                         case (BT_Protocoll.MotorAdjustingAnswer):
-                            int m_act_pos = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));
-                            int m_aim_pos = Convert.ToInt32((AccessRXBuf(rx_head + 6) << 8) + AccessRXBuf(rx_head + 7));
+                            int m_act_pos = Convert.ToInt32(Lastupdated_position * BT_Protocoll.ConvertFromMM);                 //using the last position (new position doesn't get sent)
+                            int m_aim_pos = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));        //get the real aim_position
                             OnPositionReceived(m_act_pos,m_aim_pos);
                             Logger("received MotorAdjustingAnswer");
                             break;                        
@@ -630,8 +630,8 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnPositionReceived(int current_position,  int aim_position)
         {
-            Lastupdated_position = current_position / BT_Protocoll.ConvertFromMM;
-            this.aim_position = aim_position / BT_Protocoll.ConvertFromMM;             //not using Property, because it will send new MotorAdjusting
+            Lastupdated_position = Convert.ToDouble(current_position) / BT_Protocoll.ConvertFromMM;
+            this.aim_position = Convert.ToDouble(aim_position) / BT_Protocoll.ConvertFromMM;             //not using Property, because it will send new MotorAdjusting
             if (PositionReceived != null)
                 PositionReceived(this, new ReceivedData_EventArgs(current_position, aim_position));
         }
@@ -640,7 +640,7 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnMaxGapRecieved(int maxgap)
         {
-            Maxgap = maxgap / BT_Protocoll.ConvertFromMM;
+            Maxgap = Convert.ToDouble(maxgap) / BT_Protocoll.ConvertFromMM;
             if (MaxGapRecieved != null)
                 MaxGapRecieved(this, new ReceivedData_EventArgs(maxgap));
         }

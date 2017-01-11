@@ -24,20 +24,24 @@ namespace FF_control.Visual
     public partial class Plot : UserControl
     {
         public MainWindow parent { get; set; }
-        private TextBox tb_xmin;
-        private TextBox tb_xmax;
-        private TextBox tb_ymin;
+        
+        //this is displayed in the Diagram Tab
+        private TextBox tb_xmin;                    //Tb for xmin
+        private TextBox tb_xmax;                    //Tb for xmax 
+        private TextBox tb_ymin;                    //..
         private TextBox tb_ymax;
-        private Border border_background;
-        private Border border_axis;
+        private Border border_background;           //host an OnClick
+        private Border border_axis;                 //host an OnClick
 
+        //this is displayed in the Plot Tabs
         private List<TextBox> tb_name;
         private List<Label> l_time;
         private List<Label> l_saveloc;
-        private List<Border> border_plot;
-        private List<Button> b_plot_remove;
+        private List<Border> border_plot;           //host an OnClick
+        private List<Button> b_plot_remove;         //host an OnClick
 
-        private Button b_add;
+        //this is displayed in the ADD Tab
+        private Button b_add;                       //host an OnClick 
 
         private int selected_tabindex;
 
@@ -47,10 +51,10 @@ namespace FF_control.Visual
         {
             InitializeComponent();
             parent = p;
-            selected_tabindex = 0;
+            selected_tabindex = 0;          //set the default selected_tabindex
 
             InitializeComponent();
-            this.IsVisibleChanged += Plot_IsVisibleChanged;                     
+            this.IsVisibleChanged += Plot_IsVisibleChanged;         //needet to set up the SideTabControl               
 
             parent.diagram.Can = can;
             parent.diagram.setScalingAuto();
@@ -60,8 +64,10 @@ namespace FF_control.Visual
         private void setUpSideTabControl()
         {
             selected_tabindex = SideTabControl.SelectedIndex;
-            SideTabControl.Items.Clear();
-            tb_name = new List<TextBox>();
+
+            SideTabControl.Items.Clear();       //remove old TabItems, redo new one
+
+            tb_name = new List<TextBox>();          //creat new Lists
             l_time = new List<Label>();
             l_saveloc = new List<Label>();
             border_plot = new List<Border>();
@@ -78,11 +84,11 @@ namespace FF_control.Visual
             Label l_xmin = new Label();
             l_xmin.Content = "Xmin:";
             tb_xmin = new TextBox();
-            tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");
+            tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");          //"F2" used to get only #,##
             tb_xmin.Tag = "xmin";
-            tb_xmin.LostFocus += tb_LostFocus;
+            tb_xmin.LostFocus += tb_LostFocus;              //updates the xmin if the focus is on a new Object
             wp.Children.Add(l_xmin);
-            wp.Children.Add(tb_xmin);
+            wp.Children.Add(tb_xmin);                       //add them to the WP and the Stack
             mainstack.Children.Add(wp);
 
             wp = new WrapPanel();
@@ -123,6 +129,7 @@ namespace FF_control.Visual
             wp = new WrapPanel();
             Label l_Background = new Label();
             l_Background.Content = "Background Color:";
+            //todo: creat style for ColorBorders 
             border_background = new Border();
             border_background.Width = 50;
             border_background.Height = 20;
@@ -248,7 +255,7 @@ namespace FF_control.Visual
 
         void b_add_Click(object sender, RoutedEventArgs e)
         {
-            Graph g = Graph.Open();
+            Graph g = Graph.Open();             //show the Open File dialog an other stuff
             if(g!=null)
                 parent.diagram.Grpahs.Add(g);
         }
@@ -256,28 +263,27 @@ namespace FF_control.Visual
         private void b_plot_remove_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
-            parent.diagram.Grpahs.RemoveAt((int)b.Tag);
+            parent.diagram.Grpahs.RemoveAt((int)b.Tag); //the index is saved in the tag
             setUpSideTabControl();
             DrawDiagram(); 
         }
 
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Label l = (Label)sender;
-            
+            Label l = (Label)sender;            
 
-            parent.diagram.Grpahs[(int)l.Tag].Save();
+            parent.diagram.Grpahs[(int)l.Tag].Save();       //the index is saved in the tag
             l.Content = parent.diagram.Grpahs[(int)l.Tag].SaveLocation;
         }
 
         public void DrawDiagram()
         {
-            can.Children.Clear();
+            can.Children.Clear();           //clear the canvas to redraw axis and plots
             parent.diagram.DrawAxis();
             can = parent.diagram.draw();
             if (tb_xmin != null)
             {
-                tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");
+                tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
                 tb_xmax.Text = parent.diagram.AxisXmax.ToString("F2");
                 tb_ymin.Text = parent.diagram.AxisYmin.ToString("F2");
                 tb_ymax.Text = parent.diagram.AxisYmax.ToString("F2");
@@ -310,7 +316,7 @@ namespace FF_control.Visual
                 Brush b = new SolidColorBrush(Color.FromArgb(c.A, c.R, c.G, c.B));
                 ((Border)sender).Background=b;
                 String s = ((Border)sender).Tag.ToString();
-                switch (s.Split(':')[0])
+                switch (s.Split(':')[0])                        //first part specifies for which part it is used 
                 {
                     case "background":
                         can.Background = b;
@@ -321,7 +327,7 @@ namespace FF_control.Visual
                         DrawDiagram();
                         break;
                     case "plot":
-                        parent.diagram.Grpahs[Convert.ToInt32(s.Split(':')[1])].PlotColor = b;
+                        parent.diagram.Grpahs[Convert.ToInt32(s.Split(':')[1])].PlotColor = b;      //second part of the tag is the Index
                         DrawDiagram();
                         break;
                     default:
@@ -332,7 +338,7 @@ namespace FF_control.Visual
 
         void tb_LostFocus(object sender, RoutedEventArgs e)
         {
-            switch (((TextBox)sender).Tag.ToString())
+            switch (((TextBox)sender).Tag.ToString())       //tag specifies which item was changed
             {
                 case "xmin":
                     parent.diagram.AxisXmin = Convert.ToDouble(((TextBox)sender).Text);
@@ -354,8 +360,8 @@ namespace FF_control.Visual
 
         private void can_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            parent.diagram.Scrole(e.GetPosition(can), e.Delta);
-            DrawDiagram();
+            parent.diagram.Scrole(e.GetPosition(can), e.Delta);         //scroll
+            DrawDiagram();                                              //redraw the diagram
 
         }
 
@@ -363,25 +369,25 @@ namespace FF_control.Visual
         {
             if (e.RightButton == MouseButtonState.Pressed)
             { 
-                double dx = e.GetPosition(can).X-prevmousePosition.X;
+                double dx = e.GetPosition(can).X-prevmousePosition.X;   //get the differenz to the previous position
                 double dy = e.GetPosition(can).Y-prevmousePosition.Y;
 
                 prevmousePosition=e.GetPosition(can);
-                parent.diagram.Shift(-dx, dy);
-                DrawDiagram();
+                parent.diagram.Shift(-dx, dy);                          //shift the diagram
+                DrawDiagram();                                          //redraw the diagram
 
             }
         }
 
         private void can_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            prevmousePosition = e.GetPosition(can);
+            prevmousePosition = e.GetPosition(can);                 //get the first prevmouse as a reference
         }
 
         private void can_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            parent.diagram.Can = can;
-            DrawDiagram();
+            parent.diagram.Can = can;                               //setting the can new, will change the scales and offset automatically
+            DrawDiagram();                                          //redraw the diagram
         }
     }
 }

@@ -37,9 +37,9 @@ namespace FF_control.Visual
             if (device.Connected)
             {
                 Connected = "Connected";
-                button.Style = (Style)FindResource("Style_DisconnectButton");
+                button.Style = (Style)FindResource("Style_DisconnectButton");   //overwrite the default Style
             }
-            wp.DataContext = this;
+            wp.DataContext = this;      //set the data context (Layout uses Props (DeviceName, DeviceAddress, ClassOfDevice, Connected
         }
 
         public string DeviceName { get;private set; }
@@ -48,7 +48,7 @@ namespace FF_control.Visual
         public string Connected { get; private set; }
         public BluetoothDeviceInfo Device { get; private set; }
 
-        public event RoutedEventHandler Dis_ConnectDevice
+        public event RoutedEventHandler Dis_ConnectDevice       //redirect button event
         {
             add { button.Click += value; }
             remove { button.Click -= value; }
