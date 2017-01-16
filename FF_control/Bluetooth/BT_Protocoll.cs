@@ -32,6 +32,10 @@ namespace FF_control.Bluetooth
         public static int PositionRequestAnswerLength = 7;
         public static int MaxGapRequestLength = 3;
         public static int MaxGapRequestAnswerLength = 5;
+        public static int ReferenzPlacementLength = 3;
+        public static int RefernezPlacementAnswerLength = 3;
+        public static int StopLenght = 3;
+        public static int StopAnswerLength = 3; 
 
         public const byte InitCommand = 0x01;
         public const byte InitAnswer = 0x81;
@@ -47,6 +51,11 @@ namespace FF_control.Bluetooth
         public const byte PositionRequestAnswer = 0x92;
         public const byte MaxGapRequestCommand = 0x13;
         public const byte MaxGapRequestAnswer = 0x93;
+        public const byte ReferenzPlacementCommand = 0x14;
+        public const byte ReferenzPlacementAnswer = 0x94;
+        public const byte StopCommand = 0x7F;
+        public const byte StopAnswer = 0xFF;
+
 
 
     }

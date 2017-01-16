@@ -26,9 +26,11 @@ namespace FF_control.Visual
         {
             parent = p;
             InitializeComponent();
-            parent.bt_connection.MaxGapRecieved += bt_connection_MaxGapRecieved;
+            parent.bt_connection.MaxGapReceived += bt_connection_MaxGapReceived;
             parent.bt_connection.PositionReceived += bt_connection_PositionReceived;
             parent.bt_connection.StatusReceived += bt_connection_StatusReceived;
+            parent.bt_connection.ReferenzPlacementReceived += Bt_connection_ReferenzPlacementReceived;
+            parent.bt_connection.StopReceived += Bt_connection_StopReceived;
 
             this.IsVisibleChanged += Control_IsVisibleChanged;      //needed to set up the SideTabcontrol
         }
@@ -70,6 +72,16 @@ namespace FF_control.Visual
             SideTabControl.Items.Add(ti);
         }
 
+        private void Bt_connection_StopReceived(object sender, EventArgs e)
+        {
+            //todo: implement StopReceived
+        }
+
+        private void Bt_connection_ReferenzPlacementReceived(object sender, EventArgs e)
+        {
+            //todo: implement ReferenzPlacementReceived
+        }
+
         void bt_connection_StatusReceived(object sender, EventArgs e)           //a new Status was received -> update UI
         {
             //todo:
@@ -92,7 +104,7 @@ namespace FF_control.Visual
             LabelUpdate(l_lasposition, parent.bt_connection.Lastupdated_position.ToString());       //update Lastposition (use Invoker)
         }
 
-        void bt_connection_MaxGapRecieved(object sender, EventArgs e)       //the Answer to a MaxGapRequest was received -> update UI
+        void bt_connection_MaxGapReceived(object sender, EventArgs e)       //the Answer to a MaxGapRequest was received -> update UI
         {
             LabelUpdate(l_maxgap, parent.bt_connection.Maxgap.ToString());         //update Maxgap (use Invoker)
         }
@@ -104,7 +116,7 @@ namespace FF_control.Visual
 
         private void b_refernez_Click(object sender, RoutedEventArgs e)
         {
-            //todo: implement Referenz 
+            parent.bt_connection.SendReferenzPlacement();
         }
 
         private void b_status_Click(object sender, RoutedEventArgs e)
@@ -126,6 +138,11 @@ namespace FF_control.Visual
             }
             else
                 l.Content = text;                   //else, set text
-        }   
+        }
+
+        private void button_stop_Click(object sender, RoutedEventArgs e)
+        {
+            parent.bt_connection.SendStop();
+        }
     }
 }

@@ -99,7 +99,6 @@ namespace FF_control.Bluetooth
             DeletLogger();
             crc_CreateTable(); 
             //todo: activate StayinAliveTimer
-            //startStayingAliveTimer();
 
             aim_position = -1;
             Lastupdated_position = -1;
@@ -247,8 +246,9 @@ namespace FF_control.Bluetooth
                             int number = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8 )+ AccessRXBuf(rx_head + 5));
                             int time = Convert.ToInt32((AccessRXBuf(rx_head + 6) << 8) + AccessRXBuf(rx_head + 7));
                             int data = Convert.ToInt32((AccessRXBuf(rx_head + 8) << 8) + AccessRXBuf(rx_head + 9));
+                            byte followup = AccessRXBuf(rx_head + 10);
                             OnMeasuredDataReceived(number, time,data);
-                            SendMeasuredDataAnswer(AccessRXBuf(rx_head + 10));
+                            SendMeasuredDataAnswer(followup);
                             Logger("received MeasuredDataCommand");
                             break;                                               
                         case (BT_Protocoll.MotorAdjustingAnswer):
@@ -269,8 +269,16 @@ namespace FF_control.Bluetooth
                             break;
                         case (BT_Protocoll.MaxGapRequestAnswer):
                             int i_maxGap = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));
-                            OnMaxGapRecieved(i_maxGap);
+                            OnMaxGapReceived(i_maxGap);
                             Logger("received MaxGapRequestAnswer");
+                            break;
+                        case (BT_Protocoll.ReferenzPlacementAnswer):
+                            OnReferenzPlacementReceived();
+                            Logger("received ReferenzPlacementAnswer");
+                            break;
+                        case (BT_Protocoll.StopAnswer):
+                            OnStopReceived();
+                            Logger("received StopAnswer");
                             break;
                         #region shouldn't receive any of this
                         case (BT_Protocoll.InitCommand):
@@ -294,6 +302,12 @@ namespace FF_control.Bluetooth
                         case (BT_Protocoll.MaxGapRequestCommand):
                             Logger("received MaxGapRequestCommand\t ERROR");
                             break;
+                        case (BT_Protocoll.ReferenzPlacementCommand):
+                            Logger("received ReferenzPlacementCommand");
+                            break;
+                        case (BT_Protocoll.StopCommand):
+                            Logger("recieved StopCommand\t ERROR");
+                            break;
                         #endregion
 
                         default:
@@ -301,15 +315,11 @@ namespace FF_control.Bluetooth
                     }
 
                     shiftingRXBuf(framelength + BT_Protocoll.FrameLengthOverhead); //remove packet out of buffer
-
                 }
-
 	        }
 	        catch 
-	        {
-		
-	        }                       
-            
+	        {		
+	        }                      
         }
         #endregion
 
@@ -320,10 +330,14 @@ namespace FF_control.Bluetooth
             {
                 if (bc.Connected)
                 {
-                    OnDeviceConnected(); //calling the Event DeviceConnected
                     Logger("connected to Device: " + ConnectedDevice.DeviceName + " with Address " + ConnectedDevice.DeviceAddress);
+                    if (s != null)
+                        s.Close();
                     s = bc.GetStream(); //get the Stream to read and write on
                     s.BeginRead(RX_buf, rx_tail, buf_len - rx_tail, beginRead_cal, s);  //start reading    
+                    OnDeviceConnected(); //calling the Event DeviceConnected
+                    SendInit();
+                    //startStayingAliveTimer();
                 }
             }
         }
@@ -570,6 +584,38 @@ namespace FF_control.Bluetooth
             Logger("sending MaxGapRequest");
         }
 
+        public void SendReferenzPlacement()
+        {
+            int packetlength = BT_Protocoll.ReferenzPlacementLength + BT_Protocoll.FrameLengthOverhead;
+
+            byte[] b = new byte[packetlength];
+            SettingPräamble(ref b);
+            b[2] = (byte)BT_Protocoll.ReferenzPlacementLength;
+
+            b[3] = BT_Protocoll.MaxGapRequestCommand;
+
+            b[packetlength - 2] = crc_ComputeChecksum(b);
+            b[packetlength - 1] = BT_Protocoll.CarriageReturn;
+            Send(b);
+            Logger("sending ReferenzPlacement");
+        }
+
+        public void SendStop()
+        {
+            int packetlength = BT_Protocoll.StopLenght + BT_Protocoll.FrameLengthOverhead;
+
+            byte[] b = new byte[packetlength];
+            SettingPräamble(ref b);
+            b[2] = (byte)BT_Protocoll.StopLenght;
+
+            b[3] = BT_Protocoll.MaxGapRequestCommand;
+
+            b[packetlength - 2] = crc_ComputeChecksum(b);
+            b[packetlength - 1] = BT_Protocoll.CarriageReturn;
+            Send(b);
+            Logger("sending Stop");
+        }
+
         public void Send(byte[] b)
         {
             if (s != null)
@@ -583,8 +629,6 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnDeviceConnected()
         {
-            if (s != null)
-                s.Close(); 
             if (DeviceConnected != null)
                 DeviceConnected(this, new EventArgs());
         }
@@ -602,8 +646,6 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnDiscoverDevicesEnded()
         {
-            if (s != null)
-                s.Close();
             if (DiscoverDevicesEnded != null)
                 DiscoverDevicesEnded(this, new EventArgs());
         }
@@ -636,13 +678,29 @@ namespace FF_control.Bluetooth
                 PositionReceived(this, new ReceivedData_EventArgs(current_position, aim_position));
         }
 
-        public event EventHandler MaxGapRecieved;
+        public event EventHandler MaxGapReceived;
 
-        protected virtual void OnMaxGapRecieved(int maxgap)
+        protected virtual void OnMaxGapReceived(int maxgap)
         {
             Maxgap = Convert.ToDouble(maxgap) / BT_Protocoll.ConvertFromMM;
-            if (MaxGapRecieved != null)
-                MaxGapRecieved(this, new ReceivedData_EventArgs(maxgap));
+            if (MaxGapReceived != null)
+                MaxGapReceived(this, new ReceivedData_EventArgs(maxgap));
+        }
+
+        public event EventHandler ReferenzPlacementReceived;
+
+        protected virtual void OnReferenzPlacementReceived()
+        {
+            if (MaxGapReceived != null)
+                MaxGapReceived(this, new EventArgs());
+        }
+
+        public event EventHandler StopReceived;
+
+        protected virtual void OnStopReceived()
+        {
+            if (StopReceived != null)
+                StopReceived(this, new EventArgs());
         }
         #endregion
 
