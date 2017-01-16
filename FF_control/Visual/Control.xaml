@@ -22,6 +22,7 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="150"/>
+                    <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
@@ -60,7 +61,8 @@
                     </StackPanel>
                     <Button Content="Status Aktualisieren" Name="b_status" Click="b_status_Click"/>
                 </StackPanel>
-
+                <Border Grid.ColumnSpan="3" Grid.Row="4"  Style="{StaticResource Style_ModulBorder}"/>
+                <Button Grid.Column="1" Grid.Row="4" Content="STOP" Click="button_stop_Click"  Name="button_stop"/>
 
             </Grid>
         </ScrollViewer>

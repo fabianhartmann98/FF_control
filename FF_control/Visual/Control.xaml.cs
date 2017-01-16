@@ -31,9 +31,12 @@ namespace FF_control.Visual
             parent.bt_connection.StatusReceived += bt_connection_StatusReceived;
             parent.bt_connection.ReferenzPlacementReceived += Bt_connection_ReferenzPlacementReceived;
             parent.bt_connection.StopReceived += Bt_connection_StopReceived;
+            parent.bt_connection.RunReceived += Bt_connection_RunReceived;
 
             this.IsVisibleChanged += Control_IsVisibleChanged;      //needed to set up the SideTabcontrol
         }
+
+       
 
         void Control_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -70,6 +73,11 @@ namespace FF_control.Visual
             ti.Content = wp;
 
             SideTabControl.Items.Add(ti);
+        }
+
+        private void Bt_connection_RunReceived(object sender, EventArgs e)
+        {
+            //todo: implement RunReceived
         }
 
         private void Bt_connection_StopReceived(object sender, EventArgs e)

@@ -276,6 +276,10 @@ namespace FF_control.Bluetooth
                             OnReferenzPlacementReceived();
                             Logger("received ReferenzPlacementAnswer");
                             break;
+                        case (BT_Protocoll.RunAnswer):
+                            OnRunpReceived();
+                            Logger("received RunAnswer");
+                            break;
                         case (BT_Protocoll.StopAnswer):
                             OnStopReceived();
                             Logger("received StopAnswer");
@@ -592,12 +596,28 @@ namespace FF_control.Bluetooth
             SettingPräamble(ref b);
             b[2] = (byte)BT_Protocoll.ReferenzPlacementLength;
 
-            b[3] = BT_Protocoll.MaxGapRequestCommand;
+            b[3] = BT_Protocoll.ReferenzPlacementCommand;
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
             Send(b);
             Logger("sending ReferenzPlacement");
+        }
+
+        public void SendRun()
+        {
+            int packetlength = BT_Protocoll.RunLength + BT_Protocoll.FrameLengthOverhead;
+
+            byte[] b = new byte[packetlength];
+            SettingPräamble(ref b);
+            b[2] = (byte)BT_Protocoll.RunLength;
+
+            b[3] = BT_Protocoll.RunCommand;
+
+            b[packetlength - 2] = crc_ComputeChecksum(b);
+            b[packetlength - 1] = BT_Protocoll.CarriageReturn;
+            Send(b);
+            Logger("sending Stop");
         }
 
         public void SendStop()
@@ -608,7 +628,7 @@ namespace FF_control.Bluetooth
             SettingPräamble(ref b);
             b[2] = (byte)BT_Protocoll.StopLenght;
 
-            b[3] = BT_Protocoll.MaxGapRequestCommand;
+            b[3] = BT_Protocoll.StopCommand;
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
@@ -701,6 +721,14 @@ namespace FF_control.Bluetooth
         {
             if (StopReceived != null)
                 StopReceived(this, new EventArgs());
+        }
+
+        public event EventHandler RunReceived;
+
+        protected virtual void OnRunReceived()
+        {
+            if (RunReceived != null)
+                RunReceived(this, new EventArgs());
         }
         #endregion
 
