@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -42,7 +43,7 @@ namespace FF_control.Measure
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
         private double PlottingMargin = 0.05;       //used to  set a small marging (top, bottom, right and left)  
         private double AxisMargin = 40;
-        private double LabelRounding = 0.1;
+        private double LabelRounding = 0.2;
 
         private double DefaultPlotHeightWidth = 100; 
         #endregion
@@ -654,7 +655,7 @@ namespace FF_control.Measure
         {
             delta /= 120;
             //used to zoom to the place where the mouse Pointer is
-            double LeftToAll = MousePoint.X / plotwidth; //how much canvas is on the left of the pointer/max (=plotwidht)
+            double LeftToAll = (MousePoint.X) / plotwidth; //how much canvas is on the left of the pointer/max (=plotwidht)
             double TopToAll = MousePoint.Y / plotheight;     //how much canvas is on the top of the pointer/max (=plotwidht)
 
             xmin += DiffPerScrolePercent/100 * (xmax - xmin) * LeftToAll *delta; //adapt xmin, add value acording to sensetifity, and proportion of mouse Pointer and delta
@@ -663,6 +664,11 @@ namespace FF_control.Measure
             ymin += DiffPerScrolePercent / 100 * (ymax - ymin) * (1 - TopToAll) * delta;
             ymax -= DiffPerScrolePercent / 100 * (ymax - ymin) * TopToAll * delta;
             OffsetScaleCalculation();  //scale new offset and scale
+        }
+
+        public void Scrole(MouseWheelEventArgs e, double delta)
+        {
+            Scrole(e.GetPosition(plotcan),delta);
         }
 
         public void Shift(double dx, double dy)

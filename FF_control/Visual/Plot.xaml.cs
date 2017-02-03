@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using FF_control.Measure;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace FF_control.Visual
 {
@@ -279,7 +280,7 @@ namespace FF_control.Visual
         public void DrawDiagram()
         {
             can.Children.Clear();           //clear the canvas to redraw axis and plots
-            parent.diagram.DrawAxis();
+            parent.diagram.DrawAxis2dot0();
             can = parent.diagram.draw();
             if (tb_xmin != null)
             {
@@ -360,7 +361,7 @@ namespace FF_control.Visual
 
         private void can_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            parent.diagram.Scrole(e.GetPosition(can), e.Delta);         //scroll
+            parent.diagram.Scrole(e, e.Delta);         //scroll
             DrawDiagram();                                              //redraw the diagram
 
         }
@@ -368,14 +369,18 @@ namespace FF_control.Visual
         private void can_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.RightButton == MouseButtonState.Pressed)
-            { 
+            {
+                Stopwatch sp = new Stopwatch();
+                sp.Start();
                 double dx = e.GetPosition(can).X-prevmousePosition.X;   //get the differenz to the previous position
                 double dy = e.GetPosition(can).Y-prevmousePosition.Y;
 
                 prevmousePosition=e.GetPosition(can);
                 parent.diagram.Shift(-dx, dy);                          //shift the diagram
+                long y = sp.ElapsedMilliseconds;
                 DrawDiagram();                                          //redraw the diagram
-
+                long x = sp.ElapsedMilliseconds;
+                sp.Stop();
             }
         }
 
