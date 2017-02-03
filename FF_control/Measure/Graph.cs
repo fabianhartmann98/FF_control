@@ -106,7 +106,7 @@ namespace FF_control.Measure
                 foreach (var item in mps)
                 {
                     if (item.I_Value < min)
-                        min = item.Time;
+                        min = item.I_Value;
                 }
                 return min;
             }

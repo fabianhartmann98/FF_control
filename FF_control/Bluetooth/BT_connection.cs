@@ -277,7 +277,7 @@ namespace FF_control.Bluetooth
                             Logger("received ReferenzPlacementAnswer");
                             break;
                         case (BT_Protocoll.RunAnswer):
-                            OnRunpReceived();
+                            OnRunReceived();
                             Logger("received RunAnswer");
                             break;
                         case (BT_Protocoll.StopAnswer):

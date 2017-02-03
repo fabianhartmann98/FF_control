@@ -40,7 +40,9 @@ namespace FF_control.Measure
         private int LabelMarginLeftX = -10;        //Margin to the Label Marker XAxis
         private int LabelMarginTopY = -10;         //whats the Margin to the Label Marker YAxis
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
-        private double PlottingMargin = 0.1;       //used to  set a small marging (top, bottom, right and left)    
+        private double PlottingMargin = 0.05;       //used to  set a small marging (top, bottom, right and left)  
+        private double AxisMargin = 40;
+        private double LabelRounding = 0.1;
 
         private double DefaultPlotHeightWidth = 100; 
         #endregion
@@ -56,6 +58,14 @@ namespace FF_control.Measure
         private int xAxisLabelCount = 5;                //how many labels should be placed on the x Axis (default = 5)
         private int yAxisLabelCount = 5;                //how many labels should be placed on the y Axis  (default = 5)
         private List<Graph> graphs;
+        private Canvas plotcan;
+
+        public Canvas PlotCan
+        {
+            get { return plotcan; }
+            set { plotcan = value; }
+        }
+
 
         public List<Graph> Grpahs
         {
@@ -85,15 +95,13 @@ namespace FF_control.Measure
             get { return can; }
             set
             {
-                var plotheight_old = plotheight;
-                var plotwidth_old = plotwidth;
                 can = value;
                 if (can != null)
                 {
                     if(can.ActualHeight!=0)
-                        plotheight = can.ActualHeight;                                //setting height and Width
+                        plotheight = can.ActualHeight - AxisMargin;                                //setting height and Width
                     if(can.ActualWidth!=0)
-                        plotwidth = can.ActualWidth;
+                        plotwidth = can.ActualWidth - AxisMargin;
                 }
                 else
                 {
@@ -166,6 +174,8 @@ namespace FF_control.Measure
             AxisColor = Brushes.Green;
             AxisLabelColor = Brushes.Black;
             DiffPerScrolePercent = 2;
+            plotcan = new Canvas();
+            plotcan.ClipToBounds = true;
         }
         public Diagram(List<Point> Points) : this()         //calls Plot() first
         {
@@ -205,13 +215,17 @@ namespace FF_control.Measure
         /// <returns>Canvas with Polyline and Axis as Child</returns>
         public Canvas draw()
         {
+            plotcan.Children.Clear();
             if (can != null && graphs != null)
             {
                 foreach (var item in graphs)
                 {
-                    item.draw(can, offsetX, offsetY, scaleX, scaleY,plotheight);
+                    item.draw(plotcan, offsetX, offsetY, scaleX, scaleY,plotheight);
                 }
             }
+            Canvas.SetLeft(plotcan,AxisMargin);
+            Canvas.SetTop(plotcan, 0);
+            can.Children.Add(plotcan);
             return can;
         }
 
@@ -281,7 +295,8 @@ namespace FF_control.Measure
             Graph p = new Graph();
             for (int i = 0; i < 20; i++)        //20 points
             {
-                p.addPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
+                //p.addPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
+                p.addPoint(new MeasurementPoint(new Point(i,0),i));
             }
             return p; 
         }
@@ -423,13 +438,205 @@ namespace FF_control.Measure
             #endregion
         }
 
+        public void DrawAxis2dot0()
+        {
+            #region xAxis
+            //########Line################
+            Line xAxis = new Line();        //the straight line of the axis
+            xAxis.Stroke = AxisColor;
+            xAxis.StrokeThickness = AxisStrokeThickness;
+            xAxis.X1 = 0;                   //is starting left
+            xAxis.X2 = plotwidth+AxisMargin;           //end at the right end
+
+            //xAxis.Y1 = scalingPoint(new Point(0, ymin)).Y ; // use ymin as value to go through Y Axis (also needs scaling) 
+            xAxis.Y1 = plotheight;              //setting it to the edge of plotcan (=can-Axismargin)
+            xAxis.Y2 = xAxis.Y1;
+            
+            can.Children.Add(xAxis);
+
+            //#########Arrow################
+            Polygon pX = new Polygon();     //Arrow = Filled Polygon with 3 Points 
+            pX.Fill = AxisColor;
+            pX.Stroke = AxisColor;
+            pX.StrokeThickness = AxisStrokeThickness;       //not really needed
+            pX.Points.Add(new Point(xAxis.X2, xAxis.Y1));  //Spike point (at the end and on the level of xAxis) 
+            pX.Points.Add(new Point(xAxis.X2 - arrowlength, xAxis.Y1 - arrowwidth));
+            //x = Width*(1-Arrowlengthpercentage); y = Y level of x axis - height*arrowwithpercentage
+            pX.Points.Add(new Point(xAxis.X2 - arrowlength, xAxis.Y1 + arrowwidth));
+            can.Children.Add(pX);
+
+            //#########Labels##############
+            double diffperlabel = (xmax - xmin) / xAxisLabelCount;  //get the diff per label (=range displayed / number)
+            int q = 0;                   
+            while (diffperlabel < 1/LabelRounding)  //get how much after the comma the first digit of diffperlabel is
+            {                
+                diffperlabel *= 10;                 //multiply it by the
+                q++;
+            }
+            diffperlabel=Math.Round(diffperlabel);      //round it
+            diffperlabel /= Math.Pow(10, q);            //defide by the first multiplied potenz 
+            //now we have a rounded diffperlabel and how many commas did we need to get it (used to display only the necessary digits after comma)
+
+            double xminrounded = xmin;          //round the xmin up (so it's not on the left of the Y-Axis) (only needed if 0 is not in range)
+            xminrounded *= Math.Pow(10, q);
+            xminrounded = Math.Ceiling(xminrounded);
+            xminrounded /= Math.Pow(10, q);
+
+            int power = 0;                  //get the potency we need to multiply by to get floatingpoint number
+            while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, power) / 2 < 2)
+                power++;
+            while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, power) / 2 > 20)
+                power--;
+
+
+            for (int i = 0; i < xAxisLabelCount; i++)   //for every Label
+            {
+                double x;             //which x is the label going to be placed
+
+                if (xmin <= 0 && xmax > 0)     //if x = 0 is displayed 
+                {
+                    // q    =   count - how many labels do i have to place in negative(xmin/(dif per Label))
+                    double pos = (i + Math.Ceiling(xmin / diffperlabel));        //uses Ceiling to round up (-1,2->-1) 
+                    x = pos * diffperlabel;         //multiplies it with the dif per Label
+                }
+                else
+                {                    
+                    x = i * diffperlabel + xminrounded; //not displayed, so we start with xmin -> add up dif per Labe each time
+                }
+
+                Line label_marker_line = new Line();        //setting up Label Marker Line
+                label_marker_line.Stroke = AxisLabelColor;
+                label_marker_line.StrokeThickness = AxisStrokeThickness;
+                Point p = new Point(x, 0);
+                p = scalingPoint(p);
+                label_marker_line.X1 = p.X + AxisMargin;         //x is on the level of the value (is scaled) (need to add AxisMargin (scaling only works inside plotcan (need to add the diff))
+                label_marker_line.X2 = p.X + AxisMargin;
+                label_marker_line.Y1 = xAxis.Y1 - LableMarkerLenght / 2;        //on level of XAxis +- the LabelMarkerLength/2 so the Label marker has a Length 
+                label_marker_line.Y2 = xAxis.Y1 + LableMarkerLenght / 2;
+                can.Children.Add(label_marker_line);                            //adding Label marker Line to the Canvas
+
+                TextBlock tb = new TextBlock();             //textblock with Value 
+                tb.Foreground = AxisLabelColor;
+                int floatcomma = q - power;
+                if (floatcomma < 0)
+                    floatcomma = 0;
+                tb.Text = String.Format("{0:f" + Convert.ToString(floatcomma) + "}", x * Math.Pow(10, power));         //Floating, number of decimals = (numberofdecimalsindiffperlabel) - powermultipliedwith                
+                Canvas.SetLeft(tb, label_marker_line.X1 + LabelMarginLeftX);    //set it to the label + Margin
+                Canvas.SetTop(tb, label_marker_line.Y2 + LabelMarginTopX);
+                can.Children.Add(tb);                       //adds Label Value to the canvas
+            }
+
+            TextBlock tb_multiplier = new TextBlock();      //displays the power used to multiply the labels-Text with
+            tb_multiplier.Foreground = AxisLabelColor;
+            tb_multiplier.Text = "10^" + Convert.ToString(-power);
+            //Canvas.SetLeft(tb_multiplier, xAxis.X1 + 2 * LabelMarginLeftX);
+            //Canvas.SetTop(tb_multiplier, xAxis.Y1 + 2 * LabelMarginTopX);
+            Canvas.SetLeft(tb_multiplier, 0);
+            Canvas.SetTop(tb_multiplier, xAxis.Y1);
+            can.Children.Add(tb_multiplier);
+            #endregion
+
+            #region yAxis
+            //########Line################
+            Line yAxis = new Line();                //setting up yAxis ine 
+            yAxis.Stroke = AxisColor;
+            yAxis.StrokeThickness = AxisStrokeThickness;
+            yAxis.Y1 = 0;                           //starting at the Top
+            yAxis.Y2 = plotheight + AxisMargin;                  //ending at the Bottom 
+
+            //yAxis.X1 = scalingPoint(new Point(xmin, 0)).X + AxisMargin;  // use smin as crossing point with XAxis
+            yAxis.X1 = AxisMargin;      //set the line on the AxisMargin (is directly to the Plotcan)
+            yAxis.X2 = yAxis.X1;
+            
+            can.Children.Add(yAxis);
+
+            //#########Arrow################
+            Polygon pY = new Polygon();     //Setting up Arrow = filled Polygon
+            pY.Fill = AxisColor;
+            pY.Stroke = AxisColor;
+            pY.StrokeThickness = AxisStrokeThickness;
+            pY.Points.Add(new Point(yAxis.X1, 0));   //is at the top and on the level of the yAxis 
+            pY.Points.Add(new Point(arrowwidth + yAxis.X1, arrowlength));
+            //x = yAxis.X +- Arrowwidth; y = Arrowlength 
+            pY.Points.Add(new Point(-arrowwidth + yAxis.X1, arrowlength));
+            can.Children.Add(pY);
+
+            //#########Labels##############
+            diffperlabel = (ymax - ymin) / yAxisLabelCount;     //diff per label = range displayed/ number of labels
+            q = 0;
+            while (diffperlabel < 1/LabelRounding)      //multiply by 10, till there are more than log(1/Labelrounding) decimals
+            {
+                diffperlabel *= 10;
+                q++;                                    //store the decimals, which is needed to display to get diffperlabel
+            }
+            diffperlabel = Math.Round(diffperlabel);
+            diffperlabel /= Math.Pow(10, q);
+
+            double yminrounded = ymin;
+            yminrounded *= Math.Pow(10, q);             //round ymin to the same level as diffperlabel
+            yminrounded = Math.Ceiling(yminrounded);        
+            yminrounded /= Math.Pow(10, q);
+
+            power = 0;                                  //the power which is possible to devide the labeltext by 
+            while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, power) / 2 < 2)
+                power++;
+            while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, power) / 2 > 20)
+                power--;
+
+            for (int i = 0; i < yAxisLabelCount; i++)       //for every label
+            {
+                double y;
+
+                if (ymin <= 0 && ymax > 0)  //if y = 0 is displayed
+                {
+                    // q    =   count - how many labels do i have to set in negative (xmin/(dif per label)) 
+                    double pos = (i + Math.Ceiling(ymin /diffperlabel));
+                    y = pos * diffperlabel;
+                }
+                else
+                {
+                    y = i * diffperlabel + yminrounded;    //start at ymin and add dif per label each time
+                }
+                Line label_marker_line = new Line();            //setting up Label Marker Line
+                label_marker_line.Stroke = AxisLabelColor;
+                label_marker_line.StrokeThickness = AxisStrokeThickness;
+                Point p = new Point(0, y);
+                p = scalingPoint(p);
+                label_marker_line.X1 = yAxis.X1 - LableMarkerLenght / 2;    //is on the yAxis.X +-the Marker length
+                label_marker_line.X2 = yAxis.X1 + LableMarkerLenght / 2;
+                label_marker_line.Y1 = p.Y;                                 //is on the value (is scaled) (don't need to add Axismargin, because plotcan is on top)
+                label_marker_line.Y2 = p.Y;
+                can.Children.Add(label_marker_line);                        //add Label Marker Line to the canvas 
+
+                TextBlock tb = new TextBlock();
+                tb.Foreground = AxisLabelColor;
+                int floatcomma = q - power;     //the decimals which needed to be displayed (to get diffperlabel visible)
+                if (floatcomma < 0)
+                    floatcomma = 0;
+                tb.Text = String.Format("{0:f" + Convert.ToString(floatcomma) + "}", y * Math.Pow(10, power));         //Floating 
+                Canvas.SetLeft(tb, label_marker_line.X1 + LabelMarginLeftY);    //set it to the label + Margin
+                Canvas.SetTop(tb, label_marker_line.Y2 + LabelMarginTopY);
+                can.Children.Add(tb);                           //add Label Value to the canvas 
+            }
+            tb_multiplier = new TextBlock();            //displays the power used to multiply the labels-Text with
+            tb_multiplier.Foreground = AxisLabelColor;
+            tb_multiplier.Text = "10^" + Convert.ToString(-power);
+            Canvas.SetLeft(tb_multiplier,0);
+            Canvas.SetTop(tb_multiplier, 0);
+            can.Children.Add(tb_multiplier);
+            #endregion
+        }
+
         /// <summary>
         /// sets offset and Sclae for given min and max value 
         /// </summary>
         public void OffsetScaleCalculation()
         {
-            //give them some margin 20% of the canvas is margin (10% top and bottom)
-            offsetX = xmin - (xmax - xmin) * PlottingMargin;     //xmin - Margin (Margin is not a pixel value) 
+            plotcan.Height = plotheight;        //set PlotcanHeigth and width according to the main Canvas
+            plotcan.Width = plotwidth;
+
+            //give them some margin of the canvas is margin (margin/2 top and bottom)
+            offsetX = xmin - (xmax - xmin) * PlottingMargin;     //xmin - Margin (Margin is not a pixel value; is percentage) 
             offsetY = ymin - (ymax - ymin) * PlottingMargin;
             scaleX = plotwidth / (xmax + (xmax - xmin) * PlottingMargin - offsetX);     //*1 because of 2 Margins (on is already in offset); Pixel/Range displayed(=xmax+margin-offset)  
             scaleY = plotheight / (ymax + (ymax - ymin) * PlottingMargin - offsetY);
