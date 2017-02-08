@@ -73,42 +73,42 @@ namespace FF_control.Visual
                 StackPanel mainstack = new StackPanel();
 
                 WrapPanel wp = new WrapPanel();     //creat Wrap Panel for the Name of the Plot
-                Label ll_name0 = new Label();
-                ll_name0.Content = "Name:";
+                Label ll_name = new Label();
+                ll_name.Content = "Name:";
                 tb_name.Add(new TextBox());
                 tb_name[i].Text = parent.diagram.Grpahs[i].Name; //set the text
                 tb_name[i].LostFocus += tb_name_LostFocus;      //using Lost_focus so it is not changing when eddeting
                 tb_name[i].Tag = i;                             //Tag is the index (for later use)
-                wp.Children.Add(ll_name0);                      //add those to the Wrappenel
+                wp.Children.Add(ll_name);                      //add those to the Wrappenel
                 wp.Children.Add(tb_name[i]);
                 mainstack.Children.Add(wp);                     //add them to the mainstack
 
                 wp = new WrapPanel();               //creat WrapPanel for the time of measurement
-                Label ll_time0 = new Label();
-                ll_time0.Content = "Time:";
+                Label ll_time = new Label();
+                ll_time.Content = "Time:";
                 l_time.Add(new Label());
                 l_time[i].Content = parent.diagram.Grpahs[i].MeasurementTime.ToString();    //set the Text
-                wp.Children.Add(ll_time0);
+                wp.Children.Add(ll_time);
                 wp.Children.Add(l_time[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();               //creat WrapPanel for the gap 
-                Label ll_gap0 = new Label();
-                ll_gap0.Content = "Gap:";
+                Label ll_gap = new Label();
+                ll_gap.Content = "Gap:";
                 l_gap.Add(new Label());
                 l_gap[i].Content = parent.diagram.Grpahs[i].MeasurementGap.ToString();
-                wp.Children.Add(ll_gap0);
+                wp.Children.Add(ll_gap);
                 wp.Children.Add(l_gap[i]);
                 mainstack.Children.Add(wp);
 
                 wp = new WrapPanel();               //creat WrapPanel for the Save Location
-                Label ll_saveloc0 = new Label();
-                ll_saveloc0.Content = "Save Location:";
+                Label ll_saveloc = new Label();
+                ll_saveloc.Content = "Save Location:";
                 l_saveloc.Add(new Label());
                 l_saveloc[i].Content = parent.diagram.Grpahs[i].SaveLocation;
                 l_saveloc[i].MouseUp += l_saveloc_MouseUp;          //open a saveFileDialog if clicked on it
                 l_saveloc[i].Tag = i;                               //Tag is the index (for later use)
-                wp.Children.Add(ll_saveloc0);
+                wp.Children.Add(ll_saveloc);
                 wp.Children.Add(l_saveloc[i]);
                 mainstack.Children.Add(wp);
 
@@ -137,7 +137,7 @@ namespace FF_control.Visual
 
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Button b = (Button)sender;
+            Label b = (Label)sender;
             //todo: open SavefileDialog
             parent.diagram.Grpahs[(int)b.Tag].Save(); 
             setUpSideTabControl();
@@ -178,7 +178,7 @@ namespace FF_control.Visual
             {
                 WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
-                dg.ItemsSource = parent.diagram.Grpahs[i].mps; //add the Itemsource (displaying MeasurementData)
+                dg.ItemsSource = parent.diagram.Grpahs[i].mps; //add the Itemsource (displaying MeasurementData)                
                 wp.Children.Add(dg);
                 stackpanel_dg.Children.Add(wp);
             }
