@@ -43,7 +43,8 @@ namespace FF_control.Measure
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
         private double PlottingMargin = 0.05;       //used to  set a small marging (top, bottom, right and left)  
         private double AxisMargin = 40;
-        private double LabelRounding = 0.2;
+        private double LabelRounding = 0.5;
+        private double Rounding2dot0 = 5;
 
         private double DefaultPlotHeightWidth = 100; 
         #endregion
@@ -474,12 +475,14 @@ namespace FF_control.Measure
                 diffperlabel *= 10;                 //multiply it by the
                 q++;
             }
-            diffperlabel=Math.Round(diffperlabel);      //round it
+            //diffperlabel=Math.Round(diffperlabel/Rounding2dot0)*Rounding2dot0;      //round it
+            diffperlabel = Math.Round(diffperlabel);      //round it
             diffperlabel /= Math.Pow(10, q);            //defide by the first multiplied potenz 
             //now we have a rounded diffperlabel and how many commas did we need to get it (used to display only the necessary digits after comma)
 
             double xminrounded = xmin;          //round the xmin up (so it's not on the left of the Y-Axis) (only needed if 0 is not in range)
             xminrounded *= Math.Pow(10, q);
+            //xminrounded = Math.Ceiling(xminrounded/Rounding2dot0)*Rounding2dot0;
             xminrounded = Math.Ceiling(xminrounded);
             xminrounded /= Math.Pow(10, q);
 

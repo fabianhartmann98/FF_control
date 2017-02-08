@@ -193,9 +193,9 @@
                 <ControlTemplate TargetType="TabItem">
                     <Border Name="Border" BorderThickness="0,1,0,1" BorderBrush="{DynamicResource MainTabItemSelectedBackground}" Background="{DynamicResource MainTabItemSelectedBackground}" 
                             Margin="0">
-                        <ContentPresenter x:Name="ContentSite"
-                                        ContentSource="Header"
-                                        Margin="10,5"/>
+                            <ContentPresenter x:Name="ContentSite"
+                                            ContentSource="Header"
+                                            Margin="10,5"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">

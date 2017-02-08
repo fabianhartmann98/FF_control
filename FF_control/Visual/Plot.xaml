@@ -13,10 +13,11 @@
 
         <Canvas DockPanel.Dock="Left"
             Name="can" MouseWheel="can_MouseWheel"
-            MouseRightButtonDown="can_MouseRightButtonDown"
+            MouseLeftButtonDown="can_MouseLeftButtonDown"
             MouseMove="can_MouseMove"
             Background="AliceBlue"
             ClipToBounds="True" 
-            SizeChanged="can_SizeChanged"/>
+            SizeChanged="can_SizeChanged">
+        </Canvas>
     </DockPanel>
 </UserControl>

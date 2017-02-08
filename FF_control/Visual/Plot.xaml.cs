@@ -60,6 +60,18 @@ namespace FF_control.Visual
             parent.diagram.Can = can;
             parent.diagram.setScalingAuto();
             DrawDiagram();
+
+            ContextMenu cm = new ContextMenu();
+            MenuItem mi = new MenuItem();
+            mi.Header = "qwertz";
+            mi.Click += new RoutedEventHandler(qwertzclick);
+            cm.Items.Add(mi);
+            can.ContextMenu = cm;
+        }
+
+        private void qwertzclick(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void setUpSideTabControl()
@@ -88,6 +100,7 @@ namespace FF_control.Visual
             tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");          //"F2" used to get only #,##
             tb_xmin.Tag = "xmin";
             tb_xmin.LostFocus += tb_LostFocus;              //updates the xmin if the focus is on a new Object
+            tb_xmin.KeyDown += Tb_minmax_KeyDown;
             wp.Children.Add(l_xmin);
             wp.Children.Add(tb_xmin);                       //add them to the WP and the Stack
             mainstack.Children.Add(wp);
@@ -99,6 +112,7 @@ namespace FF_control.Visual
             tb_xmax.Text = parent.diagram.AxisXmax.ToString("F2");
             tb_xmax.LostFocus += tb_LostFocus;
             tb_xmax.Tag ="xmax";
+            tb_xmax.KeyDown += Tb_minmax_KeyDown;
             wp.Children.Add(l_xmax);
             wp.Children.Add(tb_xmax);
             mainstack.Children.Add(wp);
@@ -111,6 +125,7 @@ namespace FF_control.Visual
             tb_ymin.Text = parent.diagram.AxisYmin.ToString("F2");
             tb_ymin.LostFocus += tb_LostFocus;
             tb_ymin.Tag = "ymin";
+            tb_ymin.KeyDown += Tb_minmax_KeyDown; 
             wp.Children.Add(l_ymin);
             wp.Children.Add(tb_ymin);
             mainstack.Children.Add(wp);
@@ -123,6 +138,7 @@ namespace FF_control.Visual
             tb_ymax.Text = parent.diagram.AxisYmax.ToString("F2"); ;
             tb_ymax.LostFocus += tb_LostFocus;
             tb_ymax.Tag = "ymax";
+            tb_ymax.KeyDown += Tb_minmax_KeyDown;
             wp.Children.Add(l_ymax);
             wp.Children.Add(tb_ymax);
             mainstack.Children.Add(wp);
@@ -254,6 +270,15 @@ namespace FF_control.Visual
            
         }
 
+        private void Tb_minmax_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                TextBox tb = sender as TextBox;
+                tb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+        }
+
         void b_add_Click(object sender, RoutedEventArgs e)
         {
             Graph g = Graph.Open();             //show the Open File dialog an other stuff
@@ -368,23 +393,21 @@ namespace FF_control.Visual
 
         private void can_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.RightButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && prevmousePosition.X != -100)
             {
-                Stopwatch sp = new Stopwatch();
-                sp.Start();
-                double dx = e.GetPosition(can).X-prevmousePosition.X;   //get the differenz to the previous position
-                double dy = e.GetPosition(can).Y-prevmousePosition.Y;
+                
+                double dx = e.GetPosition(can).X - prevmousePosition.X;   //get the differenz to the previous position
+                double dy = e.GetPosition(can).Y - prevmousePosition.Y;
 
-                prevmousePosition=e.GetPosition(can);
+                prevmousePosition = e.GetPosition(can);
                 parent.diagram.Shift(-dx, dy);                          //shift the diagram
-                long y = sp.ElapsedMilliseconds;
                 DrawDiagram();                                          //redraw the diagram
-                long x = sp.ElapsedMilliseconds;
-                sp.Stop();
             }
+            else
+                prevmousePosition.X = -100;
         }
 
-        private void can_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void can_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             prevmousePosition = e.GetPosition(can);                 //get the first prevmouse as a reference
         }

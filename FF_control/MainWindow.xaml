@@ -23,21 +23,53 @@
         </ComboBox>
         <DockPanel Grid.Row="3" LastChildFill="True" x:Name="dockpanel">                       
             <TabControl DockPanel.Dock="Left" VerticalContentAlignment="Stretch" SizeChanged="TabControl_SizeChanged">
-                <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
+                <TabItem Style="{StaticResource Style_MainTabItem}">
+                    <TabItem.Header>                        
+                        <DockPanel>
+                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource bluetooth_png}"/>
+                            <Label Content="Bluetooth"/>
+                        </DockPanel>
+                    </TabItem.Header>
                     <Grid Name="Connection_grid">
                     </Grid>
                 </TabItem>
-                <TabItem Header="asdf" Style="{StaticResource Style_MainTabItem}">
+                <TabItem Style="{StaticResource Style_MainTabItem}">
+                    <TabItem.Header>
+                        <DockPanel>
+                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource ff_png}"/>
+                            <Label Content="Control"/>
+                        </DockPanel>
+                    </TabItem.Header>
                     <Grid Name="Control_grid">
                     </Grid>
                 </TabItem>
-                <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
+                <TabItem Style="{StaticResource Style_MainTabItem}">
+                    <TabItem.Header>
+                        <DockPanel>
+                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource diagram_png}"/>
+                            <Label Content="Plot"/>
+                        </DockPanel>
+                    </TabItem.Header>
                     <Grid Name="Plot_grid">                        
                     </Grid>
                 </TabItem>
-                <TabItem Header="sdfg" Style="{StaticResource Style_MainTabItem}">
+                <TabItem Style="{StaticResource Style_MainTabItem}">
+                    <TabItem.Header>
+                        <DockPanel>
+                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource table_png}"/>
+                            <Label Content="Table"/>
+                        </DockPanel>
+                    </TabItem.Header>
                     <Grid Name="Table_grid">
                     </Grid>
+                </TabItem>
+                <TabItem Style="{StaticResource Style_MainTabItem}">
+                    <TabItem.Header>
+                        <DockPanel>
+                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource help_png}"/>
+                            <Label Content="Help"/>
+                        </DockPanel>
+                    </TabItem.Header>
                 </TabItem>
             </TabControl>       
         </DockPanel>
