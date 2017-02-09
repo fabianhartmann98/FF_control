@@ -320,8 +320,13 @@ namespace FF_control.Visual
         {
             if (this.IsVisible)
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 setUpSideTabControl();
+                long x = sw.ElapsedMilliseconds;
                 DrawDiagram();
+                long y = sw.ElapsedMilliseconds;
+                sw.Stop();
             }
         }
 

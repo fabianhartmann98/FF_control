@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -282,7 +283,7 @@ namespace FF_control.Measure
             graphs.Add(g);
         }
 
-        public void addGraph(List<MeasurementPoint> mp, string graphname = "")
+        public void addGraph(ObservableCollection<MeasurementPoint> mp, string graphname = "")
         {
             graphs.Add(new Graph(mp, graphname));
         }

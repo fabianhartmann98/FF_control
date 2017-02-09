@@ -31,7 +31,7 @@ namespace FF_control.Visual
         private List<TextBox> tb_name;                      //saves all Tb where the names of each graph can be modivied
         private List<Label> l_time;                         //saves all Lables where the time of recording gets displayed
         private List<Label> l_gap;                          //saves all Labels where the gap gets displayed
-        private List<Label> l_saveloc;                      //saves all Labels where teh savelocation is displayed, there is a click event on them right now
+        private List<Label> l_saveloc;                      //saves all Labels where the savelocation is displayed, there is a click event on them right now
         private List<Button> b_plot_remove;                 //saves all Buttons where the Plot can be removed, tag is the index
 
         public Table(MainWindow p)
@@ -41,6 +41,7 @@ namespace FF_control.Visual
             selected_tabindex = 0;
             this.IsVisibleChanged += Table_IsVisibleChanged; //needed to set up the SideTabControl
 
+            setUpSideTabControl(); //redo or do the TabItems 
             CreateTable();                                  //creats tables (for each graph one)
             parent.bt_connection.MeasuredDataReceived += bt_connection_MeasuredDataReceived;
         }
@@ -49,8 +50,13 @@ namespace FF_control.Visual
         {
             if (this.IsVisible) //if it is set on visible 
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 setUpSideTabControl(); //redo or do the TabItems 
+                long x = sw.ElapsedMilliseconds;
                 CreateTable();         //redo or do the Tables
+                long y = sw.ElapsedMilliseconds;
+                sw.Stop();
             }
         }
 
@@ -178,7 +184,21 @@ namespace FF_control.Visual
             {
                 WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
-                dg.ItemsSource = parent.diagram.Grpahs[i].mps; //add the Itemsource (displaying MeasurementData)                
+                //dg.Height = this.Height;                //setting height to NaN (this.Height is never set) decreases lag
+                dg.AutoGenerateColumns = false;
+                DataGridTextColumn dgtc = new DataGridTextColumn();
+                dgtc.Header = "Number";
+                dgtc.Binding = new Binding("MeasurementNumber");
+                dg.Columns.Add(dgtc);
+                dgtc = new DataGridTextColumn();
+                dgtc.Header = "Time";
+                dgtc.Binding = new Binding("Time");
+                dg.Columns.Add(dgtc);
+                dgtc = new DataGridTextColumn();
+                dgtc.Header = "Value";
+                dgtc.Binding = new Binding("I_Value");
+                dg.Columns.Add(dgtc);
+                dg.ItemsSource = parent.diagram.Grpahs[i].mps;
                 wp.Children.Add(dg);
                 stackpanel_dg.Children.Add(wp);
             }

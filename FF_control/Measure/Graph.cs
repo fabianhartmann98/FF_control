@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace FF_control.Measure
     {
 
         #region Prop
-        public List<MeasurementPoint> mps { get; set; }
+        public ObservableCollection<MeasurementPoint> mps { get; set; }
         public string SaveLocation { get; set; }
         public static string FileFilter ="H2B2 (*.b2h2)|*.b2h2|All Files (*.*)|*.*";
 
@@ -138,7 +139,7 @@ namespace FF_control.Measure
         /// </summary>
         public Graph()
         {
-            mps = new List<MeasurementPoint>();
+            mps = new ObservableCollection<MeasurementPoint>();
             plotStrokeThickness = 3;
             PlotColor = Brushes.Black;
             SaveLocation="";
@@ -150,7 +151,7 @@ namespace FF_control.Measure
         /// </summary>
         /// <param name="mp">the row of measurement points</param>
         /// <param name="name">the name of the graph</param>
-        public Graph(List<MeasurementPoint> mp, string name = "") : this()
+        public Graph(ObservableCollection<MeasurementPoint> mp, string name = "") : this()
         {
             mps = mp;
             Name = name;

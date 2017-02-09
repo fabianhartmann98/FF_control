@@ -56,12 +56,7 @@ namespace FF_control.Measure
         public Point getPoint()
         {
             return new Point(time, i_value); 
-        }
-
-        public override string ToString()
-        {
-            return String.Format("{0}: {1:c2}, {2:c2}",measurementNumber,time,i_value);
-        }
+        }       
         #endregion
     }
 }
