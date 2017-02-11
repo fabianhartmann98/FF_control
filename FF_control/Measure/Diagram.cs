@@ -208,6 +208,14 @@ namespace FF_control.Measure
         #endregion
 
         #region public methods
+        public void dehigliteallgraphs()
+        {
+            foreach (var item in graphs)
+            {
+                item.dehighliteallpoints();
+            }
+        }
+
         /// <summary>
         /// drawing the Points in a Polyline (thickness = 3, color = Black) 
         /// need to clear can if needed 

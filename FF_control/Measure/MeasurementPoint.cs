@@ -13,7 +13,13 @@ namespace FF_control.Measure
         private double i_value;             //whats the Current (Strom) value
         private double time;                //when was this recorded
         private int measurementNumber;      //whats the measurement number (not really needed) 
+        private bool highlited;
 
+        public bool Highlited
+        {
+            get { return highlited; }
+            set { highlited = value; }
+        }
         public int MeasurementNumber
         {
             get { return measurementNumber; }
@@ -36,15 +42,16 @@ namespace FF_control.Measure
         {
             i_value = 0;
             time = 0;
-            measurementNumber = 0; 
+            measurementNumber = 0;
+            highlited = false;
         }
-        public MeasurementPoint(double value, double time = 0, int measurementNumber = 0)
+        public MeasurementPoint(double value, double time = 0, int measurementNumber = 0) :this()
         {
             this.measurementNumber = measurementNumber;
             this.i_value = value;
             this.time = time; 
         }
-        public MeasurementPoint(Point p, int number = 0)
+        public MeasurementPoint(Point p, int number = 0) :this()
         {
             i_value = p.Y;
             time = p.X;

@@ -8,7 +8,7 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <DockPanel LastChildFill="False">
+    <DockPanel LastChildFill="True">
         <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
         <ScrollViewer Grid.Column="0" Name="scrollviewer">
             <StackPanel  HorizontalAlignment="Stretch" MinWidth="400">

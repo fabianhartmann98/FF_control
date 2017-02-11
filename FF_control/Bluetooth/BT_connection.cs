@@ -711,8 +711,8 @@ namespace FF_control.Bluetooth
 
         protected virtual void OnReferenzPlacementReceived()
         {
-            if (MaxGapReceived != null)
-                MaxGapReceived(this, new EventArgs());
+            if (ReferenzPlacementReceived != null)
+                ReferenzPlacementReceived(this, new EventArgs());
         }
 
         public event EventHandler StopReceived;

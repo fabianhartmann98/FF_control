@@ -25,6 +25,15 @@ namespace FF_control.Measure
         private double plotStrokeThickness; //how thick is the grpah going to be
         private DateTime measurementTime;   //when was the row measured (start Time) 
         private double gap;                 //the gap in mm
+        private double highlitedPointCircleRadius = 10;
+
+        public double HighlitedPointCircleRadius
+        {
+            get { return highlitedPointCircleRadius ; }
+            set { highlitedPointCircleRadius = value; }
+        }
+        
+
 
         public double MeasurementGap
         {
@@ -180,6 +189,16 @@ namespace FF_control.Measure
             foreach (MeasurementPoint item in mps)       //adding the Point in the list
             {
                 pl.Points.Add(scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,plotheight));   //editing the points to fit to Canvas an plot 
+                if (item.Highlited)
+                { 
+                    Ellipse e = new Ellipse();
+                    e.Fill=PlotColor;
+                    e.Height=highlitedPointCircleRadius;
+                    e.Width=highlitedPointCircleRadius;
+                    Canvas.SetTop(e,scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).Y-highlitedPointCircleRadius/2);
+                    Canvas.SetLeft(e,scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).X-highlitedPointCircleRadius/2);
+                    can.Children.Add(e);
+                }
             }
             can.Children.Add(pl);
         }
@@ -210,12 +229,20 @@ namespace FF_control.Measure
             return null;
         }
 
+        internal void dehighliteallpoints()
+        {
+            foreach (var item in mps)
+            {
+                item.Highlited = false;
+            }
+        }
+
         private Point scalingPoint(Point p, double offsetX,double offsetY, double scaleX, double scaleY, double plotheight)
         {
             Point q = new Point();
             q.X = (p.X - offsetX) * scaleX;
             q.Y = plotheight - (p.Y - offsetY) * scaleY; //start at the top -> height - YValue
             return q;
-        }
+        }        
     }
 }

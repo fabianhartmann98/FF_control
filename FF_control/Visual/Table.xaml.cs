@@ -184,6 +184,8 @@ namespace FF_control.Visual
             {
                 WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
+                dg.MouseDoubleClick += dg_MouseDoubleClick;
+                dg.Tag = i;
                 //dg.Height = this.Height;                //setting height to NaN (this.Height is never set) decreases lag
                 dg.AutoGenerateColumns = false;
                 DataGridTextColumn dgtc = new DataGridTextColumn();
@@ -203,6 +205,12 @@ namespace FF_control.Visual
                 stackpanel_dg.Children.Add(wp);
             }
 
+        }
+
+        void dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGrid dg = sender as DataGrid;
+            parent.diagram.Grpahs[(int)(dg.Tag)].mps[dg.SelectedIndex].Highlited = true;
         }
     }
 }

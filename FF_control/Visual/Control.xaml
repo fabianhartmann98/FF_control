@@ -46,7 +46,7 @@
 
 
                 <Border Grid.ColumnSpan="3" Grid.Row="3"  Style="{StaticResource Style_ModulBorder}"/>
-                <StackPanel  Grid.Row="3" Grid.ColumnSpan="3" Name="stackpanel_laststatus">
+                <StackPanel  Grid.Row="3" Grid.ColumnSpan="3" Name="stackpanel_laststatus" VerticalAlignment="Center">
                     <Label Content="Letzter Zustand" Margin="5,5,5,0"/>
                     <StackPanel VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center" Margin="0">
                         <StackPanel Orientation="Horizontal" Margin="0">

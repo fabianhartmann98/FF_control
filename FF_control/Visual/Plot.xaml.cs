@@ -63,7 +63,7 @@ namespace FF_control.Visual
 
             ContextMenu cm = new ContextMenu();
             MenuItem mi = new MenuItem();
-            mi.Header = "qwertz";
+            mi.Header = "Dehighlite all";
             mi.Click += new RoutedEventHandler(qwertzclick);
             cm.Items.Add(mi);
             can.ContextMenu = cm;
@@ -71,7 +71,8 @@ namespace FF_control.Visual
 
         private void qwertzclick(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            parent.diagram.dehigliteallgraphs();
+            DrawDiagram();
         }
 
         private void setUpSideTabControl()

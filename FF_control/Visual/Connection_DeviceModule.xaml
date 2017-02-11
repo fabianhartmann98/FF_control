@@ -11,7 +11,7 @@
 
     <Grid>
         <Border Style="{StaticResource Style_ModulBorder}"/>
-        <Grid Name="ConntentGrid">
+        <Grid Name="ConntentGrid" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition  Width="100"/>
