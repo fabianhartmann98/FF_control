@@ -7,6 +7,8 @@ using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
 using System.IO;
 using System.Timers;
+using System.Collections;
+using System.Windows;
 
 namespace FF_control.Bluetooth
 {
@@ -53,7 +55,7 @@ namespace FF_control.Bluetooth
         public BluetoothDeviceInfo[] infos { get; private set; }        //all available DeviceInfos 
         public BluetoothDeviceInfo ConnectedDevice { get; private set; }         //the deviceInfo of the connected device
         Stream s;                           //the stream to write and read on   
-        const int buf_len = 256;            //the buffer Length of the RX
+        const int buf_len = 2048;            //the buffer Length of the RX
         byte[] RX_buf = new byte[buf_len];  //the buffer for RX 
         int rx_head = 0;                    //what we have already read (should always be 0)
         int rx_tail = 0;                    //the length in the array thath is filled but not read yet 
@@ -153,6 +155,14 @@ namespace FF_control.Bluetooth
         private void beginRead_cal(IAsyncResult ar)
         {
             rx_tail += s.EndRead(ar);
+            //ArrayList al = new ArrayList();
+            //for (int i = 0; i+1< rx_tail-rx_head; i+=2)
+            //{
+            //    int high = AccessRXBuf(i + rx_head);
+            //    int low = AccessRXBuf(i + rx_head + 1);
+            //    int x = (high << 8) + low;
+            //    al.Add(x);
+            //}
             DataManager();
 
             s.BeginRead(RX_buf, rx_tail, buf_len-rx_tail, beginRead_cal, s);            
@@ -321,8 +331,9 @@ namespace FF_control.Bluetooth
                     shiftingRXBuf(framelength + BT_Protocoll.FrameLengthOverhead); //remove packet out of buffer
                 }
 	        }
-	        catch 
-	        {		
+	        catch (Exception e)
+	        {
+                MessageBox.Show(e.ToString());
 	        }                      
         }
         #endregion
@@ -670,11 +681,10 @@ namespace FF_control.Bluetooth
                 DiscoverDevicesEnded(this, new EventArgs());
         }
 
-        public event EventHandler MeasuredDataReceived;
+        public event EventHandler<ReceivedData_EventArgs> MeasuredDataReceived;
 
-        protected virtual void OnMeasuredDataReceived(double number, double time, double act_value)
+        protected virtual void OnMeasuredDataReceived(int number, int time, int act_value)
         {
-
             if (MeasuredDataReceived != null)
                 MeasuredDataReceived(this, new ReceivedData_EventArgs(number,time,act_value));
         }

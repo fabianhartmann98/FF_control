@@ -305,16 +305,29 @@ namespace FF_control.Visual
 
         public void DrawDiagram()
         {
-            can.Children.Clear();           //clear the canvas to redraw axis and plots
-            parent.diagram.DrawAxis2dot0();
-            can = parent.diagram.draw();
-            if (tb_xmin != null)
+            // der Textbox einen Text hinzufügen
+            if (!can.Dispatcher.CheckAccess())
             {
-                tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
-                tb_xmax.Text = parent.diagram.AxisXmax.ToString("F2");
-                tb_ymin.Text = parent.diagram.AxisYmin.ToString("F2");
-                tb_ymax.Text = parent.diagram.AxisYmax.ToString("F2");
+                can.Dispatcher.Invoke((Action<string>)DrawDiagram, "0");
             }
+            else
+            {
+                can.Children.Clear();           //clear the canvas to redraw axis and plots
+                parent.diagram.DrawAxis2dot0();
+                can = parent.diagram.draw();
+                if (tb_xmin != null)
+                {
+                    tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
+                    tb_xmax.Text = parent.diagram.AxisXmax.ToString("F2");
+                    tb_ymin.Text = parent.diagram.AxisYmin.ToString("F2");
+                    tb_ymax.Text = parent.diagram.AxisYmax.ToString("F2");
+                }
+            }
+            
+        }
+        public void DrawDiagram(string x)
+        {
+            DrawDiagram();
         }
 
         void Plot_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

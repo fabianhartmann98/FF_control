@@ -156,12 +156,12 @@ namespace FF_control.Visual
             setUpSideTabControl();
         }
 
-        void bt_connection_MeasuredDataReceived(object sender, EventArgs e) //received a new Data
+        void bt_connection_MeasuredDataReceived(object sender, ReceivedData_EventArgs e) //received a new Data
         {
-            ReceivedData_EventArgs args = (ReceivedData_EventArgs)e;
-            double number = (double)args.ArrayL[0];//get number (are saved in ArrayList) (order is importent)
-            double time = (double)args.ArrayL[1];//get time
-            double actvalue = (double)args.ArrayL[2]; //get actual value
+            ReceivedData_EventArgs args = e;
+            int number = (int)args.ArrayL[0];//get number (are saved in ArrayList) (order is importent)
+            int time = (int)args.ArrayL[1];//get time
+            int actvalue = (int)args.ArrayL[2]; //get actual value
 
             int index = parent.diagram.Grpahs.Count - 1; //get the index of the graph to be added
 
@@ -173,7 +173,9 @@ namespace FF_control.Visual
                 parent.diagram.Grpahs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
             }
             parent.diagram.Grpahs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
+            parent.diagram.setScalingAuto();
             parent.v_plot.DrawDiagram();
+            
         }
 
 

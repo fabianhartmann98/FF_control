@@ -20,8 +20,11 @@ namespace FF_control.Bluetooth
 
         public ReceivedData_EventArgs(params object[] list)
         {
-            al = new ArrayList(); 
-            al.Add(list);
+            al = new ArrayList();
+            foreach (var item in list)
+            {
+                al.Add(item);
+            }
         }
     }
 }

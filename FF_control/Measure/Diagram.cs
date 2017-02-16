@@ -645,14 +645,27 @@ namespace FF_control.Measure
         /// </summary>
         public void OffsetScaleCalculation()
         {
-            plotcan.Height = plotheight;        //set PlotcanHeigth and width according to the main Canvas
-            plotcan.Width = plotwidth;
+            can_set_heigt_width(plotcan, plotheight, plotwidth);
 
             //give them some margin of the canvas is margin (margin/2 top and bottom)
             offsetX = xmin - (xmax - xmin) * PlottingMargin;     //xmin - Margin (Margin is not a pixel value; is percentage) 
             offsetY = ymin - (ymax - ymin) * PlottingMargin;
             scaleX = plotwidth / (xmax + (xmax - xmin) * PlottingMargin - offsetX);     //*1 because of 2 Margins (on is already in offset); Pixel/Range displayed(=xmax+margin-offset)  
             scaleY = plotheight / (ymax + (ymax - ymin) * PlottingMargin - offsetY);
+        }
+
+        private void can_set_heigt_width(Canvas c, double height, double width)
+        {
+            // der Textbox einen Text hinzufügen
+            if (!c.Dispatcher.CheckAccess())
+            {
+                c.Dispatcher.Invoke((Action<Canvas, double,double>)can_set_heigt_width, c,height, width);
+            }
+            else
+            {
+                c.Height = height;
+                c.Width = width;
+            }
         }
 
         /// <summary>
