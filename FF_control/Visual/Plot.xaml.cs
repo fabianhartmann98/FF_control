@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using FF_control.Measure;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
 
 namespace FF_control.Visual
 {
@@ -66,7 +67,25 @@ namespace FF_control.Visual
             mi.Header = "Dehighlite all";
             mi.Click += new RoutedEventHandler(qwertzclick);
             cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Save as png";
+            mi.Click += new RoutedEventHandler(save_canvas_png);
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Save to Clipboard";
+            mi.Click += new RoutedEventHandler(save_to_clipboard);
+            cm.Items.Add(mi);
             can.ContextMenu = cm;
+        }
+
+        private void save_to_clipboard(object sender, RoutedEventArgs e)
+        {
+            parent.diagram.save_to_clipboard();
+        }
+
+        private void save_canvas_png(object sender, RoutedEventArgs e)
+        {
+            parent.diagram.save_as_png();
         }
 
         private void qwertzclick(object sender, EventArgs e)

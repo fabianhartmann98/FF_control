@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace FF_control.Measure
@@ -703,6 +704,52 @@ namespace FF_control.Measure
             ymax += dy / scaleY;
             ymin += dy / scaleY;
             OffsetScaleCalculation();  //scale new offset and scale
+        }
+
+        public void save_as_png()
+        {
+            Rect rect = new Rect(can.RenderSize);
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
+              (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            rtb.Render(can);
+            //endcode as PNG
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            //save to memory stream
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+
+            pngEncoder.Save(ms);
+            ms.Close();
+            System.IO.File.WriteAllBytes("logo.png", ms.ToArray());
+        }
+
+        public void save_to_clipboard()
+        {
+
+            Rect rect = new Rect(can.RenderSize);
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
+              (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            rtb.Render(can);
+
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            //save to memory stream
+            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+            pngEncoder.Save(stream);
+            byte[] bytes = stream.ToArray();
+
+            string str = BitConverter.ToString(bytes, 0).Replace("-", string.Empty);
+            int width = (int)rtb.Width;
+            int height = (int)rtb.Height;
+            string mpic = @"{\rtf1"
+            +"some stuff" +@"{\pict\pngblip\picw" +
+            rtb.Width.ToString() + @"\pich" + rtb.Height.ToString() +
+            ////@"\picwgoal" + width.ToString() + @"\pichgoal" + height.ToString() +
+            @"\bin " + str + "}" + "some other stuff}";
+            Clipboard.Clear();
+            Clipboard.SetData(DataFormats.Rtf, mpic);
         }
         #endregion
         
