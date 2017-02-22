@@ -2,11 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     
-    <BitmapImage x:Key="ff_png" UriSource="\Visual\Pics\ffsymb.png"/>
-    <BitmapImage x:Key="help_png" UriSource="\Visual\Pics\Questionsymb.png"/>
-    <BitmapImage x:Key="diagram_png" UriSource="\Visual\Pics\Diagramsymb.png"/>
-    <BitmapImage x:Key="bluetooth_png" UriSource="\Visual\Pics\Bluetoothsymb.png"/>
-    <BitmapImage x:Key="table_png" UriSource="\Visual\Pics\Tablesymb.png"/>
+    <BitmapImage x:Key="ff_png" UriSource="\Visual\Pics\Symbols\ffsymb.png"/>
+    <BitmapImage x:Key="help_png" UriSource="\Visual\Pics\Symbols\Questionsymb.png"/>
+    <BitmapImage x:Key="diagram_png" UriSource="\Visual\Pics\Symbols\Diagramsymb.png"/>
+    <BitmapImage x:Key="bluetooth_png" UriSource="\Visual\Pics\Symbols\Bluetoothsymb.png"/>
+    <BitmapImage x:Key="table_png" UriSource="\Visual\Pics\Symbols\Tablesymb.png"/>
 
     <SolidColorBrush x:Key="BasicForeground" Color="Black"/>
     <SolidColorBrush x:Key="BasicBackground" Color="#FFF7F7F7"/>

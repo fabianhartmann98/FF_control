@@ -159,13 +159,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Visual\Pics\Bluetoothsymb.png" />
-    <Resource Include="Visual\Pics\Diagramsymb.png" />
-    <Resource Include="Visual\Pics\ffsymb.png" />
-    <Resource Include="Visual\Pics\Questionsymb.png" />
-    <Resource Include="Visual\Pics\Tablesymb.png" />
+    <Resource Include="Visual\Pics\Symbols\Bluetoothsymb.png" />
+    <Resource Include="Visual\Pics\Symbols\Diagramsymb.png" />
+    <Resource Include="Visual\Pics\Symbols\ffsymb.png" />
+    <Resource Include="Visual\Pics\Symbols\Questionsymb.png" />
+    <Resource Include="Visual\Pics\Symbols\Tablesymb.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

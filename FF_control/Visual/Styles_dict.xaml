@@ -1,8 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <sys:Double x:Key="d_SideTabControlWidth">200</sys:Double>
+    <sys:Double x:Key="d_MainTabControlWidth">150</sys:Double>
 
     <Style x:Key="ControlBaseStyle" TargetType="{x:Type Control}">
-        <Setter Property="FontFamily" Value="Times New Roman"/>
+        <Setter Property="FontFamily" Value="Arial"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Foreground" Value="{DynamicResource BasicForeground}"/>
         <Setter Property="Margin" Value="5"/>
@@ -184,7 +188,7 @@
     <!-- End of Flat ComboBox -->
 
     <Style TargetType="TabItem" x:Key="Style_MainTabItem" BasedOn="{StaticResource ControlBaseStyle}">
-        <Setter Property="Width" Value="150"/>
+        <Setter Property="Width" Value="{StaticResource d_MainTabControlWidth}"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="Margin" Value="0"/>
@@ -252,7 +256,7 @@
         <Setter Property="Margin" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Width" Value="200"/>
+        <Setter Property="Width" Value="{StaticResource d_SideTabControlWidth}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">
