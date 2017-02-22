@@ -692,11 +692,23 @@ namespace FF_control.Measure
             OffsetScaleCalculation();  //scale new offset and scale
         }
 
+        /// <summary>
+        /// get's the position in reference to plotcan
+        /// calls Scrole(Point,double)
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="delta"></param>
         public void Scrole(MouseWheelEventArgs e, double delta)
         {
             Scrole(e.GetPosition(plotcan),delta);
         }
 
+        /// <summary>
+        /// shifts min and max according to dx and dy and the sclae used 
+        /// gets new offset (also scale is computed)
+        /// </summary>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
         public void Shift(double dx, double dy)
         {
             xmin += dx / scaleX;
@@ -706,50 +718,62 @@ namespace FF_control.Measure
             OffsetScaleCalculation();  //scale new offset and scale
         }
 
+        /// <summary>
+        /// saves the Plot in a png (right now it's saved as logo.png in Debug)
+        /// </summary>
         public void save_as_png()
         {
             Rect rect = new Rect(can.RenderSize);
             RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
               (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
-            rtb.Render(can);
+            rtb.Render(can);        //create screenshot
             //endcode as PNG
             BitmapEncoder pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));     //add it to the encoder
 
             //save to memory stream
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
 
             pngEncoder.Save(ms);
             ms.Close();
-            System.IO.File.WriteAllBytes("logo.png", ms.ToArray());
+            System.IO.File.WriteAllBytes("logo.png", ms.ToArray()); //save the png
         }
 
+        /// <summary>
+        /// save plot and some text to the clipboard as rtf
+        /// </summary>
         public void save_to_clipboard()
         {
-
             Rect rect = new Rect(can.RenderSize);
             RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
               (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
-            rtb.Render(can);
+            rtb.Render(can);        //create screenshot
 
             BitmapEncoder pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb)); //add it to the encoder
 
             //save to memory stream
             System.IO.MemoryStream stream = new System.IO.MemoryStream();
-            pngEncoder.Save(stream);
-            byte[] bytes = stream.ToArray();
+            pngEncoder.Save(stream);            //add it to the stream
+            byte[] bytes = stream.ToArray();    //create byte-Array
 
             string str = BitConverter.ToString(bytes, 0).Replace("-", string.Empty);
             int width = (int)rtb.Width;
             int height = (int)rtb.Height;
-            string mpic = @"{\rtf1"
-            +"some stuff" +@"{\pict\pngblip\picw" +
-            rtb.Width.ToString() + @"\pich" + rtb.Height.ToString() +
-            ////@"\picwgoal" + width.ToString() + @"\pichgoal" + height.ToString() +
-            @"\bin " + str + "}" + "some other stuff}";
+            StringBuilder sb = new StringBuilder();
+            sb.Append(@"{\rtf1");           //add start of rtf
+            sb.Append("text prev pic");     //add some text
+            sb.Append(@"{\pict\pngblip\picw");  //add the header for the pic
+            sb.Append(rtb.Width.ToString());    //add the widht
+            sb.Append(@"\pich");                //add the height
+            sb.Append(rtb.Height.ToString());
+            sb.Append(@"\bin ");                //add the binary information of the png
+            sb.Append(str);                     //byte array
+            sb.Append("}");                     //end the pic
+            sb.Append("text after pic");        //add some text after pic
+            sb.Append("}");                     //close the rtf
             Clipboard.Clear();
-            Clipboard.SetData(DataFormats.Rtf, mpic);
+            Clipboard.SetData(DataFormats.Rtf, sb.ToString());      //add it ot the clipboard (rtf)
         }
         #endregion
         
@@ -766,7 +790,6 @@ namespace FF_control.Measure
             q.Y = plotheight - (p.Y - offsetY) * scaleY; //start at the top -> height - YValue
             return q; 
         }
-
         #endregion
 
     }
