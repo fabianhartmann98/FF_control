@@ -255,6 +255,31 @@ namespace FF_control.Measure
             return null;
         }
 
+        public void Save_graph_xaml(Graph g)
+        {
+            Diagram d = new Diagram();
+            d.Grpahs.Add(g);
+            d.Save_diagram_xml();
+        }
+        public void Save_graph_xaml(int index)
+        {
+            Diagram d = new Diagram();
+            d.Grpahs.Add(this.Grpahs[index]);
+            d.Save_diagram_xml();
+        }
+        public static Graph[] Open_graph_xaml()
+        {
+            Diagram d = Diagram.Open_diagram_xml();
+            if (d == null && d.Grpahs.Count == 0)
+                return null;
+            Graph[] col = new Graph[d.Grpahs.Count];
+            for (int i = 0; i < d.Grpahs.Count; i++)
+            {
+                col[i] = d.Grpahs[i];
+            }
+            return col;
+        }
+
         public void dehigliteallgraphs()
         {
             foreach (var item in graphs)

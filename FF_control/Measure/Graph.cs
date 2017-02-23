@@ -201,33 +201,7 @@ namespace FF_control.Measure
                 }
             }
             can.Children.Add(pl);
-        }
-
-        public void Save()
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            if (SaveLocation != null && "" != SaveLocation)
-                sfd.InitialDirectory =SaveLocation;
-            sfd.Filter = Graph.FileFilter;
-            if ((bool)sfd.ShowDialog())
-            {
-                SaveLocation = sfd.FileName;
-            }
-        }
-
-        public static Graph Open()
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.FileName = Graph.FileFilter;
-            if ((bool)ofd.ShowDialog())
-            {
-                Graph g = new Graph();
-                g.SaveLocation = ofd.FileName;
-
-                return g; 
-            }
-            return null;
-        }
+        }        
 
         internal void dehighliteallpoints()
         {
