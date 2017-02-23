@@ -75,7 +75,27 @@ namespace FF_control.Visual
             mi.Header = "Save to Clipboard";
             mi.Click += new RoutedEventHandler(save_to_clipboard);
             cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Save Diagram";
+            mi.Click += new RoutedEventHandler(save_diagram);
+            cm.Items.Add(mi);
+            mi = new MenuItem();
+            mi.Header = "Open Diagram";
+            mi.Click += new RoutedEventHandler(open_diagram);
+            cm.Items.Add(mi);
             can.ContextMenu = cm;
+        }
+
+        private void open_diagram(object sender, RoutedEventArgs e)
+        {
+            parent.diagram = Diagram.Open_diagram_xml();
+            parent.diagram.Can = can;
+            DrawDiagram();
+        }
+
+        private void save_diagram(object sender, RoutedEventArgs e)
+        {
+            parent.diagram.Save_diagram_xml();
         }
 
         private void save_to_clipboard(object sender, RoutedEventArgs e)

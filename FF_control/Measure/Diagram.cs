@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FF_control.Measure
 {
@@ -64,6 +68,7 @@ namespace FF_control.Measure
         private List<Graph> graphs;
         private Canvas plotcan;
 
+        [XmlIgnore]
         public Canvas PlotCan
         {
             get { return plotcan; }
@@ -94,6 +99,7 @@ namespace FF_control.Measure
         /// drasw on given can
         /// set: addapts scale 
         /// </summary>
+        [XmlIgnore]
         public Canvas Can
         {
             get { return can; }
@@ -157,8 +163,8 @@ namespace FF_control.Measure
         #endregion
 
         #region prop vaiables 
-        public Brush AxisColor { get; set; }            //whats the color of the Axis
-        public Brush AxisLabelColor { get; set; }       //whats the color of the Axis Labels and Markers
+        [XmlIgnore]public Brush AxisColor { get; set; }            //whats the color of the Axis
+        [XmlIgnore]public Brush AxisLabelColor { get; set; }       //whats the color of the Axis Labels and Markers
         public double DiffPerScrolePercent { get; set; }       //what does the window (min and max of Axis) change per each scroll
         #endregion
 
@@ -209,6 +215,46 @@ namespace FF_control.Measure
         #endregion
 
         #region public methods
+        public void Save_diagram_xml()
+        {
+            try
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                if (!(bool)sfd.ShowDialog())
+                    return;
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
+
+                System.IO.StreamWriter sww = new System.IO.StreamWriter(sfd.FileName);
+                XmlWriter writer = XmlWriter.Create(sww);
+                xsSubmit.Serialize(writer, this);
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        static public Diagram Open_diagram_xml()
+        {
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                if (!(bool)ofd.ShowDialog())
+                    return null;
+                string xml = File.ReadAllText(ofd.FileName);
+                StreamReader sr = new StreamReader(ofd.FileName);
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
+
+                return (Diagram) xsSubmit.Deserialize(sr);                
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            return null;
+        }
+
         public void dehigliteallgraphs()
         {
             foreach (var item in graphs)
