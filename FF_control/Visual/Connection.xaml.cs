@@ -131,5 +131,16 @@ namespace FF_control.Visual
             parent.bt_connection.GetAvailableDevicesAsync();  //search for available devices
         }
 
+        private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            double columnwidth = (double)FindResource("d_SideTabControlWidth");
+            if (connection_grid.ColumnDefinitions[connection_grid.ColumnDefinitions.Count - 1].Width.Value >= columnwidth)
+                columnwidth = 10;
+            connection_grid.ColumnDefinitions.RemoveAt(connection_grid.ColumnDefinitions.Count - 1);
+            ColumnDefinition cd = new ColumnDefinition();
+            cd.Width = new GridLength(columnwidth);
+            cd.MinWidth = columnwidth;
+            connection_grid.ColumnDefinitions.Add(cd);
+        }
     }
 }

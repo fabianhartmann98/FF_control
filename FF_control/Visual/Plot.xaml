@@ -8,10 +8,16 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
-        <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
+    <Grid Name="plot_grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Name="SideTabGridColumn" MinWidth="{StaticResource d_SideTabControlWidth}" Width="{StaticResource gridlength_SideTabControlWidth}"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+        <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
 
-        <Canvas DockPanel.Dock="Left"
+        <Canvas Grid.Column="0"
             Name="can" MouseWheel="can_MouseWheel"
             MouseLeftButtonDown="can_MouseLeftButtonDown"
             MouseMove="can_MouseMove"
@@ -19,5 +25,5 @@
             ClipToBounds="True" 
             SizeChanged="can_SizeChanged">
         </Canvas>
-    </DockPanel>
+    </Grid>
 </UserControl>

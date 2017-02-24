@@ -8,9 +8,15 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <DockPanel>
-        <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
-        <ScrollViewer>
+    <Grid Name="control_grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Name="SideTabGridColumn" MinWidth="{StaticResource d_SideTabControlWidth}" Width="{StaticResource gridlength_SideTabControlWidth}"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+        <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
+        <ScrollViewer Grid.Column="0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -66,5 +72,5 @@
 
             </Grid>
         </ScrollViewer>
-    </DockPanel>
+    </Grid>
 </UserControl>

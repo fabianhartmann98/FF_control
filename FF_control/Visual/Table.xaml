@@ -14,11 +14,7 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Name="SideTabGridColumn" MinWidth="{StaticResource d_SideTabControlWidth}" Width="{StaticResource gridlength_SideTabControlWidth}"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter  Grid.Column="1" Margin="2,0,2,0"
-                  Width="3" Background="Purple" 
-                  VerticalAlignment="Stretch" 
-                  HorizontalAlignment="Center" 
-                  MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+        <GridSplitter MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
         <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
         <StackPanel Grid.Column="0" Name="stackpanel_dg" Orientation="Horizontal">
 

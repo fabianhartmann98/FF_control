@@ -152,5 +152,17 @@ namespace FF_control.Visual
         {
             parent.bt_connection.SendStop();
         }
+
+        private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            double columnwidth = (double)FindResource("d_SideTabControlWidth");
+            if (control_grid.ColumnDefinitions[control_grid.ColumnDefinitions.Count - 1].Width.Value >= columnwidth)
+                columnwidth = 10;
+            control_grid.ColumnDefinitions.RemoveAt(control_grid.ColumnDefinitions.Count - 1);
+            ColumnDefinition cd = new ColumnDefinition();
+            cd.Width = new GridLength(columnwidth);
+            cd.MinWidth = columnwidth;
+            control_grid.ColumnDefinitions.Add(cd);
+        }
     }
 }

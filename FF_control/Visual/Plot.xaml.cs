@@ -493,5 +493,17 @@ namespace FF_control.Visual
             parent.diagram.Can = can;                               //setting the can new, will change the scales and offset automatically
             DrawDiagram();                                          //redraw the diagram
         }
+
+        private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            double columnwidth = (double)FindResource("d_SideTabControlWidth");
+            if (plot_grid.ColumnDefinitions[plot_grid.ColumnDefinitions.Count - 1].Width.Value >= columnwidth)
+                columnwidth = 10;
+            plot_grid.ColumnDefinitions.RemoveAt(plot_grid.ColumnDefinitions.Count - 1);
+            ColumnDefinition cd = new ColumnDefinition();
+            cd.Width = new GridLength(columnwidth);
+            cd.MinWidth = columnwidth;
+            plot_grid.ColumnDefinitions.Add(cd);
+        }
     }
 }

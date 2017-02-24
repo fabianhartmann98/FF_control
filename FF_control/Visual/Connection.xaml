@@ -8,8 +8,14 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
-        <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
+    <Grid Name="connection_grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Name="SideTabGridColumn" MinWidth="{StaticResource d_SideTabControlWidth}" Width="{StaticResource gridlength_SideTabControlWidth}"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+        <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
         <ScrollViewer Grid.Column="0" Name="scrollviewer">
             <StackPanel  HorizontalAlignment="Stretch" MinWidth="400">
                 <StackPanel Name="stackpanel">
@@ -17,5 +23,5 @@
                 <Button Content="Search for Devices" Name="button_refresh" Click="button_refresh_Click"/>
             </StackPanel>
         </ScrollViewer>
-    </DockPanel>
+    </Grid>
 </UserControl>
