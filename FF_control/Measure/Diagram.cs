@@ -227,7 +227,6 @@ namespace FF_control.Measure
                 System.IO.StreamWriter sww = new System.IO.StreamWriter(sfd.FileName);
                 XmlWriter writer = XmlWriter.Create(sww);
                 xsSubmit.Serialize(writer, this);
-
             }
             catch (Exception e)
             {
@@ -242,7 +241,6 @@ namespace FF_control.Measure
                 OpenFileDialog ofd = new OpenFileDialog();
                 if (!(bool)ofd.ShowDialog())
                     return null;
-                string xml = File.ReadAllText(ofd.FileName);
                 StreamReader sr = new StreamReader(ofd.FileName);
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
 
@@ -265,6 +263,7 @@ namespace FF_control.Measure
         {
             Diagram d = new Diagram();
             d.Grpahs.Add(this.Grpahs[index]);
+            d.setScalingAuto();
             d.Save_diagram_xml();
         }
         public static Graph[] Open_graph_xaml()
@@ -718,12 +717,38 @@ namespace FF_control.Measure
         public void OffsetScaleCalculation()
         {
             can_set_heigt_width(plotcan, plotheight, plotwidth);
-
+            check_max_min();
             //give them some margin of the canvas is margin (margin/2 top and bottom)
             offsetX = xmin - (xmax - xmin) * PlottingMargin;     //xmin - Margin (Margin is not a pixel value; is percentage) 
             offsetY = ymin - (ymax - ymin) * PlottingMargin;
             scaleX = plotwidth / (xmax + (xmax - xmin) * PlottingMargin - offsetX);     //*1 because of 2 Margins (on is already in offset); Pixel/Range displayed(=xmax+margin-offset)  
             scaleY = plotheight / (ymax + (ymax - ymin) * PlottingMargin - offsetY);
+        }
+
+        private void check_max_min()
+        {
+            if (xmin == xmax)
+            {
+                xmin--;
+                xmax++;
+            }
+            if (ymin == ymax)
+            {
+                ymin--;
+                ymax++;
+            }
+            if (xmax < xmin)
+            {
+                double temp = xmin;
+                xmin = xmax;
+                xmax = temp;
+            }
+            if (ymax < ymin)
+            {
+                double temp = ymin;
+                ymin = ymax;
+                ymax = temp;
+            }
         }
 
         private void can_set_heigt_width(Canvas c, double height, double width)

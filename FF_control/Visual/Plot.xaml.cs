@@ -88,8 +88,12 @@ namespace FF_control.Visual
 
         private void open_diagram(object sender, RoutedEventArgs e)
         {
-            parent.diagram = Diagram.Open_diagram_xml();
+            Diagram temp = Diagram.Open_diagram_xml();
+            if (temp == null)
+                return;
+            parent.diagram = temp;
             parent.diagram.Can = can;
+            parent.diagram.OffsetScaleCalculation();
             DrawDiagram();
         }
 
@@ -321,9 +325,12 @@ namespace FF_control.Visual
 
         void b_add_Click(object sender, RoutedEventArgs e)
         {
-            Graph g = Graph.Open();             //show the Open File dialog an other stuff
+            Graph[] g = Diagram.Open_graph_xaml();             //show the Open File dialog an other stuff
             if(g!=null)
-                parent.diagram.Grpahs.Add(g);
+                foreach (var item in g)
+                {
+                    parent.diagram.Grpahs.Add(item);
+                }
         }
 
         private void b_plot_remove_Click(object sender, RoutedEventArgs e)
@@ -338,7 +345,7 @@ namespace FF_control.Visual
         {
             Label l = (Label)sender;            
 
-            parent.diagram.Grpahs[(int)l.Tag].Save();       //the index is saved in the tag
+            parent.diagram.Save_graph_xaml((int)l.Tag);       //the index is saved in the tag
             l.Content = parent.diagram.Grpahs[(int)l.Tag].SaveLocation;
         }
 

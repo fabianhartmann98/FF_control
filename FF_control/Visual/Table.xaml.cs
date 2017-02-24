@@ -145,7 +145,7 @@ namespace FF_control.Visual
         {
             Label b = (Label)sender;
             //todo: open SavefileDialog
-            parent.diagram.Grpahs[(int)b.Tag].Save(); 
+            parent.diagram.Save_graph_xaml((int)b.Tag); 
             setUpSideTabControl();
         }
 
