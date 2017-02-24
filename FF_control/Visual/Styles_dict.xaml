@@ -3,6 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     
     <sys:Double x:Key="d_SideTabControlWidth">200</sys:Double>
+    <GridLength x:Key="gridlength_SideTabControlWidth">200</GridLength>
     <sys:Double x:Key="d_MainTabControlWidth">150</sys:Double>
 
     <Style x:Key="ControlBaseStyle" TargetType="{x:Type Control}">
@@ -256,7 +257,7 @@
         <Setter Property="Margin" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Width" Value="{StaticResource d_SideTabControlWidth}"/>
+        <!--<Setter Property="Width" Value="{StaticResource d_SideTabControlWidth}"/>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">

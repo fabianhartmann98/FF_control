@@ -8,11 +8,20 @@
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <DockPanel>
-        <TabControl DockPanel.Dock="Right" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
-
-        <StackPanel Name="stackpanel_dg" Orientation="Horizontal">
+    <Grid Name="table_grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Name="SideTabGridColumn" MinWidth="{StaticResource d_SideTabControlWidth}" Width="{StaticResource gridlength_SideTabControlWidth}"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter  Grid.Column="1" Margin="2,0,2,0"
+                  Width="3" Background="Purple" 
+                  VerticalAlignment="Stretch" 
+                  HorizontalAlignment="Center" 
+                  MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+        <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
+        <StackPanel Grid.Column="0" Name="stackpanel_dg" Orientation="Horizontal">
 
         </StackPanel>
-    </DockPanel>
+    </Grid>
 </UserControl>

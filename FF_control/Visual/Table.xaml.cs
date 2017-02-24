@@ -217,5 +217,17 @@ namespace FF_control.Visual
             DataGrid dg = sender as DataGrid;
             parent.diagram.Grpahs[(int)(dg.Tag)].mps[dg.SelectedIndex].Highlited = true;
         }
+
+        private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            double columnwidth = (double)FindResource("d_SideTabControlWidth");
+            if (table_grid.ColumnDefinitions[table_grid.ColumnDefinitions.Count-1].Width.Value >=columnwidth)
+                columnwidth = 10;
+            table_grid.ColumnDefinitions.RemoveAt(table_grid.ColumnDefinitions.Count-1);
+            ColumnDefinition cd = new ColumnDefinition();
+            cd.Width = new GridLength(columnwidth);
+            cd.MinWidth = columnwidth;
+            table_grid.ColumnDefinitions.Add(cd);
+        }
     }
 }
