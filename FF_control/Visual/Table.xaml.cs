@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace FF_control.Visual
 {
@@ -144,8 +145,10 @@ namespace FF_control.Visual
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Label b = (Label)sender;
-            //todo: open SavefileDialog
-            parent.diagram.Save_graph_xaml((int)b.Tag); 
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (!(bool)sfd.ShowDialog())
+                return;
+            parent.diagram.Save_graph_xaml((int)b.Tag,sfd.FileName); 
             setUpSideTabControl();
         }
 

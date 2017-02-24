@@ -88,7 +88,10 @@ namespace FF_control.Visual
 
         private void open_diagram(object sender, RoutedEventArgs e)
         {
-            Diagram temp = Diagram.Open_diagram_xml();
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (!(bool)ofd.ShowDialog())
+                return;
+            Diagram temp = Diagram.Open_diagram_xml(ofd.FileName);
             if (temp == null)
                 return;
             parent.diagram = temp;
@@ -99,7 +102,10 @@ namespace FF_control.Visual
 
         private void save_diagram(object sender, RoutedEventArgs e)
         {
-            parent.diagram.Save_diagram_xml();
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (!(bool)sfd.ShowDialog())
+                return;
+            parent.diagram.Save_diagram_xml(sfd.FileName);
         }
 
         private void save_to_clipboard(object sender, RoutedEventArgs e)
@@ -325,7 +331,10 @@ namespace FF_control.Visual
 
         void b_add_Click(object sender, RoutedEventArgs e)
         {
-            Graph[] g = Diagram.Open_graph_xaml();             //show the Open File dialog an other stuff
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (!(bool)ofd.ShowDialog())
+                return;
+            Graph[] g = Diagram.Open_graph_xaml(ofd.FileName);             //show the Open File dialog an other stuff
             if(g!=null)
                 foreach (var item in g)
                 {
@@ -343,9 +352,11 @@ namespace FF_control.Visual
 
         private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Label l = (Label)sender;            
-
-            parent.diagram.Save_graph_xaml((int)l.Tag);       //the index is saved in the tag
+            Label l = (Label)sender;
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (!(bool)sfd.ShowDialog())
+                return;
+            parent.diagram.Save_graph_xaml((int)l.Tag,sfd.FileName);       //the index is saved in the tag
             l.Content = parent.diagram.Grpahs[(int)l.Tag].SaveLocation;
         }
 

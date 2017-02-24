@@ -215,33 +215,35 @@ namespace FF_control.Measure
         #endregion
 
         #region public methods
-        public void Save_diagram_xml()
+        /// <summary>
+        /// saves this diagram as xml-file ont the location of filename
+        /// </summary>
+        /// <param name="filename">location of file</param>
+        public void Save_diagram_xml(string filename)
         {
             try
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                if (!(bool)sfd.ShowDialog())
-                    return;
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
+            {                
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));//create an xmlSerializer
 
-                System.IO.StreamWriter sww = new System.IO.StreamWriter(sfd.FileName);
+                System.IO.StreamWriter sww = new System.IO.StreamWriter(filename);
                 XmlWriter writer = XmlWriter.Create(sww);
-                xsSubmit.Serialize(writer, this);
+                xsSubmit.Serialize(writer, this);//write to the file
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
         }
-
-        static public Diagram Open_diagram_xml()
+        /// <summary>
+        /// opens a diagram at the location of filename and returns it
+        /// </summary>
+        /// <param name="filename">location of file</param>
+        /// <returns>the diagram which was opended</returns>
+        static public Diagram Open_diagram_xml(string filename)
         {
             try
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                if (!(bool)ofd.ShowDialog())
-                    return null;
-                StreamReader sr = new StreamReader(ofd.FileName);
+            {                
+                StreamReader sr = new StreamReader(filename);
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
 
                 return (Diagram) xsSubmit.Deserialize(sr);                
@@ -253,22 +255,35 @@ namespace FF_control.Measure
             return null;
         }
 
-        public void Save_graph_xaml(Graph g)
+        /// <summary>
+        /// create a single graph in a new diagram at the given location
+        /// </summary>
+        /// <param name="g">the graph to save</param>
+        /// <param name="filename">the location to save the file</param>
+        static public void Save_graph_xaml(Graph g, string filename)
         {
             Diagram d = new Diagram();
             d.Grpahs.Add(g);
-            d.Save_diagram_xml();
-        }
-        public void Save_graph_xaml(int index)
-        {
-            Diagram d = new Diagram();
-            d.Grpahs.Add(this.Grpahs[index]);
             d.setScalingAuto();
-            d.Save_diagram_xml();
+            d.Save_diagram_xml(filename);
         }
-        public static Graph[] Open_graph_xaml()
+        /// <summary>
+        /// saves a single graph (index) at a given location
+        /// </summary>
+        /// <param name="index">index of the graph</param>
+        /// <param name="filename">the location to save the file</param>
+        public void Save_graph_xaml(int index, string filename)
         {
-            Diagram d = Diagram.Open_diagram_xml();
+            Diagram.Save_graph_xaml(this.Grpahs[index],filename);
+        }
+        /// <summary>
+        /// gets only the graphs of the file (ingnores the min and max)
+        /// </summary>
+        /// <param name="filename">the location of the file</param>
+        /// <returns>all the saved graphs</returns>
+        public static Graph[] Open_graph_xaml(string filename)
+        {
+            Diagram d = Diagram.Open_diagram_xml(filename);
             if (d == null && d.Grpahs.Count == 0)
                 return null;
             Graph[] col = new Graph[d.Grpahs.Count];
