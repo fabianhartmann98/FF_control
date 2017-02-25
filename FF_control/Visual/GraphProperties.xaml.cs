@@ -37,6 +37,8 @@ namespace FF_control.Visual
         private void tb_name_LostFocus(object sender, RoutedEventArgs e)
         {
             graph.Name = tb_name.Text;
+            if (b_remove.IsMouseOver)           //if b_remove was clicked it loses fokus but doesn't call b_remove_Click
+                b_remove_Click(b_remove, e);
             OnGraphPropertiesChanged();
         }
 

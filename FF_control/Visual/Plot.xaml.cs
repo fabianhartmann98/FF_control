@@ -86,6 +86,7 @@ namespace FF_control.Visual
             parent.diagram.Can = can;
             parent.diagram.OffsetScaleCalculation();
             DrawDiagram();
+            setUpSideTabControl();
         }
 
         private void save_diagram(object sender, RoutedEventArgs e)
