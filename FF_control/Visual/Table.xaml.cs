@@ -27,13 +27,8 @@ namespace FF_control.Visual
     {
         public MainWindow parent { get; set; }              //saves the parent MainWindow (used to access bt_connection and graph) 
 
-        private int selected_tabindex;                      //what tabindex was selected, before redoing SideTabItems
-
-        private List<TextBox> tb_name;                      //saves all Tb where the names of each graph can be modivied
-        private List<Label> l_time;                         //saves all Lables where the time of recording gets displayed
-        private List<Label> l_gap;                          //saves all Labels where the gap gets displayed
-        private List<Label> l_saveloc;                      //saves all Labels where the savelocation is displayed, there is a click event on them right now
-        private List<Button> b_plot_remove;                 //saves all Buttons where the Plot can be removed, tag is the index
+        private int selected_tabindex;                      //what tabindex was selected, before redoing SideTabItems 
+        private List<GraphProperties> gplist;
 
         public Table(MainWindow p)
         {
@@ -50,14 +45,9 @@ namespace FF_control.Visual
         private void Table_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (this.IsVisible) //if it is set on visible 
-            {
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
+            {                
                 setUpSideTabControl(); //redo or do the TabItems 
-                long x = sw.ElapsedMilliseconds;
                 CreateTable();         //redo or do the Tables
-                long y = sw.ElapsedMilliseconds;
-                sw.Stop();
             }
         }
 
@@ -65,11 +55,7 @@ namespace FF_control.Visual
         {
             selected_tabindex = SideTabControl.SelectedIndex; //get the last index, set back to it after redoing them
             SideTabControl.Items.Clear();       //delete all Items 
-            tb_name = new List<TextBox>();      //make an instanze
-            l_time = new List<Label>();
-            l_gap = new List<Label>();
-            l_saveloc = new List<Label>();
-            b_plot_remove = new List<Button>();
+            gplist = new List<GraphProperties>();
 
             for (int i = 0; i < parent.diagram.Grpahs.Count; i++)//for each graph, creat an own tab
             {
@@ -77,61 +63,19 @@ namespace FF_control.Visual
                 ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
                 ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
 
-                StackPanel mainstack = new StackPanel();
+                GraphProperties gp = new GraphProperties(parent.diagram.Grpahs[i], parent.diagram);
+                gp.GraphPropertiesChanged += gp_GraphPropertiesChanged;
+                gplist.Add(gp);
 
-                WrapPanel wp = new WrapPanel();     //creat Wrap Panel for the Name of the Plot
-                Label ll_name = new Label();
-                ll_name.Content = "Name:";
-                tb_name.Add(new TextBox());
-                tb_name[i].Text = parent.diagram.Grpahs[i].Name; //set the text
-                tb_name[i].LostFocus += tb_name_LostFocus;      //using Lost_focus so it is not changing when eddeting
-                tb_name[i].Tag = i;                             //Tag is the index (for later use)
-                wp.Children.Add(ll_name);                      //add those to the Wrappenel
-                wp.Children.Add(tb_name[i]);
-                mainstack.Children.Add(wp);                     //add them to the mainstack
-
-                wp = new WrapPanel();               //creat WrapPanel for the time of measurement
-                Label ll_time = new Label();
-                ll_time.Content = "Time:";
-                l_time.Add(new Label());
-                l_time[i].Content = parent.diagram.Grpahs[i].MeasurementTime.ToString();    //set the Text
-                wp.Children.Add(ll_time);
-                wp.Children.Add(l_time[i]);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();               //creat WrapPanel for the gap 
-                Label ll_gap = new Label();
-                ll_gap.Content = "Gap:";
-                l_gap.Add(new Label());
-                l_gap[i].Content = parent.diagram.Grpahs[i].MeasurementGap.ToString();
-                wp.Children.Add(ll_gap);
-                wp.Children.Add(l_gap[i]);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();               //creat WrapPanel for the Save Location
-                Label ll_saveloc = new Label();
-                ll_saveloc.Content = "Save Location:";
-                l_saveloc.Add(new Label());
-                l_saveloc[i].Content = parent.diagram.Grpahs[i].SaveLocation;
-                l_saveloc[i].MouseUp += l_saveloc_MouseUp;          //open a saveFileDialog if clicked on it
-                l_saveloc[i].Tag = i;                               //Tag is the index (for later use)
-                wp.Children.Add(ll_saveloc);
-                wp.Children.Add(l_saveloc[i]);
-                mainstack.Children.Add(wp);
-
-                wp = new WrapPanel();           //creat WrapPanel for removing graph
-                b_plot_remove.Add(new Button());
-                b_plot_remove[i].Content = "Remove";
-                b_plot_remove[i].Click += b_plot_remove_Click;  //if click remove plot and redo tab and creatTable
-                b_plot_remove[i].Tag = i;
-                wp.Children.Add(b_plot_remove[i]);
-                mainstack.Children.Add(wp);
-
-                ti.Content = mainstack;
+                ti.Content = gp;
                 SideTabControl.Items.Add(ti);
+            }            
+        }
 
-            }
-            
+        void gp_GraphPropertiesChanged(object sender, EventArgs e)
+        {
+            setUpSideTabControl();
+            CreateTable();
         }
 
         private void b_plot_remove_Click(object sender, RoutedEventArgs e)

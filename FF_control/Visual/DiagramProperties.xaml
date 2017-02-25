@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="FF_control.Visual.DiagramProperties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Styles_dict.xaml"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+        <WrapPanel>
+            <Label Content="Xmin"/>
+            <TextBox Name="tb_xmin" Tag="xmin"
+                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/> 
+        </WrapPanel>
+        <WrapPanel>
+            <Label Content="Xmax"/>
+            <TextBox Name="tb_xmax" Tag="xmax"
+                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+        </WrapPanel>
+        <WrapPanel>
+            <Label Content="Ymin"/>
+            <TextBox Name="tb_ymin" Tag="ymin"
+                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+        </WrapPanel>
+        <WrapPanel>
+            <Label Content="Ymax"/>
+            <TextBox Name="tb_ymax" Tag="ymax"
+                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+        </WrapPanel>
+        <WrapPanel>
+            <Label Content="Background Color"/>
+            <Border Name="border_BackgroundColor" 
+                    MouseUp="border_BackgroundColor_MouseUp"
+                    Style="{StaticResource Style_ColorBorder}"/>
+        </WrapPanel>
+        <WrapPanel>
+            <Label Content="Axis Color"/>
+            <Border Name="border_AxisColor" 
+                    MouseUp="border_AxisColor_MouseUp"
+                    Style="{StaticResource Style_ColorBorder}"/>
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

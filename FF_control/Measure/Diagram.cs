@@ -321,6 +321,7 @@ namespace FF_control.Measure
             Diagram d = new Diagram();
             d.Grpahs.Add(g);
             d.setScalingAuto();
+            g.SaveLocation = filename;
             d.Save_diagram_xml(filename);
         }
         /// <summary>

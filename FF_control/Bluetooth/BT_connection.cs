@@ -50,6 +50,9 @@ namespace FF_control.Bluetooth
         public double Lastupdated_position {get; private set;}      //saves the gap in mm
         public byte Lastupdated_status{get; private set;}
         public double Maxgap { get; private set; }                                       //saves the max gap in mm
+        public long BytesSend { get; set; }
+        public long BytesReceived { get; set; }
+
 
         public BluetoothClient bc {get; private set;}                 //the client which it is going to be connected to 
         public BluetoothDeviceInfo[] infos { get; private set; }        //all available DeviceInfos 
@@ -154,7 +157,9 @@ namespace FF_control.Bluetooth
         /// <param name="ar"></param>
         private void beginRead_cal(IAsyncResult ar)
         {
-            rx_tail += s.EndRead(ar);
+            int read = s.EndRead(ar);
+            rx_tail += read;
+            BytesReceived += read;
             //ArrayList al = new ArrayList();
             //for (int i = 0; i+1< rx_tail-rx_head; i+=2)
             //{
@@ -650,7 +655,10 @@ namespace FF_control.Bluetooth
         public void Send(byte[] b)
         {
             if (s != null)
+            {
                 s.Write(b, 0, b.Length);
+                BytesSend += b.Length;
+            }
             //s.Write(new byte[] {0x01}, 0, 1);
         }
         #endregion

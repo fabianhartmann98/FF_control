@@ -70,6 +70,12 @@
     <Compile Include="Visual\Control.xaml.cs">
       <DependentUpon>Control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Visual\DiagramProperties.xaml.cs">
+      <DependentUpon>DiagramProperties.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visual\GraphProperties.xaml.cs">
+      <DependentUpon>GraphProperties.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visual\Plot.xaml.cs">
       <DependentUpon>Plot.xaml</DependentUpon>
     </Compile>
@@ -108,6 +114,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Visual\Control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visual\DiagramProperties.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visual\GraphProperties.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
