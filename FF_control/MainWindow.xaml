@@ -9,19 +9,10 @@
         <ResourceDictionary Source="Visual/Styles_dict.xaml"/>
     </Window.Resources>
     <Grid x:Name="maingrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="50"/>
+        <Grid.RowDefinitions>            
             <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Label Content="asdf" Grid.Row="0"/>
-        <Button Content="sdfg" Click="Button_Click" Grid.Row="1"/>
-        <ComboBox Grid.Row="2">
-            <ComboBoxItem Content="asdf"/>
-            <ComboBoxItem Content="qwer"/>
-        </ComboBox>
-        <DockPanel Grid.Row="3" LastChildFill="True" x:Name="dockpanel">                       
+        </Grid.RowDefinitions>        
+        <DockPanel Grid.Row="0" LastChildFill="True" x:Name="dockpanel">                       
             <TabControl DockPanel.Dock="Left" VerticalContentAlignment="Stretch" SizeChanged="TabControl_SizeChanged">
                 <TabItem Style="{StaticResource Style_MainTabItem}">
                     <TabItem.Header>                        

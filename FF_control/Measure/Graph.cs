@@ -23,6 +23,9 @@ namespace FF_control.Measure
 
         private string name;            //name of the measurementrow
         [XmlIgnore]private Brush plotColor;        //the color which is going to be displayed
+        private string plotColor_hex;
+
+        
         private double plotStrokeThickness; //how thick is the grpah going to be
         private DateTime measurementTime;   //when was the row measured (start Time) 
         private double gap;                 //the gap in mm
@@ -52,6 +55,18 @@ namespace FF_control.Measure
             get { return plotStrokeThickness; }
             set { plotStrokeThickness = value; }
         }
+
+        public string PlotColor_hex
+        {
+            get { return ((SolidColorBrush)PlotColor).Color.ToString(); }
+            set 
+            { 
+                plotColor_hex = value;
+                var converter = new System.Windows.Media.BrushConverter();
+                PlotColor = (Brush)converter.ConvertFromString(plotColor_hex);
+            }
+        }
+
         [XmlIgnore]
         public Brush PlotColor
         {

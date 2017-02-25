@@ -421,7 +421,7 @@ namespace FF_control.Visual
                 switch (s.Split(':')[0])                        //first part specifies for which part it is used 
                 {
                     case "background":
-                        can.Background = b;
+                        parent.diagram.BackgroundColor = b;
                         break;
                     case "axis":
                         parent.diagram.AxisColor = b;

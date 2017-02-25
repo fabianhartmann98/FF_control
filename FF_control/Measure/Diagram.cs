@@ -67,6 +67,56 @@ namespace FF_control.Measure
         private int yAxisLabelCount = 5;                //how many labels should be placed on the y Axis  (default = 5)
         private List<Graph> graphs;
         private Canvas plotcan;
+        private string axisColor_hex;
+        private string axisLabelColor_hex;
+        private string backgroundColor_hex;
+        private Brush backgroundColor;
+        [XmlIgnore]
+        public Brush BackgroundColor 
+        {
+            get { return backgroundColor; }
+            set
+            {
+                backgroundColor = value;
+                if(can!=null)
+                    can.Background = backgroundColor;
+            } 
+        }       
+
+
+        public string BackgroundColor_hex
+        {
+            get { return ((SolidColorBrush)BackgroundColor).Color.ToString(); }
+            set
+            {
+                backgroundColor_hex = value;
+                var converter = new System.Windows.Media.BrushConverter();
+                BackgroundColor = (Brush)converter.ConvertFromString(backgroundColor_hex);
+            }
+        }
+
+        public string AxisLabelColor_hex
+        {
+            get { return ((SolidColorBrush)AxisLabelColor).Color.ToString(); }
+            set
+            {
+                axisLabelColor_hex = value;
+                var converter = new System.Windows.Media.BrushConverter();
+                AxisLabelColor = (Brush)converter.ConvertFromString(axisLabelColor_hex);
+            }
+        }
+
+        public string AxisColor_hex
+        {
+            get { return ((SolidColorBrush)AxisColor).Color.ToString(); }
+            set 
+            { 
+                axisColor_hex = value;
+                var converter = new System.Windows.Media.BrushConverter();
+                AxisColor = (Brush)converter.ConvertFromString(axisColor_hex);
+            }
+        }
+        
 
         [XmlIgnore]
         public Canvas PlotCan
@@ -106,6 +156,7 @@ namespace FF_control.Measure
             set
             {
                 can = value;
+                can.Background = backgroundColor;
                 if (can != null)
                 {
                     if(can.ActualHeight!=0)
@@ -183,6 +234,7 @@ namespace FF_control.Measure
             plotwidth = DefaultPlotHeightWidth;
             AxisColor = Brushes.Green;
             AxisLabelColor = Brushes.Black;
+            backgroundColor = Brushes.AliceBlue;
             DiffPerScrolePercent = 2;
             plotcan = new Canvas();
             plotcan.ClipToBounds = true;
@@ -228,6 +280,7 @@ namespace FF_control.Measure
                 System.IO.StreamWriter sww = new System.IO.StreamWriter(filename);
                 XmlWriter writer = XmlWriter.Create(sww);
                 xsSubmit.Serialize(writer, this);//write to the file
+                writer.Close();
             }
             catch (Exception e)
             {
@@ -246,7 +299,10 @@ namespace FF_control.Measure
                 StreamReader sr = new StreamReader(filename);
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
 
-                return (Diagram) xsSubmit.Deserialize(sr);                
+
+                Diagram d =  (Diagram) xsSubmit.Deserialize(sr);         
+                sr.Close();
+                return d;
             }
             catch (Exception e)
             {
@@ -284,7 +340,7 @@ namespace FF_control.Measure
         public static Graph[] Open_graph_xaml(string filename)
         {
             Diagram d = Diagram.Open_diagram_xml(filename);
-            if (d == null && d.Grpahs.Count == 0)
+            if (d == null || d.Grpahs.Count == 0)
                 return null;
             Graph[] col = new Graph[d.Grpahs.Count];
             for (int i = 0; i < d.Grpahs.Count; i++)
