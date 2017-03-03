@@ -21,8 +21,8 @@ namespace FF_control.Visual
     /// </summary>
     public partial class DiagramProperties : UserControl
     {
-        Diagram diagram;
-        public DiagramProperties(Diagram d )
+        GraphCollection diagram;
+        public DiagramProperties(GraphCollection d )
         {
             InitializeComponent();
             diagram = d;

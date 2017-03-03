@@ -58,7 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Measure\Diagram.cs" />
+    <Compile Include="Measure\GraphCollection.cs" />
     <Compile Include="Measure\Graph.cs" />
     <Compile Include="Measure\MeasurementPoint.cs" />
     <Compile Include="Visual\Connection.xaml.cs">

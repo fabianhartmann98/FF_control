@@ -25,7 +25,7 @@ namespace FF_control
     public partial class MainWindow : Window
     {
         public BT_connection bt_connection { get; set; }
-        public Diagram diagram { get; set; }
+        public GraphCollection diagram { get; set; }
         public Connection v_connection;
         public FF_control.Visual.Control v_control;
         public Plot v_plot;
@@ -37,8 +37,8 @@ namespace FF_control
 
             bt_connection = new BT_connection(); 
 
-            diagram = new Diagram();
-            diagram.addGraph(Diagram.createTestingPlot());
+            diagram = new GraphCollection();
+            diagram.addGraph(GraphCollection.createTestingPlot());
             Graph g = new Graph();
             g.addPoint(new MeasurementPoint(new Point(-5, 2)));
             g.addPoint(new MeasurementPoint(new Point(-2, 4)));
@@ -46,8 +46,8 @@ namespace FF_control
             g.addPoint(new MeasurementPoint(new Point(5, 4)));
             diagram.addGraph(g);
 
-            diagram.Grpahs[1].PlotColor = Brushes.Blue;
-            diagram.Grpahs[0].PlotColor = Brushes.Green;
+            diagram.Graphs[1].PlotColor = Brushes.Blue;
+            diagram.Graphs[0].PlotColor = Brushes.Green;
 
             v_connection = new Connection(this);
             Connection_grid.Children.Add(v_connection);

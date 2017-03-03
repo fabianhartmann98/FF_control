@@ -76,7 +76,7 @@ namespace FF_control.Visual
 
         private void open_diagram(object sender, RoutedEventArgs e)
         {            
-            Diagram temp = Diagram.Open_diagram_xml();
+            GraphCollection temp = GraphCollection.Open_diagram_xml();
             if (temp == null)
                 return;
             parent.diagram = temp;
@@ -126,13 +126,13 @@ namespace FF_control.Visual
             #endregion
 
             #region  Plot Tab
-            for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
+            for (int i = 0; i < parent.diagram.Graphs.Count; i++)
 			{			
                 ti = new TabItem();
                 ti.Header = "Plot"+i.ToString();
                 ti.Style = (Style)FindResource("Style_SideTabItem");               
 
-                GraphProperties gp = new GraphProperties(parent.diagram.Grpahs[i],parent.diagram);
+                GraphProperties gp = new GraphProperties(parent.diagram.Graphs[i],parent.diagram);
                 gp.GraphPropertiesChanged+=gp_GraphPropertiesChanged;
                 gplist.Add(gp);
                 ti.Content = gp;
@@ -177,11 +177,11 @@ namespace FF_control.Visual
 
         void b_add_Click(object sender, RoutedEventArgs e)
         {            
-            Graph[] g = Diagram.Open_graph_xml();             //show the Open File dialog an other stuff
+            Graph[] g = GraphCollection.Open_graph_xml();             //show the Open File dialog an other stuff
             if(g!=null)
                 foreach (var item in g)
                 {
-                    parent.diagram.Grpahs.Add(item);
+                    parent.diagram.Graphs.Add(item);
                 }
             DrawDiagram();
             setUpSideTabControl();

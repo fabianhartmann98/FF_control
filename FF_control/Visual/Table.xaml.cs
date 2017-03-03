@@ -57,13 +57,13 @@ namespace FF_control.Visual
             SideTabControl.Items.Clear();       //delete all Items 
             gplist = new List<GraphProperties>();
 
-            for (int i = 0; i < parent.diagram.Grpahs.Count; i++)//for each graph, creat an own tab
+            for (int i = 0; i < parent.diagram.Graphs.Count; i++)//for each graph, creat an own tab
             {
                 TabItem ti = new TabItem(); //creat Tab
                 ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
                 ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
 
-                GraphProperties gp = new GraphProperties(parent.diagram.Grpahs[i], parent.diagram);
+                GraphProperties gp = new GraphProperties(parent.diagram.Graphs[i], parent.diagram);
                 gp.GraphPropertiesChanged += gp_GraphPropertiesChanged;
                 gplist.Add(gp);
 
@@ -85,16 +85,16 @@ namespace FF_control.Visual
             int time = (int)args.ArrayL[1];//get time
             int actvalue = (int)args.ArrayL[2]; //get actual value
 
-            int index = parent.diagram.Grpahs.Count - 1; //get the index of the graph to be added
+            int index = parent.diagram.Graphs.Count - 1; //get the index of the graph to be added
 
             if(number==0) //if number is 0 => new Graph
             {
-                parent.diagram.Grpahs.Add(new Measure.Graph()); //add Graph
-                index = parent.diagram.Grpahs.Count - 1;        //set index new
-                parent.diagram.Grpahs[index].MeasurementTime=DateTime.Now;  //set the MeasurementTime
-                parent.diagram.Grpahs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
+                parent.diagram.Graphs.Add(new Measure.Graph()); //add Graph
+                index = parent.diagram.Graphs.Count - 1;        //set index new
+                parent.diagram.Graphs[index].MeasurementTime=DateTime.Now;  //set the MeasurementTime
+                parent.diagram.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
             }
-            parent.diagram.Grpahs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
+            parent.diagram.Graphs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
             parent.diagram.setScalingAuto();
             parent.v_plot.DrawDiagram();
             
@@ -104,7 +104,7 @@ namespace FF_control.Visual
         public void CreateTable()
         {
             stackpanel_dg.Children.Clear(); //delete all Grids
-            for (int i = 0; i < parent.diagram.Grpahs.Count; i++)
+            for (int i = 0; i < parent.diagram.Graphs.Count; i++)
             {
                 WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
@@ -124,7 +124,7 @@ namespace FF_control.Visual
                 dgtc.Header = "Value";
                 dgtc.Binding = new Binding("I_Value");
                 dg.Columns.Add(dgtc);
-                dg.ItemsSource = parent.diagram.Grpahs[i].mps;
+                dg.ItemsSource = parent.diagram.Graphs[i].mps;
                 wp.Children.Add(dg);
                 stackpanel_dg.Children.Add(wp);
             }
@@ -134,7 +134,7 @@ namespace FF_control.Visual
         void dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             DataGrid dg = sender as DataGrid;
-            parent.diagram.Grpahs[(int)(dg.Tag)].mps[dg.SelectedIndex].Highlited = true;
+            parent.diagram.Graphs[(int)(dg.Tag)].mps[dg.SelectedIndex].Highlited = true;
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)

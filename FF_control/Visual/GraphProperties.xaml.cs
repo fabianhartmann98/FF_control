@@ -23,8 +23,8 @@ namespace FF_control.Visual
     public partial class GraphProperties : UserControl
     {
         Graph graph;
-        Diagram diagram;
-        public GraphProperties(Graph g, Diagram d)
+        GraphCollection diagram;
+        public GraphProperties(Graph g, GraphCollection d)
         {
             InitializeComponent();
             graph = g;
@@ -44,7 +44,7 @@ namespace FF_control.Visual
 
         private void b_saveloc_Click(object sender, RoutedEventArgs e)
         {            
-            Diagram.Save_graph_xml(graph);
+            GraphCollection.Save_graph_xml(graph);
             l_saveloc.Content = graph.SaveLocation;
             OnGraphPropertiesChanged();
         }
@@ -66,7 +66,7 @@ namespace FF_control.Visual
 
         private void b_remove_Click(object sender, RoutedEventArgs e)
         {
-            diagram.Grpahs.Remove(graph);
+            diagram.Graphs.Remove(graph);
             OnGraphPropertiesChanged();
         }
 

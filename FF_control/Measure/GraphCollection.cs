@@ -17,7 +17,7 @@ using System.Xml.Serialization;
 
 namespace FF_control.Measure
 {
-    public class Diagram
+    public class GraphCollection
     {
         /*
          * Working flow: 
@@ -126,7 +126,7 @@ namespace FF_control.Measure
         }
 
 
-        public List<Graph> Grpahs
+        public List<Graph> Graphs
         {
             get { return graphs; }
             set { graphs = value; }
@@ -227,9 +227,9 @@ namespace FF_control.Measure
         /// DiffPerScrolePercent = 1
         /// gets allways called 
         /// </summary>
-        public Diagram()
+        public GraphCollection()
         {
-            Grpahs = new List<Graph>();
+            Graphs = new List<Graph>();
             plotheight = DefaultPlotHeightWidth;
             plotwidth = DefaultPlotHeightWidth;
             AxisColor = Brushes.Green;
@@ -239,7 +239,7 @@ namespace FF_control.Measure
             plotcan = new Canvas();
             plotcan.ClipToBounds = true;
         }
-        public Diagram(List<Point> Points) : this()         //calls Plot() first
+        public GraphCollection(List<Point> Points) : this()         //calls Plot() first
         {
             Graph g = new Graph();
             foreach (var item in Points)
@@ -248,7 +248,7 @@ namespace FF_control.Measure
             }
             graphs.Add(g);
         }
-        public Diagram(Canvas ca) : this()                 //calls Plot() first
+        public GraphCollection(Canvas ca) : this()                 //calls Plot() first
         {
             can = ca;
             if (can != null)
@@ -284,7 +284,7 @@ namespace FF_control.Measure
         {
             try
             {                
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));//create an xmlSerializer
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));//create an xmlSerializer
 
                 System.IO.StreamWriter sww = new System.IO.StreamWriter(filename);
                 XmlWriter writer = XmlWriter.Create(sww);
@@ -297,7 +297,7 @@ namespace FF_control.Measure
             }
         }
 
-        static public Diagram Open_diagram_xml()
+        static public GraphCollection Open_diagram_xml()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (!(bool)ofd.ShowDialog())
@@ -310,15 +310,15 @@ namespace FF_control.Measure
         /// </summary>
         /// <param name="filename">location of file</param>
         /// <returns>the diagram which was opended</returns>
-        static public Diagram Open_diagram_xml(string filename)
+        static public GraphCollection Open_diagram_xml(string filename)
         {
             try
             {                
                 StreamReader sr = new StreamReader(filename);
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(Diagram));
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));
 
 
-                Diagram d =  (Diagram) xsSubmit.Deserialize(sr);         
+                GraphCollection d =  (GraphCollection) xsSubmit.Deserialize(sr);         
                 sr.Close();
                 return d;
             }
@@ -346,8 +346,8 @@ namespace FF_control.Measure
         /// <param name="filename">the location to save the file</param>
         static public void Save_graph_xml(Graph g, string filename)
         {
-            Diagram d = new Diagram();
-            d.Grpahs.Add(g);
+            GraphCollection d = new GraphCollection();
+            d.Graphs.Add(g);
             d.setScalingAuto();
             g.SaveLocation = filename;
             d.Save_diagram_xml(filename);
@@ -365,7 +365,7 @@ namespace FF_control.Measure
         /// <param name="filename">the location to save the file</param>
         public void Save_graph_xml(int index, string filename)
         {
-            Diagram.Save_graph_xml(this.Grpahs[index],filename);
+            GraphCollection.Save_graph_xml(this.Graphs[index],filename);
         }
 
         public static Graph[] Open_graph_xml()
@@ -382,13 +382,13 @@ namespace FF_control.Measure
         /// <returns>all the saved graphs</returns>
         public static Graph[] Open_graph_xml(string filename)
         {
-            Diagram d = Diagram.Open_diagram_xml(filename);
-            if (d == null || d.Grpahs.Count == 0)
+            GraphCollection d = GraphCollection.Open_diagram_xml(filename);
+            if (d == null || d.Graphs.Count == 0)
                 return null;
-            Graph[] col = new Graph[d.Grpahs.Count];
-            for (int i = 0; i < d.Grpahs.Count; i++)
+            Graph[] col = new Graph[d.Graphs.Count];
+            for (int i = 0; i < d.Graphs.Count; i++)
             {
-                col[i] = d.Grpahs[i];
+                col[i] = d.Graphs[i];
             }
             return col;
         }
