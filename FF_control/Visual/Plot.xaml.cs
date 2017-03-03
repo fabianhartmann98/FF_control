@@ -75,11 +75,8 @@ namespace FF_control.Visual
         }
 
         private void open_diagram(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (!(bool)ofd.ShowDialog())
-                return;
-            Diagram temp = Diagram.Open_diagram_xml(ofd.FileName);
+        {            
+            Diagram temp = Diagram.Open_diagram_xml();
             if (temp == null)
                 return;
             parent.diagram = temp;
@@ -91,10 +88,7 @@ namespace FF_control.Visual
 
         private void save_diagram(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            if (!(bool)sfd.ShowDialog())
-                return;
-            parent.diagram.Save_diagram_xml(sfd.FileName);
+            parent.diagram.Save_diagram_xml();
         }
 
         private void save_to_clipboard(object sender, RoutedEventArgs e)
@@ -109,7 +103,7 @@ namespace FF_control.Visual
 
         private void qwertzclick(object sender, EventArgs e)
         {
-            parent.diagram.dehigliteallgraphs();
+            parent.diagram.higliteallgraphs(false);
             DrawDiagram();
         }
 
@@ -182,11 +176,8 @@ namespace FF_control.Visual
         }
 
         void b_add_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (!(bool)ofd.ShowDialog())
-                return;
-            Graph[] g = Diagram.Open_graph_xaml(ofd.FileName);             //show the Open File dialog an other stuff
+        {            
+            Graph[] g = Diagram.Open_graph_xml();             //show the Open File dialog an other stuff
             if(g!=null)
                 foreach (var item in g)
                 {

@@ -32,47 +32,6 @@ namespace FF_control.Visual
             parent.bt_connection.ReferenzPlacementReceived += Bt_connection_ReferenzPlacementReceived;
             parent.bt_connection.StopReceived += Bt_connection_StopReceived;
             parent.bt_connection.RunReceived += Bt_connection_RunReceived;
-
-            this.IsVisibleChanged += Control_IsVisibleChanged;      //needed to set up the SideTabcontrol
-        }
-
-       
-
-        void Control_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (this.IsVisible)
-                setUpSideTabControl();
-        }
-
-        private void setUpSideTabControl()
-        {
-            SideTabControl.Items.Clear();       //redo all of the TabItems
-
-            TabItem ti = new TabItem();         //first Tabitem
-            ti.Header = "1st Control Header";
-            ti.Style = (Style)FindResource("Style_SideTabItem");
-
-            WrapPanel wp = new WrapPanel();
-            Label l = new Label();
-            l.Content = "1st TabItem Content from Control";
-            wp.Children.Add(l);
-
-            ti.Content = wp;
-            SideTabControl.Items.Add(ti);
-
-
-            ti = new TabItem();                 //secont TabItem
-            ti.Header = "2nd Control Header";
-            ti.Style = (Style)FindResource("Style_SideTabItem");
-
-            wp = new WrapPanel();
-            l = new Label();
-            l.Content = "2nd TabItem Content from Control";
-            wp.Children.Add(l);
-
-            ti.Content = wp;
-
-            SideTabControl.Items.Add(ti);
         }
 
         private void Bt_connection_RunReceived(object sender, EventArgs e)

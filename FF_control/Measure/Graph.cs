@@ -218,11 +218,11 @@ namespace FF_control.Measure
             can.Children.Add(pl);
         }        
 
-        internal void dehighliteallpoints()
+        internal void highliteallpoints(bool v)
         {
             foreach (var item in mps)
             {
-                item.Highlited = false;
+                item.Highlited = v;
             }
         }
 

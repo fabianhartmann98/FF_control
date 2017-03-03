@@ -78,31 +78,6 @@ namespace FF_control.Visual
             CreateTable();
         }
 
-        private void b_plot_remove_Click(object sender, RoutedEventArgs e)
-        {
-            Button b = (Button)sender;              //get the button
-            parent.diagram.Grpahs.RemoveAt((int)b.Tag); //get the index for the Graphs in the Tag (need casting)
-            setUpSideTabControl();                  //redo SideTab
-            CreateTable();                          //redo Table
-        }
-
-        private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            Label b = (Label)sender;
-            SaveFileDialog sfd = new SaveFileDialog();
-            if (!(bool)sfd.ShowDialog())
-                return;
-            parent.diagram.Save_graph_xaml((int)b.Tag,sfd.FileName); 
-            setUpSideTabControl();
-        }
-
-        private void tb_name_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox tb = (TextBox)sender; 
-            parent.diagram.Grpahs[(int)tb.Tag].Name = tb.Text; //reset the name
-            setUpSideTabControl();
-        }
-
         void bt_connection_MeasuredDataReceived(object sender, ReceivedData_EventArgs e) //received a new Data
         {
             ReceivedData_EventArgs args = e;

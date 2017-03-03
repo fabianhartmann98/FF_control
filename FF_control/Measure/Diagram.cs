@@ -267,6 +267,15 @@ namespace FF_control.Measure
         #endregion
 
         #region public methods
+        #region diagram save open
+        public void Save_diagram_xml()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (!(bool)sfd.ShowDialog())
+                return;
+            Save_diagram_xml(sfd.FileName);
+        }
+
         /// <summary>
         /// saves this diagram as xml-file ont the location of filename
         /// </summary>
@@ -287,6 +296,15 @@ namespace FF_control.Measure
                 MessageBox.Show(e.ToString());
             }
         }
+
+        static public Diagram Open_diagram_xml()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (!(bool)ofd.ShowDialog())
+                return null;
+            return Open_diagram_xml(ofd.FileName);
+        }
+
         /// <summary>
         /// opens a diagram at the location of filename and returns it
         /// </summary>
@@ -310,13 +328,23 @@ namespace FF_control.Measure
             }
             return null;
         }
+        #endregion
+
+        #region graph save and open
+        static public void Save_graph_xml(Graph g)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (!(bool)sfd.ShowDialog())
+                return;
+            Save_graph_xml(g, sfd.FileName);
+        }
 
         /// <summary>
         /// create a single graph in a new diagram at the given location
         /// </summary>
         /// <param name="g">the graph to save</param>
         /// <param name="filename">the location to save the file</param>
-        static public void Save_graph_xaml(Graph g, string filename)
+        static public void Save_graph_xml(Graph g, string filename)
         {
             Diagram d = new Diagram();
             d.Grpahs.Add(g);
@@ -324,21 +352,35 @@ namespace FF_control.Measure
             g.SaveLocation = filename;
             d.Save_diagram_xml(filename);
         }
+
+        public void Save_graph_xml(int index)
+        {
+            Save_graph_xml(graphs[index]);
+        }
+
         /// <summary>
         /// saves a single graph (index) at a given location
         /// </summary>
         /// <param name="index">index of the graph</param>
         /// <param name="filename">the location to save the file</param>
-        public void Save_graph_xaml(int index, string filename)
+        public void Save_graph_xml(int index, string filename)
         {
-            Diagram.Save_graph_xaml(this.Grpahs[index],filename);
+            Diagram.Save_graph_xml(this.Grpahs[index],filename);
+        }
+
+        public static Graph[] Open_graph_xml()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (!(bool)ofd.ShowDialog())
+                return null;
+            return Open_graph_xml(ofd.FileName);
         }
         /// <summary>
         /// gets only the graphs of the file (ingnores the min and max)
         /// </summary>
         /// <param name="filename">the location of the file</param>
         /// <returns>all the saved graphs</returns>
-        public static Graph[] Open_graph_xaml(string filename)
+        public static Graph[] Open_graph_xml(string filename)
         {
             Diagram d = Diagram.Open_diagram_xml(filename);
             if (d == null || d.Grpahs.Count == 0)
@@ -350,12 +392,13 @@ namespace FF_control.Measure
             }
             return col;
         }
+        #endregion
 
-        public void dehigliteallgraphs()
+        public void higliteallgraphs(bool highlite)
         {
             foreach (var item in graphs)
             {
-                item.dehighliteallpoints();
+                item.highliteallpoints(highlite);
             }
         }
 

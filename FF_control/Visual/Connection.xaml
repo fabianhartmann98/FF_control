@@ -10,12 +10,8 @@
     </UserControl.Resources>
     <Grid Name="connection_grid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Name="SideTabGridColumn" MinWidth="{StaticResource d_SideTabControlWidth}" Width="{StaticResource gridlength_SideTabControlWidth}"/>
+            <ColumnDefinition Width="*"/>            
         </Grid.ColumnDefinitions>
-        <GridSplitter MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
-        <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
         <ScrollViewer Grid.Column="0" Name="scrollviewer">
             <StackPanel  HorizontalAlignment="Stretch" MinWidth="400">
                 <StackPanel Name="stackpanel">

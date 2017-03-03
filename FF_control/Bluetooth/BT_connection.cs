@@ -263,7 +263,7 @@ namespace FF_control.Bluetooth
                             int data = Convert.ToInt32((AccessRXBuf(rx_head + 8) << 8) + AccessRXBuf(rx_head + 9));
                             byte followup = AccessRXBuf(rx_head + 10);
                             OnMeasuredDataReceived(number, time,data);
-                            SendMeasuredDataAnswer(followup);
+                            //SendMeasuredDataAnswer(followup);
                             Logger("received MeasuredDataCommand");
                             break;                                               
                         case (BT_Protocoll.MotorAdjustingAnswer):

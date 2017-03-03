@@ -36,47 +36,8 @@ namespace FF_control.Visual
             parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
             parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;
 
-            this.IsVisibleChanged += Connection_IsVisibleChanged;           //to set up the SideTabBar again
-
             parent.bt_connection.GetAvailableDevicesAsync();            //get de AvailableDevices Async 
-        }
-
-        void Connection_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (this.IsVisible)
-                setUpSideTabControl();
-        }
-
-        private void setUpSideTabControl()
-        {
-            SideTabControl.Items.Clear();       //remove every exsisting Item (redo all of them)
-
-            TabItem ti = new TabItem();         //creat first Tab item
-            ti.Header = "1st Header";
-            ti.Style = (Style)FindResource("Style_SideTabItem");
-
-            WrapPanel wp = new WrapPanel();
-            Label l = new Label();
-            l.Content = "1st TabItem Content from Connection";
-            wp.Children.Add(l);
-
-            ti.Content = wp;                    //set the Wrappanel as the conntent of the TabItem 
-            SideTabControl.Items.Add(ti);
-
-
-            ti = new TabItem();                 //creat second Tab item
-            ti.Header = "2nd Header";
-            ti.Style = (Style)FindResource("Style_SideTabItem");
-
-            wp = new WrapPanel();
-            l = new Label();
-            l.Content = "2nd TabItem Content from Connection";
-            wp.Children.Add(l);
-
-            ti.Content = wp;                //set the Wrappanel as the conntent of the TabItem 
-
-            SideTabControl.Items.Add(ti);       //add the secont TabItem to the TabControl
-        }
+        }        
 
         void bt_DiscoverDevicesEnded(object sender, EventArgs e)        //now able to get the devices 
         {

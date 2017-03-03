@@ -43,11 +43,8 @@ namespace FF_control.Visual
         }
 
         private void b_saveloc_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            if (!(bool)sfd.ShowDialog())
-                return;
-            Diagram.Save_graph_xaml(graph, sfd.FileName);
+        {            
+            Diagram.Save_graph_xml(graph);
             l_saveloc.Content = graph.SaveLocation;
             OnGraphPropertiesChanged();
         }
