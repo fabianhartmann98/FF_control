@@ -19,15 +19,16 @@ namespace FF_control.Measure
 {
     public class GraphCollection
     {
+
         /*
-         * Working flow: 
-         * 1. setup Plot (change Plotting color and shit) 
-         * 2. add Graph (add points and chang color and shit) 
-         * 3. add canvas 
-         * 4. if wanted (setAutoScaling) 
-         * 5. drawAxis if wanted
-         * 6. draw plot (need to clear can) 
-         */
+* Working flow: 
+* 1. setup Plot (change Plotting color and shit) 
+* 2. add Graph (add points and chang color and shit) 
+* 3. add canvas 
+* 4. if wanted (setAutoScaling) 
+* 5. drawAxis if wanted
+* 6. draw plot (need to clear can) 
+*/
 
         #region private variables, not accesable form outside
         private double scaleX;              //by which scale do i have to multiplie to use canvas properly (set in setAxisAuto and set Can)
@@ -49,8 +50,11 @@ namespace FF_control.Measure
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
         private double PlottingMargin = 0.05;       //used to  set a small marging (top, bottom, right and left)  
         private double AxisMargin = 40;
-        private double LabelRounding = 0.5;
+        private double LabelRounding = 5;
         private double Rounding2dot0 = 5;
+        private const int LabelMinAverage = 5;
+        private const int LabelMaxAverage = 50;
+
 
         private double DefaultPlotHeightWidth = 100;
         public static string FileFilter = "H2B2 (*.h2b2)|*.h2b2|All Files (*.*)|*.*";
@@ -75,6 +79,22 @@ namespace FF_control.Measure
         private Brush axisColor;
         private Brush axisLabelColor;
         private List<Graph> graphs;
+        private double xDiffPerLabel;
+        private double yDiffPerLabel;
+
+        public double YDiffPerLabel
+        {
+            get { return yDiffPerLabel; }
+            set { yDiffPerLabel = value; }
+        }
+
+
+        public double XDiffPerLabel
+        {
+            get { return xDiffPerLabel; }
+            set { xDiffPerLabel = value; }
+        }
+        
 
         public List<Graph> Graphs
         {
@@ -250,6 +270,10 @@ namespace FF_control.Measure
 
         #region prop vaiables 
         public double DiffPerScrolePercent { get; set; }       //what does the window (min and max of Axis) change per each scroll
+        public int XDiffAccuracy { get; private set; }
+        public int YDiffAccuracy { get; private set; }
+        public int XLabelPow { get; private set; }
+        public int YLabelPow { get; private set; }
         #endregion
 
         #region constructors
@@ -610,7 +634,6 @@ namespace FF_control.Measure
             xAxis.X1 = 0;                   //is starting left
             xAxis.X2 = plotwidth + AxisMargin;           //end at the right end
 
-            //xAxis.Y1 = scalingPoint(new Point(0, ymin)).Y ; // use ymin as value to go through Y Axis (also needs scaling) 
             xAxis.Y1 = plotheight;              //setting it to the edge of plotcan (=can-Axismargin)
             xAxis.Y2 = xAxis.Y1;
 
@@ -623,34 +646,39 @@ namespace FF_control.Measure
             pX.StrokeThickness = AxisStrokeThickness;       //not really needed
             pX.Points.Add(new Point(xAxis.X2, xAxis.Y1));  //Spike point (at the end and on the level of xAxis) 
             pX.Points.Add(new Point(xAxis.X2 - arrowlength, xAxis.Y1 - arrowwidth));
-            //x = Width*(1-Arrowlengthpercentage); y = Y level of x axis - height*arrowwithpercentage
             pX.Points.Add(new Point(xAxis.X2 - arrowlength, xAxis.Y1 + arrowwidth));
             can.Children.Add(pX);
 
             //#########Labels##############
-            double diffperlabel = (xmax - xmin) / xAxisLabelCount;  //get the diff per label (=range displayed / number)
-            int q = 0;
-            while (diffperlabel < 1 / LabelRounding)  //get how much after the comma the first digit of diffperlabel is
+            xDiffPerLabel = (xmax - xmin) / xAxisLabelCount;  //get the diff per label (=range displayed / number)
+            XDiffAccuracy = 0;
+            while (Math.Round(xDiffPerLabel) > LabelRounding*0.1)
             {
-                diffperlabel *= 10;                 //multiply it by the
-                q++;
+                xDiffPerLabel /= 10;
+                XDiffAccuracy--;
             }
+            while (Math.Round(xDiffPerLabel) < LabelRounding)  //get how much after the comma the first digit of diffperlabel is
+            {
+                xDiffPerLabel *= 10;                 //multiply it by the
+                XDiffAccuracy++;
+            }
+            
             //diffperlabel=Math.Round(diffperlabel/Rounding2dot0)*Rounding2dot0;      //round it
-            diffperlabel = Math.Round(diffperlabel);      //round it
-            diffperlabel /= Math.Pow(10, q);            //defide by the first multiplied potenz 
+            xDiffPerLabel = Math.Round(xDiffPerLabel);      //round it
+            XDiffPerLabel /= Math.Pow(10, XDiffAccuracy);            //divide by the first multiplied potenz; using property so it eventually gets updatet in UI
             //now we have a rounded diffperlabel and how many commas did we need to get it (used to display only the necessary digits after comma)
 
             double xminrounded = xmin;          //round the xmin up (so it's not on the left of the Y-Axis) (only needed if 0 is not in range)
-            xminrounded *= Math.Pow(10, q);
+            xminrounded *= Math.Pow(10, XDiffAccuracy);
             //xminrounded = Math.Ceiling(xminrounded/Rounding2dot0)*Rounding2dot0;
             xminrounded = Math.Ceiling(xminrounded);
-            xminrounded /= Math.Pow(10, q);
+            xminrounded /= Math.Pow(10, XDiffAccuracy);
 
-            int power = 0;                  //get the potency we need to multiply by to get floatingpoint number
-            while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, power) / 2 < 2)
-                power++;
-            while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, power) / 2 > 20)
-                power--;
+            XLabelPow = 0;                  //get the potency we need to multiply by to get floatingpoint number
+            while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, -XLabelPow) / 2 < LabelMinAverage)
+                XLabelPow--;
+            while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, -XLabelPow) / 2 > LabelMaxAverage)
+                XLabelPow++;
 
 
             for (int i = 0; i < xAxisLabelCount; i++)   //for every Label
@@ -660,12 +688,12 @@ namespace FF_control.Measure
                 if (xmin <= 0 && xmax > 0)     //if x = 0 is displayed 
                 {
                     // q    =   count - how many labels do i have to place in negative(xmin/(dif per Label))
-                    double pos = (i + Math.Ceiling(xmin / diffperlabel));        //uses Ceiling to round up (-1,2->-1) 
-                    x = pos * diffperlabel;         //multiplies it with the dif per Label
+                    double pos = (i + Math.Ceiling(xmin / xDiffPerLabel));        //uses Ceiling to round up (-1,2->-1) 
+                    x = pos * xDiffPerLabel;         //multiplies it with the dif per Label
                 }
                 else
                 {
-                    x = i * diffperlabel + xminrounded; //not displayed, so we start with xmin -> add up dif per Labe each time
+                    x = i * xDiffPerLabel + xminrounded; //not displayed, so we start with xmin -> add up dif per Labe each time
                 }
 
                 Line label_marker_line = new Line();        //setting up Label Marker Line
@@ -681,10 +709,10 @@ namespace FF_control.Measure
 
                 TextBlock tb = new TextBlock();             //textblock with Value 
                 tb.Foreground = AxisLabelColor;
-                int floatcomma = q - power;
+                int floatcomma = XDiffAccuracy + XLabelPow;
                 if (floatcomma < 0)
                     floatcomma = 0;
-                tb.Text = String.Format("{0:f" + Convert.ToString(floatcomma) + "}", x * Math.Pow(10, power));         //Floating, number of decimals = (numberofdecimalsindiffperlabel) - powermultipliedwith                
+                tb.Text = String.Format("{0:f" + Convert.ToString(floatcomma) + "}", x * Math.Pow(10, -XLabelPow));         //Floating, number of decimals = (numberofdecimalsindiffperlabel) - powermultipliedwith                
                 Canvas.SetLeft(tb, label_marker_line.X1 + LabelMarginLeftX);    //set it to the label + Margin
                 Canvas.SetTop(tb, label_marker_line.Y2 + LabelMarginTopX);
                 can.Children.Add(tb);                       //adds Label Value to the canvas
@@ -692,9 +720,7 @@ namespace FF_control.Measure
 
             TextBlock tb_multiplier = new TextBlock();      //displays the power used to multiply the labels-Text with
             tb_multiplier.Foreground = AxisLabelColor;
-            tb_multiplier.Text = "10^" + Convert.ToString(-power);
-            //Canvas.SetLeft(tb_multiplier, xAxis.X1 + 2 * LabelMarginLeftX);
-            //Canvas.SetTop(tb_multiplier, xAxis.Y1 + 2 * LabelMarginTopX);
+            tb_multiplier.Text = "10^" + Convert.ToString(XLabelPow);
             Canvas.SetLeft(tb_multiplier, 0);
             Canvas.SetTop(tb_multiplier, xAxis.Y1);
             can.Children.Add(tb_multiplier);
@@ -726,26 +752,32 @@ namespace FF_control.Measure
             can.Children.Add(pY);
 
             //#########Labels##############
-            diffperlabel = (ymax - ymin) / yAxisLabelCount;     //diff per label = range displayed/ number of labels
-            q = 0;
-            while (diffperlabel < 1 / LabelRounding)      //multiply by 10, till there are more than log(1/Labelrounding) decimals
+            yDiffPerLabel = (ymax - ymin) / yAxisLabelCount;     //diff per label = range displayed/ number of labels
+            YDiffAccuracy = 0;
+            while (Math.Round(yDiffPerLabel) > LabelRounding*0.1)      
             {
-                diffperlabel *= 10;
-                q++;                                    //store the decimals, which is needed to display to get diffperlabel
+                yDiffPerLabel /= 10;
+                YDiffAccuracy--;                                    //store the decimals, which is needed to display to get diffperlabel
             }
-            diffperlabel = Math.Round(diffperlabel);
-            diffperlabel /= Math.Pow(10, q);
+            while (Math.Round(yDiffPerLabel) < LabelRounding)      //multiply by 10, till there are more than log(1/Labelrounding) decimals
+            {
+                yDiffPerLabel *= 10;
+                YDiffAccuracy++;                                    //store the decimals, which is needed to display to get diffperlabel
+            }
+            
+            yDiffPerLabel = Math.Round(yDiffPerLabel);
+            YDiffPerLabel /= Math.Pow(10, YDiffAccuracy);    //using prop to potentioly inform UI
 
             double yminrounded = ymin;
-            yminrounded *= Math.Pow(10, q);             //round ymin to the same level as diffperlabel
+            yminrounded *= Math.Pow(10, YDiffAccuracy);             //round ymin to the same level as diffperlabel
             yminrounded = Math.Ceiling(yminrounded);
-            yminrounded /= Math.Pow(10, q);
+            yminrounded /= Math.Pow(10, YDiffAccuracy);
 
-            power = 0;                                  //the power which is possible to devide the labeltext by 
-            while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, power) / 2 < 2)
-                power++;
-            while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, power) / 2 > 20)
-                power--;
+            YLabelPow = 0;                                  //the power which is possible to devide the labeltext by 
+            while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, -YLabelPow) / 2 < LabelMinAverage)
+                YLabelPow--;
+            while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, -YLabelPow) / 2 > LabelMaxAverage)
+                YLabelPow++;
 
             for (int i = 0; i < yAxisLabelCount; i++)       //for every label
             {
@@ -754,12 +786,12 @@ namespace FF_control.Measure
                 if (ymin <= 0 && ymax > 0)  //if y = 0 is displayed
                 {
                     // q    =   count - how many labels do i have to set in negative (xmin/(dif per label)) 
-                    double pos = (i + Math.Ceiling(ymin / diffperlabel));
-                    y = pos * diffperlabel;
+                    double pos = (i + Math.Ceiling(ymin / yDiffPerLabel));
+                    y = pos * yDiffPerLabel;
                 }
                 else
                 {
-                    y = i * diffperlabel + yminrounded;    //start at ymin and add dif per label each time
+                    y = i * yDiffPerLabel + yminrounded;    //start at ymin and add dif per label each time
                 }
                 Line label_marker_line = new Line();            //setting up Label Marker Line
                 label_marker_line.Stroke = AxisLabelColor;
@@ -774,17 +806,17 @@ namespace FF_control.Measure
 
                 TextBlock tb = new TextBlock();
                 tb.Foreground = AxisLabelColor;
-                int floatcomma = q - power;     //the decimals which needed to be displayed (to get diffperlabel visible)
+                int floatcomma = YDiffAccuracy + YLabelPow;     //the decimals which needed to be displayed (to get diffperlabel visible)
                 if (floatcomma < 0)
                     floatcomma = 0;
-                tb.Text = String.Format("{0:f" + Convert.ToString(floatcomma) + "}", y * Math.Pow(10, power));         //Floating 
+                tb.Text = String.Format("{0:f" + Convert.ToString(floatcomma) + "}", y * Math.Pow(10, -YLabelPow));         //Floating 
                 Canvas.SetLeft(tb, label_marker_line.X1 + LabelMarginLeftY);    //set it to the label + Margin
                 Canvas.SetTop(tb, label_marker_line.Y2 + LabelMarginTopY);
                 can.Children.Add(tb);                           //add Label Value to the canvas 
             }
             tb_multiplier = new TextBlock();            //displays the power used to multiply the labels-Text with
             tb_multiplier.Foreground = AxisLabelColor;
-            tb_multiplier.Text = "10^" + Convert.ToString(-power);
+            tb_multiplier.Text = "10^" + Convert.ToString(YLabelPow);
             Canvas.SetLeft(tb_multiplier, 0);
             Canvas.SetTop(tb_multiplier, 0);
             can.Children.Add(tb_multiplier);
