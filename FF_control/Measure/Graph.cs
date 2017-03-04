@@ -15,12 +15,23 @@ namespace FF_control.Measure
 {
     public class Graph
     {
-
+        [XmlIgnore]
+        public GraphCollection parent;
+        public Guid uid;
         #region Prop
-        public ObservableCollection<MeasurementPoint> mps { get; set; }
-        public string SaveLocation { get; set; }
-        public static string FileFilter ="H2B2 (*.b2h2)|*.b2h2|All Files (*.*)|*.*";
+        private ObservableCollection<MeasurementPoint> mps;
 
+        public ObservableCollection<MeasurementPoint> Mps
+        {
+            get { return mps; }
+            set
+            {
+                mps = value;
+                InformParent();
+            }
+        }
+        public string SaveLocation { get; set; }
+        
         private string name;            //name of the measurementrow
         [XmlIgnore]private Brush plotColor;        //the color which is going to be displayed
         private string plotColor_hex;
@@ -34,26 +45,42 @@ namespace FF_control.Measure
         public double HighlitedPointCircleRadius
         {
             get { return highlitedPointCircleRadius ; }
-            set { highlitedPointCircleRadius = value; }
+            set
+            {
+                highlitedPointCircleRadius = value;
+                InformParent();
+            }
         }
 
         public double MeasurementGap
         {
             get { return gap; }
-            set { gap = value; }
+            set
+            {
+                gap = value;
+                InformParent();
+            }
         }
         
 
         public DateTime MeasurementTime
         {
             get { return measurementTime; }
-            set { measurementTime = value; }
+            set
+            {
+                measurementTime = value;
+                InformParent();
+            }
         }
 
         public double PlotStrokeThickness
         {
             get { return plotStrokeThickness; }
-            set { plotStrokeThickness = value; }
+            set
+            {
+                plotStrokeThickness = value;
+                InformParent();
+            }
         }
 
         public string PlotColor_hex
@@ -71,12 +98,27 @@ namespace FF_control.Measure
         public Brush PlotColor
         {
             get { return plotColor; }
-            set { plotColor = value; }
+            set
+            {
+                plotColor = value;
+                InformParent();
+            }
         }
+
+        private void InformParent()
+        {
+            if(parent!=null)
+                parent.OnGraphCollectionPropertiesChanged(GraphCollectionChange.Graph, this);
+        }
+
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set
+            {
+                name = value;
+                InformParent();
+            }
         }
         #endregion
 
@@ -161,13 +203,26 @@ namespace FF_control.Measure
         /// <summary>
         /// creat a new graph with a measurement row
         /// </summary>
-        public Graph()
+        public Graph(GraphCollection p)
         {
             mps = new ObservableCollection<MeasurementPoint>();
             plotStrokeThickness = 3;
             PlotColor = Brushes.Black;
             SaveLocation="";
             name = "";
+            parent = p;
+            uid = Guid.NewGuid();         
+        }
+
+        private Graph()
+        {
+            mps = new ObservableCollection<MeasurementPoint>();
+            plotStrokeThickness = 3;
+            PlotColor = Brushes.Black;
+            SaveLocation = "";
+            name = "";
+            parent = null;
+            uid = Guid.NewGuid();
         }
 
         /// <summary>
@@ -175,16 +230,17 @@ namespace FF_control.Measure
         /// </summary>
         /// <param name="mp">the row of measurement points</param>
         /// <param name="name">the name of the graph</param>
-        public Graph(ObservableCollection<MeasurementPoint> mp, string name = "") : this()
+        public Graph(ObservableCollection<MeasurementPoint> mp, GraphCollection p,  string name = ""):this(p)
         {
             mps = mp;
             Name = name;
         }
         #endregion
 
-        public void addPoint(MeasurementPoint mp)
+        public void AddPoint(MeasurementPoint mp)
         {
             mps.Add(mp);
+            InformParent();
         }
 
         /// <summary>

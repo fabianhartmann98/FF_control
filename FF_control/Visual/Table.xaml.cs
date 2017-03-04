@@ -40,6 +40,21 @@ namespace FF_control.Visual
             setUpSideTabControl(); //redo or do the TabItems 
             CreateTable();                                  //creats tables (for each graph one)
             parent.bt_connection.MeasuredDataReceived += bt_connection_MeasuredDataReceived;
+            parent.gcollection.GraphCollectionPropertiesChanged += Diagram_GraphCollectionPropertiesChanged;
+        }
+
+        private void Diagram_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
+        {
+            if (e.change == GraphCollectionChange.Collection||e.change==GraphCollectionChange.everything)
+            {
+                setUpSideTabControl();
+                CreateTable();
+            }
+            if (e.change == GraphCollectionChange.Graph)
+            {
+                gplist[(int)e.Data].UpdateProperties();
+                CreateTable();
+            }
         }
 
         private void Table_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -57,25 +72,18 @@ namespace FF_control.Visual
             SideTabControl.Items.Clear();       //delete all Items 
             gplist = new List<GraphProperties>();
 
-            for (int i = 0; i < parent.diagram.Graphs.Count; i++)//for each graph, creat an own tab
+            for (int i = 0; i < parent.gcollection.Graphs.Count; i++)//for each graph, creat an own tab
             {
                 TabItem ti = new TabItem(); //creat Tab
                 ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
                 ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
 
-                GraphProperties gp = new GraphProperties(parent.diagram.Graphs[i], parent.diagram);
-                gp.GraphPropertiesChanged += gp_GraphPropertiesChanged;
+                GraphProperties gp = new GraphProperties(parent.gcollection.Graphs[i], parent.gcollection);
                 gplist.Add(gp);
 
                 ti.Content = gp;
                 SideTabControl.Items.Add(ti);
             }            
-        }
-
-        void gp_GraphPropertiesChanged(object sender, EventArgs e)
-        {
-            setUpSideTabControl();
-            CreateTable();
         }
 
         void bt_connection_MeasuredDataReceived(object sender, ReceivedData_EventArgs e) //received a new Data
@@ -85,17 +93,16 @@ namespace FF_control.Visual
             int time = (int)args.ArrayL[1];//get time
             int actvalue = (int)args.ArrayL[2]; //get actual value
 
-            int index = parent.diagram.Graphs.Count - 1; //get the index of the graph to be added
+            int index = parent.gcollection.Graphs.Count - 1; //get the index of the graph to be added
 
             if(number==0) //if number is 0 => new Graph
             {
-                parent.diagram.Graphs.Add(new Measure.Graph()); //add Graph
-                index = parent.diagram.Graphs.Count - 1;        //set index new
-                parent.diagram.Graphs[index].MeasurementTime=DateTime.Now;  //set the MeasurementTime
-                parent.diagram.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
+                parent.gcollection.addGraph(new Measure.Graph(parent.gcollection)); //add Graph
+                parent.gcollection.Graphs[index].MeasurementTime=DateTime.Now;  //set the MeasurementTime
+                parent.gcollection.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
             }
-            parent.diagram.Graphs[index].mps.Add(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
-            parent.diagram.setScalingAuto();
+            parent.gcollection.Graphs[index].AddPoint(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
+            parent.gcollection.setScalingAuto();
             parent.v_plot.DrawDiagram();
             
         }
@@ -104,7 +111,7 @@ namespace FF_control.Visual
         public void CreateTable()
         {
             stackpanel_dg.Children.Clear(); //delete all Grids
-            for (int i = 0; i < parent.diagram.Graphs.Count; i++)
+            for (int i = 0; i < parent.gcollection.Graphs.Count; i++)
             {
                 WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
@@ -124,7 +131,7 @@ namespace FF_control.Visual
                 dgtc.Header = "Value";
                 dgtc.Binding = new Binding("I_Value");
                 dg.Columns.Add(dgtc);
-                dg.ItemsSource = parent.diagram.Graphs[i].mps;
+                dg.ItemsSource = parent.gcollection.Graphs[i].Mps;
                 wp.Children.Add(dg);
                 stackpanel_dg.Children.Add(wp);
             }
@@ -134,7 +141,7 @@ namespace FF_control.Visual
         void dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             DataGrid dg = sender as DataGrid;
-            parent.diagram.Graphs[(int)(dg.Tag)].mps[dg.SelectedIndex].Highlited = true;
+            parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited = true;
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -23,12 +23,12 @@ namespace FF_control.Visual
     public partial class GraphProperties : UserControl
     {
         Graph graph;
-        GraphCollection diagram;
+        GraphCollection gcollection;
         public GraphProperties(Graph g, GraphCollection d)
         {
             InitializeComponent();
             graph = g;
-            diagram=d;
+            gcollection = d;
             tb_name.Text = g.Name;
             tb_time.Text = g.MeasurementTime.ToString();
             border_StrokeColor.Background = g.PlotColor;
@@ -39,20 +39,18 @@ namespace FF_control.Visual
             graph.Name = tb_name.Text;
             if (b_remove.IsMouseOver)           //if b_remove was clicked it loses fokus but doesn't call b_remove_Click
                 b_remove_Click(b_remove, e);
-            OnGraphPropertiesChanged();
         }
 
         private void b_saveloc_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             GraphCollection.Save_graph_xml(graph);
             l_saveloc.Content = graph.SaveLocation;
-            OnGraphPropertiesChanged();
         }
 
         private void border_StrokeColor_MouseUp(object sender, MouseButtonEventArgs e)
         {
             System.Windows.Forms.ColorDialog cd = new System.Windows.Forms.ColorDialog();
-            cd.SolidColorOnly=true;
+            cd.SolidColorOnly = true;
 
             if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -61,21 +59,18 @@ namespace FF_control.Visual
                 border_StrokeColor.Background = b;
                 graph.PlotColor = b;
             }
-            OnGraphPropertiesChanged();
         }
 
         private void b_remove_Click(object sender, RoutedEventArgs e)
         {
-            diagram.Graphs.Remove(graph);
-            OnGraphPropertiesChanged();
+            gcollection.removeGraph(graph);
         }
 
-        public event EventHandler GraphPropertiesChanged;
-
-        protected virtual void OnGraphPropertiesChanged()
+        public void UpdateProperties()
         {
-            if (GraphPropertiesChanged != null)
-                GraphPropertiesChanged(this, new EventArgs());
+            tb_name.Text = graph.Name;
+            tb_time.Text = graph.MeasurementTime.ToString();
+            border_StrokeColor.Background = graph.PlotColor;
         }
     }
 }

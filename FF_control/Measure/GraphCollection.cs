@@ -52,7 +52,9 @@ namespace FF_control.Measure
         private double LabelRounding = 0.5;
         private double Rounding2dot0 = 5;
 
-        private double DefaultPlotHeightWidth = 100; 
+        private double DefaultPlotHeightWidth = 100;
+        public static string FileFilter = "H2B2 (*.h2b2)|*.h2b2|All Files (*.*)|*.*";
+
         #endregion
 
         #endregion
@@ -65,12 +67,46 @@ namespace FF_control.Measure
         private Canvas can;                         //the canvas to draw on 
         private int xAxisLabelCount = 5;                //how many labels should be placed on the x Axis (default = 5)
         private int yAxisLabelCount = 5;                //how many labels should be placed on the y Axis  (default = 5)
-        private List<Graph> graphs;
         private Canvas plotcan;
         private string axisColor_hex;
         private string axisLabelColor_hex;
         private string backgroundColor_hex;
         private Brush backgroundColor;
+        private Brush axisColor;
+        private Brush axisLabelColor;
+        private List<Graph> graphs;
+
+        public List<Graph> Graphs
+        {
+            get { return graphs; }
+            set
+            {
+                graphs = value;
+                OnGraphCollectionPropertiesChanged(GraphCollectionChange.Collection);
+            }
+        }
+
+        [XmlIgnore]
+        public Brush AxisColor
+        {
+            get
+            { return axisColor; }
+            set
+            {
+                axisColor = value;
+                OnGraphCollectionPropertiesChanged(GraphCollectionChange.Color);
+            }
+        }            //whats the color of the Axis
+        [XmlIgnore]
+        public Brush AxisLabelColor
+        {
+            get { return axisLabelColor; }
+            set
+            {
+                axisLabelColor = value;
+                OnGraphCollectionPropertiesChanged(GraphCollectionChange.Color);
+            }
+        }       //whats the color of the Axis Labels and Markers
         [XmlIgnore]
         public Brush BackgroundColor 
         {
@@ -78,11 +114,11 @@ namespace FF_control.Measure
             set
             {
                 backgroundColor = value;
-                if(can!=null)
+                OnGraphCollectionPropertiesChanged(GraphCollectionChange.Color);
+                if (can!=null)
                     can.Background = backgroundColor;
             } 
-        }       
-
+        }     
 
         public string BackgroundColor_hex
         {
@@ -115,8 +151,7 @@ namespace FF_control.Measure
                 var converter = new System.Windows.Media.BrushConverter();
                 AxisColor = (Brush)converter.ConvertFromString(axisColor_hex);
             }
-        }
-        
+        }        
 
         [XmlIgnore]
         public Canvas PlotCan
@@ -125,23 +160,23 @@ namespace FF_control.Measure
             set { plotcan = value; }
         }
 
-
-        public List<Graph> Graphs
-        {
-            get { return graphs; }
-            set { graphs = value; }
-        }
-
-
         public int YAxisLabelCount
         {
             get { return yAxisLabelCount; }
-            set { yAxisLabelCount = value; }
+            set
+            {
+                yAxisLabelCount = value;
+                OnGraphCollectionPropertiesChanged(GraphCollectionChange.LabelCount);
+            }
         }
         public int XAxisLabelCount
         {
             get { return xAxisLabelCount; }
-            set { xAxisLabelCount = value; }
+            set
+            {
+                xAxisLabelCount = value;
+                OnGraphCollectionPropertiesChanged(GraphCollectionChange.LabelCount);
+            }
         }
 
 
@@ -214,8 +249,6 @@ namespace FF_control.Measure
         #endregion
 
         #region prop vaiables 
-        [XmlIgnore]public Brush AxisColor { get; set; }            //whats the color of the Axis
-        [XmlIgnore]public Brush AxisLabelColor { get; set; }       //whats the color of the Axis Labels and Markers
         public double DiffPerScrolePercent { get; set; }       //what does the window (min and max of Axis) change per each scroll
         #endregion
 
@@ -229,7 +262,7 @@ namespace FF_control.Measure
         /// </summary>
         public GraphCollection()
         {
-            Graphs = new List<Graph>();
+            graphs = new List<Graph>();
             plotheight = DefaultPlotHeightWidth;
             plotwidth = DefaultPlotHeightWidth;
             AxisColor = Brushes.Green;
@@ -241,12 +274,12 @@ namespace FF_control.Measure
         }
         public GraphCollection(List<Point> Points) : this()         //calls Plot() first
         {
-            Graph g = new Graph();
+            Graph g = new Graph(this);
             foreach (var item in Points)
             {
-                g.addPoint(new MeasurementPoint(item));
+                g.AddPoint(new MeasurementPoint(item));
             }
-            graphs.Add(g);
+            this.addGraph(g);
         }
         public GraphCollection(Canvas ca) : this()                 //calls Plot() first
         {
@@ -271,6 +304,7 @@ namespace FF_control.Measure
         public void Save_diagram_xml()
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = FileFilter;
             if (!(bool)sfd.ShowDialog())
                 return;
             Save_diagram_xml(sfd.FileName);
@@ -282,24 +316,26 @@ namespace FF_control.Measure
         /// <param name="filename">location of file</param>
         public void Save_diagram_xml(string filename)
         {
+            System.IO.StreamWriter sww = new System.IO.StreamWriter(filename);
+            XmlWriter writer = XmlWriter.Create(sww);
             try
-            {                
+            {
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));//create an xmlSerializer
-
-                System.IO.StreamWriter sww = new System.IO.StreamWriter(filename);
-                XmlWriter writer = XmlWriter.Create(sww);
+                
                 xsSubmit.Serialize(writer, this);//write to the file
-                writer.Close();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
+            writer.Close();
+            sww.Close();
         }
 
         static public GraphCollection Open_diagram_xml()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilter;
             if (!(bool)ofd.ShowDialog())
                 return null;
             return Open_diagram_xml(ofd.FileName);
@@ -312,13 +348,12 @@ namespace FF_control.Measure
         /// <returns>the diagram which was opended</returns>
         static public GraphCollection Open_diagram_xml(string filename)
         {
+            StreamReader sr = new StreamReader(filename);
             try
             {                
-                StreamReader sr = new StreamReader(filename);
                 XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));
 
-
-                GraphCollection d =  (GraphCollection) xsSubmit.Deserialize(sr);         
+                GraphCollection d =  (GraphCollection) xsSubmit.Deserialize(sr);
                 sr.Close();
                 return d;
             }
@@ -326,6 +361,7 @@ namespace FF_control.Measure
             {
                 MessageBox.Show(e.ToString());
             }
+            sr.Close();
             return null;
         }
         #endregion
@@ -347,7 +383,7 @@ namespace FF_control.Measure
         static public void Save_graph_xml(Graph g, string filename)
         {
             GraphCollection d = new GraphCollection();
-            d.Graphs.Add(g);
+            d.addGraph(g);
             d.setScalingAuto();
             g.SaveLocation = filename;
             d.Save_diagram_xml(filename);
@@ -355,7 +391,7 @@ namespace FF_control.Measure
 
         public void Save_graph_xml(int index)
         {
-            Save_graph_xml(graphs[index]);
+            Save_graph_xml(Graphs[index]);
         }
 
         /// <summary>
@@ -365,7 +401,7 @@ namespace FF_control.Measure
         /// <param name="filename">the location to save the file</param>
         public void Save_graph_xml(int index, string filename)
         {
-            GraphCollection.Save_graph_xml(this.Graphs[index],filename);
+            GraphCollection.Save_graph_xml(Graphs[index],filename);
         }
 
         public static Graph[] Open_graph_xml()
@@ -394,9 +430,10 @@ namespace FF_control.Measure
         }
         #endregion
 
+        #region appearence 
         public void higliteallgraphs(bool highlite)
         {
-            foreach (var item in graphs)
+            foreach (var item in Graphs)
             {
                 item.highliteallpoints(highlite);
             }
@@ -413,9 +450,9 @@ namespace FF_control.Measure
         public Canvas draw()
         {
             plotcan.Children.Clear();
-            if (can != null && graphs != null)
+            if (can != null && this != null)
             {
-                foreach (var item in graphs)
+                foreach (var item in Graphs)
                 {
                     item.draw(plotcan, offsetX, offsetY, scaleX, scaleY,plotheight);
                 }
@@ -424,78 +461,6 @@ namespace FF_control.Measure
             Canvas.SetTop(plotcan, 0);
             can.Children.Add(plotcan);
             return can;
-        }
-
-        /// <summary>
-        /// sets offset and scale depending on the plotwidth and height and the points 
-        /// doesn't need to be called if resized (need to set new Canvas) 
-        /// get's min and max values and calls OffsetScaleCalcualtion
-        /// </summary>
-        public void setScalingAuto()
-        {
-            if (graphs.Count == 0)
-                return;
-            xmin = graphs[0].getXmin;
-            xmax = graphs[0].getXmax;
-            ymin = graphs[0].getYmin;
-            ymax = graphs[0].getYmax;
-            for (int i = 1; i < graphs.Count; i++)
-            {
-                if (xmin > graphs[i].getXmin)
-                    xmin = graphs[i].getXmin;
-                if (xmax < graphs[i].getXmax)
-                    xmax = graphs[i].getXmax;
-                if (ymin > graphs[i].getYmin)
-                    ymin = graphs[i].getYmin;
-                if (ymax < graphs[i].getYmax)
-                    ymax = graphs[i].getYmax;
-            }
-
-            OffsetScaleCalculation();
-
-        }
-
-        /// <summary>
-        /// Adds point to the List of MeasurementPoints 
-        /// </summary>
-        /// <param name="mp"></param>
-        public void addPoint(MeasurementPoint mp, int Plotindex)
-        {
-            if (Plotindex > graphs.Count)
-                return;
-            graphs[Plotindex].addPoint(mp);
-        }
-
-        #region addGraph
-        public void addGraph()
-        {
-            graphs.Add(new Graph());            
-        }
-
-        public void addGraph(Graph g)
-        {
-            graphs.Add(g);
-        }
-
-        public void addGraph(ObservableCollection<MeasurementPoint> mp, string graphname = "")
-        {
-            graphs.Add(new Graph(mp, graphname));
-        }
-        #endregion
-        /// <summary>
-        /// just for debugging purpose
-        /// creating a small sample to test plotting
-        /// </summary>
-        /// <returns></returns>
-        public static Graph createTestingPlot()
-        {
-            Graph p = new Graph();
-            for (int i = 0; i < 20; i++)        //20 points
-            {
-                //p.addPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
-                p.addPoint(new MeasurementPoint(new Point(i,0),i));
-            }
-            return p; 
         }
 
         /// <summary>
@@ -531,7 +496,7 @@ namespace FF_control.Measure
             pX.Points.Add(new Point(plotwidth, xAxis.Y1));  //Spike point (at the end and on the level of xAxis) 
             pX.Points.Add(new Point(plotwidth - arrowlength, xAxis.Y1 - arrowwidth));
             //x = Width*(1-Arrowlengthpercentage); y = Y level of x axis - height*arrowwithpercentage
-            pX.Points.Add(new Point(plotwidth -arrowlength, xAxis.Y1 + arrowwidth));
+            pX.Points.Add(new Point(plotwidth - arrowlength, xAxis.Y1 + arrowwidth));
             can.Children.Add(pX);
 
             //#########Labels##############
@@ -643,12 +608,12 @@ namespace FF_control.Measure
             xAxis.Stroke = AxisColor;
             xAxis.StrokeThickness = AxisStrokeThickness;
             xAxis.X1 = 0;                   //is starting left
-            xAxis.X2 = plotwidth+AxisMargin;           //end at the right end
+            xAxis.X2 = plotwidth + AxisMargin;           //end at the right end
 
             //xAxis.Y1 = scalingPoint(new Point(0, ymin)).Y ; // use ymin as value to go through Y Axis (also needs scaling) 
             xAxis.Y1 = plotheight;              //setting it to the edge of plotcan (=can-Axismargin)
             xAxis.Y2 = xAxis.Y1;
-            
+
             can.Children.Add(xAxis);
 
             //#########Arrow################
@@ -664,9 +629,9 @@ namespace FF_control.Measure
 
             //#########Labels##############
             double diffperlabel = (xmax - xmin) / xAxisLabelCount;  //get the diff per label (=range displayed / number)
-            int q = 0;                   
-            while (diffperlabel < 1/LabelRounding)  //get how much after the comma the first digit of diffperlabel is
-            {                
+            int q = 0;
+            while (diffperlabel < 1 / LabelRounding)  //get how much after the comma the first digit of diffperlabel is
+            {
                 diffperlabel *= 10;                 //multiply it by the
                 q++;
             }
@@ -699,7 +664,7 @@ namespace FF_control.Measure
                     x = pos * diffperlabel;         //multiplies it with the dif per Label
                 }
                 else
-                {                    
+                {
                     x = i * diffperlabel + xminrounded; //not displayed, so we start with xmin -> add up dif per Labe each time
                 }
 
@@ -746,7 +711,7 @@ namespace FF_control.Measure
             //yAxis.X1 = scalingPoint(new Point(xmin, 0)).X + AxisMargin;  // use smin as crossing point with XAxis
             yAxis.X1 = AxisMargin;      //set the line on the AxisMargin (is directly to the Plotcan)
             yAxis.X2 = yAxis.X1;
-            
+
             can.Children.Add(yAxis);
 
             //#########Arrow################
@@ -763,7 +728,7 @@ namespace FF_control.Measure
             //#########Labels##############
             diffperlabel = (ymax - ymin) / yAxisLabelCount;     //diff per label = range displayed/ number of labels
             q = 0;
-            while (diffperlabel < 1/LabelRounding)      //multiply by 10, till there are more than log(1/Labelrounding) decimals
+            while (diffperlabel < 1 / LabelRounding)      //multiply by 10, till there are more than log(1/Labelrounding) decimals
             {
                 diffperlabel *= 10;
                 q++;                                    //store the decimals, which is needed to display to get diffperlabel
@@ -773,7 +738,7 @@ namespace FF_control.Measure
 
             double yminrounded = ymin;
             yminrounded *= Math.Pow(10, q);             //round ymin to the same level as diffperlabel
-            yminrounded = Math.Ceiling(yminrounded);        
+            yminrounded = Math.Ceiling(yminrounded);
             yminrounded /= Math.Pow(10, q);
 
             power = 0;                                  //the power which is possible to devide the labeltext by 
@@ -789,7 +754,7 @@ namespace FF_control.Measure
                 if (ymin <= 0 && ymax > 0)  //if y = 0 is displayed
                 {
                     // q    =   count - how many labels do i have to set in negative (xmin/(dif per label)) 
-                    double pos = (i + Math.Ceiling(ymin /diffperlabel));
+                    double pos = (i + Math.Ceiling(ymin / diffperlabel));
                     y = pos * diffperlabel;
                 }
                 else
@@ -820,10 +785,139 @@ namespace FF_control.Measure
             tb_multiplier = new TextBlock();            //displays the power used to multiply the labels-Text with
             tb_multiplier.Foreground = AxisLabelColor;
             tb_multiplier.Text = "10^" + Convert.ToString(-power);
-            Canvas.SetLeft(tb_multiplier,0);
+            Canvas.SetLeft(tb_multiplier, 0);
             Canvas.SetTop(tb_multiplier, 0);
             can.Children.Add(tb_multiplier);
             #endregion
+        }
+        #endregion
+
+        /// <summary>
+        /// sets offset and scale depending on the plotwidth and height and the points 
+        /// doesn't need to be called if resized (need to set new Canvas) 
+        /// get's min and max values and calls OffsetScaleCalcualtion
+        /// </summary>
+        public void setScalingAuto()
+        {
+            if (Graphs.Count == 0)
+                return;
+            xmin = Graphs[0].getXmin;
+            xmax = Graphs[0].getXmax;
+            ymin = Graphs[0].getYmin;
+            ymax = Graphs[0].getYmax;
+            for (int i = 1; i < Graphs.Count; i++)
+            {
+                if (xmin > Graphs[i].getXmin)
+                    xmin = Graphs[i].getXmin;
+                if (xmax < Graphs[i].getXmax)
+                    xmax = Graphs[i].getXmax;
+                if (ymin > Graphs[i].getYmin)
+                    ymin = Graphs[i].getYmin;
+                if (ymax < Graphs[i].getYmax)
+                    ymax = Graphs[i].getYmax;
+            }
+
+            OffsetScaleCalculation();
+
+        }
+
+        /// <summary>
+        /// Adds point to the List of MeasurementPoints 
+        /// </summary>
+        /// <param name="mp"></param>
+        public void addPoint(MeasurementPoint mp, int Plotindex)
+        {
+            if (Plotindex > Graphs.Count)
+                return;
+            Graphs[Plotindex].AddPoint(mp);
+        }
+
+        #region addGraph removeGraph
+        public void addGraph()
+        {
+            addGraph(new Graph(this));            
+        }
+        public void addGraph(ObservableCollection<MeasurementPoint> list,  string graphname = "")
+        {
+            addGraph(new Graph(list,this,graphname));
+        }
+        public void addGraph(Graph g)
+        {
+            Graphs.Add(g);
+            OnGraphCollectionPropertiesChanged(GraphCollectionChange.Collection);
+        }
+
+        public void removeGraph(int index)
+        {
+            removeGraph(Graphs[index]);
+        }
+        public void removeGraph(Graph g)
+        {
+            Graphs.Remove(g);
+            OnGraphCollectionPropertiesChanged(GraphCollectionChange.Collection);
+        }
+
+        public void Clone(GraphCollection g)
+        {
+            axisColor = g.AxisColor;
+            axisLabelColor = g.AxisLabelColor;
+            xmax = g.AxisXmax;
+            xmin =  AxisXmin;
+            ymax = g.AxisYmax;
+            ymin = g.AxisYmin;
+            backgroundColor = g.BackgroundColor;
+            can = g.Can;
+            DiffPerScrolePercent = g.DiffPerScrolePercent;
+            graphs = g.Graphs;
+            foreach (var item in graphs)
+            {
+                item.parent = this;
+            }
+            plotcan = g.PlotCan;
+            xAxisLabelCount = g.XAxisLabelCount;
+            yAxisLabelCount = g.YAxisLabelCount;
+            OffsetScaleCalculation();
+            OnGraphCollectionPropertiesChanged(GraphCollectionChange.everything);       
+        }
+
+        public void Clone(GraphCollection g, Canvas can)
+        {
+            axisColor = g.AxisColor;
+            axisLabelColor = g.AxisLabelColor;
+            xmax = g.AxisXmax;
+            xmin = AxisXmin;
+            ymax = g.AxisYmax;
+            ymin = g.AxisYmin;
+            backgroundColor = g.BackgroundColor;
+            this.can = can;
+            DiffPerScrolePercent = g.DiffPerScrolePercent;
+            graphs = g.Graphs;
+            foreach (var item in graphs)
+            {
+                item.parent = this;
+            }
+            plotcan = g.PlotCan;
+            xAxisLabelCount = g.XAxisLabelCount;
+            yAxisLabelCount = g.YAxisLabelCount;
+            OffsetScaleCalculation();
+            OnGraphCollectionPropertiesChanged(GraphCollectionChange.everything);
+        }
+        #endregion
+
+        /// <summary>
+        /// just for debugging purpose
+        /// creating a small sample to test plotting
+        /// </summary>
+        /// <returns></returns>
+        public static Graph createTestingPlot(GraphCollection parent)
+        {
+            Graph p = new Graph(parent);
+            for (int i = 0; i < 20; i++)        //20 points
+            {
+                //p.addPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
+                p.AddPoint(new MeasurementPoint(new Point(i,0),i));
+            }
+            return p; 
         }
 
         /// <summary>
@@ -838,6 +932,8 @@ namespace FF_control.Measure
             offsetY = ymin - (ymax - ymin) * PlottingMargin;
             scaleX = plotwidth / (xmax + (xmax - xmin) * PlottingMargin - offsetX);     //*1 because of 2 Margins (on is already in offset); Pixel/Range displayed(=xmax+margin-offset)  
             scaleY = plotheight / (ymax + (ymax - ymin) * PlottingMargin - offsetY);
+            OnGraphCollectionPropertiesChanged(GraphCollectionChange.MinMax);
+
         }
 
         private void check_max_min()
@@ -1000,6 +1096,21 @@ namespace FF_control.Measure
             q.X = (p.X - offsetX) * scaleX;
             q.Y = plotheight - (p.Y - offsetY) * scaleY; //start at the top -> height - YValue
             return q; 
+        }
+        #endregion
+
+        #region Events
+        public event EventHandler<GraphCollectionChanged_EventArgs> GraphCollectionPropertiesChanged;
+
+        public void OnGraphCollectionPropertiesChanged(GraphCollectionChange gcc)
+        {
+            if (GraphCollectionPropertiesChanged != null)
+                GraphCollectionPropertiesChanged(this, new GraphCollectionChanged_EventArgs(gcc));
+        }
+        public void OnGraphCollectionPropertiesChanged(GraphCollectionChange gcc, Graph g)
+        {
+            if (GraphCollectionPropertiesChanged != null)
+                GraphCollectionPropertiesChanged(this, new GraphCollectionChanged_EventArgs(gcc, Graphs.FindIndex(item =>item.uid==g.uid)));
         }
         #endregion
 

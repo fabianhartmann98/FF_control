@@ -26,13 +26,7 @@ namespace FF_control.Visual
         {
             InitializeComponent();
             diagram = d;
-            if (tb_xmin != null)
-            {
-                tb_xmin.Text = diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
-                tb_xmax.Text = diagram.AxisXmax.ToString("F2");
-                tb_ymin.Text = diagram.AxisYmin.ToString("F2");
-                tb_ymax.Text = diagram.AxisYmax.ToString("F2");
-            }
+            update_minmax();
             border_AxisColor.Background = d.AxisColor;
             border_BackgroundColor.Background = d.BackgroundColor;
         }
@@ -100,8 +94,14 @@ namespace FF_control.Visual
         }
 
         public void update_minmax()
-        { 
-        
+        {
+            if (tb_xmin != null)
+            {
+                tb_xmin.Text = diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
+                tb_xmax.Text = diagram.AxisXmax.ToString("F2");
+                tb_ymin.Text = diagram.AxisYmin.ToString("F2");
+                tb_ymax.Text = diagram.AxisYmax.ToString("F2");
+            }
         }
 
         public event EventHandler DiagramPropertiesChanged;

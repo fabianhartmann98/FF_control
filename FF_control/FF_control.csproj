@@ -60,6 +60,7 @@
     </ApplicationDefinition>
     <Compile Include="Measure\GraphCollection.cs" />
     <Compile Include="Measure\Graph.cs" />
+    <Compile Include="Measure\GraphCollectionChanged_EventArgs.cs" />
     <Compile Include="Measure\MeasurementPoint.cs" />
     <Compile Include="Visual\Connection.xaml.cs">
       <DependentUpon>Connection.xaml</DependentUpon>

@@ -46,8 +46,9 @@ namespace FF_control.Visual
             InitializeComponent();
             this.IsVisibleChanged += Plot_IsVisibleChanged;         //needet to set up the SideTabControl               
 
-            parent.diagram.Can = can;
-            parent.diagram.setScalingAuto();
+            parent.gcollection.Can = can;
+            parent.gcollection.setScalingAuto();
+            parent.gcollection.GraphCollectionPropertiesChanged += Gcollection_GraphCollectionPropertiesChanged;
             DrawDiagram();
 
             ContextMenu cm = new ContextMenu();
@@ -74,36 +75,43 @@ namespace FF_control.Visual
             can.ContextMenu = cm;
         }
 
+        private void Gcollection_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
+        {
+            DrawDiagram();
+            if (e.change == GraphCollectionChange.MinMax)
+                dp.update_minmax();
+            if (e.change == GraphCollectionChange.Collection||e.change==GraphCollectionChange.everything)
+                setUpSideTabControl();
+            if (e.change == GraphCollectionChange.Graph)
+                gplist[(int)e.Data].UpdateProperties();
+        }
+
         private void open_diagram(object sender, RoutedEventArgs e)
         {            
             GraphCollection temp = GraphCollection.Open_diagram_xml();
             if (temp == null)
                 return;
-            parent.diagram = temp;
-            parent.diagram.Can = can;
-            parent.diagram.OffsetScaleCalculation();
-            DrawDiagram();
-            setUpSideTabControl();
+            parent.gcollection.Clone(temp, can);
         }
 
         private void save_diagram(object sender, RoutedEventArgs e)
         {
-            parent.diagram.Save_diagram_xml();
+            parent.gcollection.Save_diagram_xml();
         }
 
         private void save_to_clipboard(object sender, RoutedEventArgs e)
         {
-            parent.diagram.save_to_clipboard();
+            parent.gcollection.save_to_clipboard();
         }
 
         private void save_canvas_png(object sender, RoutedEventArgs e)
         {
-            parent.diagram.save_as_png();
+            parent.gcollection.save_as_png();
         }
 
         private void qwertzclick(object sender, EventArgs e)
         {
-            parent.diagram.higliteallgraphs(false);
+            parent.gcollection.higliteallgraphs(false);
             DrawDiagram();
         }
 
@@ -119,21 +127,19 @@ namespace FF_control.Visual
             ti.Header = "Diagram";
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
-            dp = new DiagramProperties(parent.diagram);
-            dp.DiagramPropertiesChanged += dp_DiagramPropertiesChanged;
+            dp = new DiagramProperties(parent.gcollection);
             ti.Content = dp;
             SideTabControl.Items.Add(ti);
             #endregion
 
             #region  Plot Tab
-            for (int i = 0; i < parent.diagram.Graphs.Count; i++)
+            for (int i = 0; i < parent.gcollection.Graphs.Count; i++)
 			{			
                 ti = new TabItem();
                 ti.Header = "Plot"+i.ToString();
                 ti.Style = (Style)FindResource("Style_SideTabItem");               
 
-                GraphProperties gp = new GraphProperties(parent.diagram.Graphs[i],parent.diagram);
-                gp.GraphPropertiesChanged+=gp_GraphPropertiesChanged;
+                GraphProperties gp = new GraphProperties(parent.gcollection.Graphs[i],parent.gcollection);
                 gplist.Add(gp);
                 ti.Content = gp;
                 SideTabControl.Items.Add(ti);
@@ -164,27 +170,14 @@ namespace FF_control.Visual
            
         }
 
-        void gp_GraphPropertiesChanged(object sender, EventArgs e)
-        {
-            DrawDiagram();
-            setUpSideTabControl();
-        }
-
-        void dp_DiagramPropertiesChanged(object sender, EventArgs e)
-        {
-            DrawDiagram();
-        }
-
         void b_add_Click(object sender, RoutedEventArgs e)
         {            
             Graph[] g = GraphCollection.Open_graph_xml();             //show the Open File dialog an other stuff
             if(g!=null)
                 foreach (var item in g)
                 {
-                    parent.diagram.Graphs.Add(item);
+                    parent.gcollection.addGraph(item);
                 }
-            DrawDiagram();
-            setUpSideTabControl();
         }
 
         public void DrawDiagram()
@@ -197,8 +190,8 @@ namespace FF_control.Visual
             else
             {
                 can.Children.Clear();           //clear the canvas to redraw axis and plots
-                parent.diagram.DrawAxis2dot0();
-                can = parent.diagram.draw();
+                parent.gcollection.DrawAxis2dot0();
+                can = parent.gcollection.draw();
                 //if (tb_xmin != null)
                 //{
                 //    tb_xmin.Text = parent.diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
@@ -225,9 +218,7 @@ namespace FF_control.Visual
 
         private void can_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            parent.diagram.Scrole(e, e.Delta);         //scroll
-            DrawDiagram();                                              //redraw the diagram
-
+            parent.gcollection.Scrole(e, e.Delta);         //scroll
         }
 
         private void can_MouseMove(object sender, MouseEventArgs e)
@@ -239,8 +230,7 @@ namespace FF_control.Visual
                 double dy = e.GetPosition(can).Y - prevmousePosition.Y;
 
                 prevmousePosition = e.GetPosition(can);
-                parent.diagram.Shift(-dx, dy);                          //shift the diagram
-                DrawDiagram();                                          //redraw the diagram
+                parent.gcollection.Shift(-dx, dy);                          //shift the diagram
             }
             else
                 prevmousePosition.X = -100;
@@ -253,8 +243,7 @@ namespace FF_control.Visual
 
         private void can_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            parent.diagram.Can = can;                               //setting the can new, will change the scales and offset automatically
-            DrawDiagram();                                          //redraw the diagram
+            parent.gcollection.Can = can;                               //setting the can new, will change the scales and offset automatically
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
