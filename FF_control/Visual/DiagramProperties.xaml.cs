@@ -33,24 +33,31 @@ namespace FF_control.Visual
 
         private void tb_minmax_LostFocus(object sender, RoutedEventArgs e)
         {
-            switch (((TextBox)sender).Tag.ToString())       //tag specifies which item was changed
+
+            try
             {
-                case "xmin":
-                    diagram.AxisXmin = Convert.ToDouble(((TextBox)sender).Text);
-                    break;
-                case "xmax":
-                    diagram.AxisXmax = Convert.ToDouble(((TextBox)sender).Text);
-                    break;
-                case "ymin":
-                    diagram.AxisYmin = Convert.ToDouble(((TextBox)sender).Text);
-                    break;
-                case "ymax":
-                    diagram.AxisYmax = Convert.ToDouble(((TextBox)sender).Text);
-                    break;
-                default:
-                    break;
+                switch (((TextBox)sender).Tag.ToString())       //tag specifies which item was changed
+                {
+                    case "xmin":
+                        diagram.AxisXmin = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
+                        break;
+                    case "xmax":
+                        diagram.AxisXmax = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
+                        break;
+                    case "ymin":
+                        diagram.AxisYmin = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
+                        break;
+                    case "ymax":
+                        diagram.AxisYmax = Convert.ToDouble(((TextBox)sender).Text.Replace('.', ','));
+                        break;
+                    default:
+                        break;
+                }
             }
-            OnDiagramPropertiesChanged();
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.ToString());
+            }
         }
 
         private void tb_minmax_KeyDown(object sender, KeyEventArgs e)
@@ -73,7 +80,6 @@ namespace FF_control.Visual
                 Brush b = new SolidColorBrush(Color.FromArgb(c.A, c.R, c.G, c.B));
                 border_BackgroundColor.Background = b;
                 diagram.BackgroundColor = b;
-                OnDiagramPropertiesChanged();
             }
         }
 
@@ -89,27 +95,24 @@ namespace FF_control.Visual
                 border_AxisColor.Background = b;
                 diagram.AxisColor = b;
                 diagram.AxisLabelColor = b;
-                OnDiagramPropertiesChanged();
             }
         }
 
         public void update_minmax()
         {
             if (tb_xmin != null)
-            {
-                tb_xmin.Text = diagram.AxisXmin.ToString("F2");      //"F2" used for #,##
-                tb_xmax.Text = diagram.AxisXmax.ToString("F2");
-                tb_ymin.Text = diagram.AxisYmin.ToString("F2");
-                tb_ymax.Text = diagram.AxisYmax.ToString("F2");
+            { 
+                int xdecimals = diagram.XDiffAccuracy + diagram.XLabelPow;
+                if (xdecimals<0)
+                    xdecimals = 0;
+                int ydecimals = diagram.YDiffAccuracy + diagram.YLabelPow;
+                if (ydecimals<0)
+                    ydecimals = 0;
+                tb_xmin.Text = (diagram.AxisXmin / Math.Pow(10, diagram.XLabelPow)).ToString("F" + (xdecimals+1).ToString()) + "E" + diagram.XLabelPow;
+                tb_xmax.Text = (diagram.AxisXmax / Math.Pow(10, diagram.XLabelPow)).ToString("F" + (xdecimals+1).ToString()) + "E" + diagram.XLabelPow;
+                tb_ymin.Text = (diagram.AxisYmin / Math.Pow(10, diagram.YLabelPow)).ToString("F" + (ydecimals+1).ToString()) + "E" + diagram.YLabelPow;
+                tb_ymax.Text = (diagram.AxisYmax / Math.Pow(10, diagram.YLabelPow)).ToString("F" + (ydecimals+1).ToString()) + "E" + diagram.YLabelPow;
             }
-        }
-
-        public event EventHandler DiagramPropertiesChanged;
-
-        protected virtual void OnDiagramPropertiesChanged()
-        {
-            if (DiagramPropertiesChanged != null)
-                DiagramPropertiesChanged(this, new EventArgs());
         }
     }
 }

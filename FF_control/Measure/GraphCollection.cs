@@ -52,8 +52,8 @@ namespace FF_control.Measure
         private double AxisMargin = 40;
         private double LabelRounding = 5;
         private double Rounding2dot0 = 5;
-        private const int LabelMinAverage = 5;
-        private const int LabelMaxAverage = 50;
+        private const int LabelMinAverage = 2;
+        private const int LabelMaxAverage = 2000;
 
 
         private double DefaultPlotHeightWidth = 100;
@@ -676,12 +676,12 @@ namespace FF_control.Measure
 
             XLabelPow = 0;                  //get the potency we need to multiply by to get floatingpoint number
             while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, -XLabelPow) / 2 < LabelMinAverage)
-                XLabelPow--;
+                XLabelPow-=3;
             while ((Math.Abs(xmin) + Math.Abs(xmax)) * Math.Pow(10, -XLabelPow) / 2 > LabelMaxAverage)
-                XLabelPow++;
+                XLabelPow+=3;
 
 
-            for (int i = 0; i < xAxisLabelCount; i++)   //for every Label
+            for (int i = 0; i < (xmax-xmin)/xDiffPerLabel; i++)   //for every Label
             {
                 double x;             //which x is the label going to be placed
 
@@ -759,7 +759,7 @@ namespace FF_control.Measure
                 yDiffPerLabel /= 10;
                 YDiffAccuracy--;                                    //store the decimals, which is needed to display to get diffperlabel
             }
-            while (Math.Round(yDiffPerLabel) < LabelRounding)      //multiply by 10, till there are more than log(1/Labelrounding) decimals
+            while (Math.Round(yDiffPerLabel) < LabelRounding)      //multiply by 10, till there are more than decimals
             {
                 yDiffPerLabel *= 10;
                 YDiffAccuracy++;                                    //store the decimals, which is needed to display to get diffperlabel
@@ -775,11 +775,11 @@ namespace FF_control.Measure
 
             YLabelPow = 0;                                  //the power which is possible to devide the labeltext by 
             while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, -YLabelPow) / 2 < LabelMinAverage)
-                YLabelPow--;
+                YLabelPow-=3;
             while ((Math.Abs(ymin) + Math.Abs(ymax)) * Math.Pow(10, -YLabelPow) / 2 > LabelMaxAverage)
-                YLabelPow++;
+                YLabelPow+=3;
 
-            for (int i = 0; i < yAxisLabelCount; i++)       //for every label
+            for (int i = 0; i < (ymax - ymin) / yDiffPerLabel; i++)       //for every label
             {
                 double y;
 
@@ -851,17 +851,6 @@ namespace FF_control.Measure
 
             OffsetScaleCalculation();
 
-        }
-
-        /// <summary>
-        /// Adds point to the List of MeasurementPoints 
-        /// </summary>
-        /// <param name="mp"></param>
-        public void addPoint(MeasurementPoint mp, int Plotindex)
-        {
-            if (Plotindex > Graphs.Count)
-                return;
-            Graphs[Plotindex].AddPoint(mp);
         }
 
         #region addGraph removeGraph
