@@ -29,23 +29,34 @@ namespace FF_control.Visual
 
         private int selected_tabindex;                      //what tabindex was selected, before redoing SideTabItems 
         private List<GraphProperties> gplist;
+        private List<DataGrid> dglist; 
 
         public Table(MainWindow p)
         {
             InitializeComponent();
             parent = p;
-            selected_tabindex = 0;
-            this.IsVisibleChanged += Table_IsVisibleChanged; //needed to set up the SideTabControl
 
+            this.Loaded += Table_Loaded;
+
+            gplist = new List<GraphProperties>();
+            dglist = new List<DataGrid>();
+
+            selected_tabindex = 0;
             setUpSideTabControl(); //redo or do the TabItems 
             CreateTable();                                  //creats tables (for each graph one)
             parent.bt_connection.MeasuredDataReceived += bt_connection_MeasuredDataReceived;
             parent.gcollection.GraphCollectionPropertiesChanged += Diagram_GraphCollectionPropertiesChanged;
         }
 
+        private void Table_Loaded(object sender, RoutedEventArgs e)
+        {
+            //CreateTable();
+            //setUpSideTabControl();
+        }
+
         private void Diagram_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
         {
-            if (e.change == GraphCollectionChange.Collection||e.change==GraphCollectionChange.everything)
+            if (e.change == GraphCollectionChange.Collection || e.change == GraphCollectionChange.everything)
             {
                 setUpSideTabControl();
                 CreateTable();
@@ -57,20 +68,12 @@ namespace FF_control.Visual
             }
         }
 
-        private void Table_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (this.IsVisible) //if it is set on visible 
-            {                
-                setUpSideTabControl(); //redo or do the TabItems 
-                CreateTable();         //redo or do the Tables
-            }
-        }
-
         private void setUpSideTabControl()
         {
             selected_tabindex = SideTabControl.SelectedIndex; //get the last index, set back to it after redoing them
             SideTabControl.Items.Clear();       //delete all Items 
-            gplist = new List<GraphProperties>();
+
+            gplist.Clear();
 
             for (int i = 0; i < parent.gcollection.Graphs.Count; i++)//for each graph, creat an own tab
             {
@@ -103,37 +106,53 @@ namespace FF_control.Visual
             }
             parent.gcollection.Graphs[index].AddPoint(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
             parent.gcollection.setScalingAuto();
-            parent.v_plot.DrawDiagram();
-            
+            parent.v_plot.DrawDiagram();            
         }
 
 
         public void CreateTable()
         {
             stackpanel_dg.Children.Clear(); //delete all Grids
+            dglist.Clear(); 
             for (int i = 0; i < parent.gcollection.Graphs.Count; i++)
             {
-                WrapPanel wp = new WrapPanel(); 
                 DataGrid dg = new DataGrid();
                 dg.MouseDoubleClick += dg_MouseDoubleClick;
                 dg.Tag = i;
                 //dg.Height = this.Height;                //setting height to NaN (this.Height is never set) decreases lag
                 dg.AutoGenerateColumns = false;
+                //dg.EnableColumnVirtualization = true;
+                //dg.EnableRowVirtualization = true;
+                dg.MaxHeight = this.ActualHeight;
+                
+
                 DataGridTextColumn dgtc = new DataGridTextColumn();
                 dgtc.Header = "Number";
-                dgtc.Binding = new Binding("MeasurementNumber");
+                Binding bindingmeasurementnumber = new Binding();
+                bindingmeasurementnumber.IsAsync = true;
+                bindingmeasurementnumber.Path = new PropertyPath("MeasurementNumber");
+                dgtc.Binding = bindingmeasurementnumber;
                 dg.Columns.Add(dgtc);
+
                 dgtc = new DataGridTextColumn();
                 dgtc.Header = "Time";
-                dgtc.Binding = new Binding("Time");
+                Binding bindingtime = new Binding();
+                bindingtime.IsAsync = true;
+                bindingtime.Path = new PropertyPath("Time");
+                dgtc.Binding = bindingtime;
                 dg.Columns.Add(dgtc);
+
                 dgtc = new DataGridTextColumn();
                 dgtc.Header = "Value";
-                dgtc.Binding = new Binding("I_Value");
+                Binding bindingvalue = new Binding();
+                bindingvalue.IsAsync = true;
+                bindingvalue.Path = new PropertyPath("I_Value");
+                dgtc.Binding = bindingvalue;
                 dg.Columns.Add(dgtc);
+
                 dg.ItemsSource = parent.gcollection.Graphs[i].Mps;
-                wp.Children.Add(dg);
-                stackpanel_dg.Children.Add(wp);
+                stackpanel_dg.Children.Add(dg);
+                dglist.Add(dg);
             }
 
         }
@@ -141,7 +160,8 @@ namespace FF_control.Visual
         void dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             DataGrid dg = sender as DataGrid;
-            parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited = true;
+            if(dg.SelectedIndex!=-1)
+                parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited = !parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited;
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -154,6 +174,15 @@ namespace FF_control.Visual
             cd.Width = new GridLength(columnwidth);
             cd.MinWidth = columnwidth;
             table_grid.ColumnDefinitions.Add(cd);
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double actheight = this.ActualHeight;
+            foreach (var item in dglist)
+            {
+                item.MaxHeight = actheight;
+            }
         }
     }
 }

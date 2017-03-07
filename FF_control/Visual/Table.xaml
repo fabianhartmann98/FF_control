@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" SizeChanged="UserControl_SizeChanged">
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <Grid Name="table_grid">
+    <Grid Name="table_grid" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
@@ -16,8 +16,8 @@
         </Grid.ColumnDefinitions>
         <GridSplitter MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
         <TabControl Grid.Column="2" Name="SideTabControl" Style="{StaticResource Style_SideTabControl}"/>
-        <StackPanel Grid.Column="0" Name="stackpanel_dg" Orientation="Horizontal">
-
-        </StackPanel>
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+            <StackPanel Name="stackpanel_dg" Orientation="Horizontal"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>
