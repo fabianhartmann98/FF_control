@@ -360,6 +360,8 @@ namespace FF_control.Bluetooth
                     //startStayingAliveTimer();
                 }
             }
+            if (!bc.Connected)
+                OnDeviceConnectedFailed();
         }
 
         /// <summary>
@@ -372,13 +374,7 @@ namespace FF_control.Bluetooth
             {
                 if (item.DeviceName == DevName)  //if the name of the device has the name we search for
                 {
-                    ConnectedDevice = item;      //set the deviceinfo of the connected device
-                    BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
-
-                    if (ConnectedDevice.Authenticated)
-                    {
-                        bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac),ConnectedDevice); //connect 
-                    }
+                    ConnectToDevice(item);
                     break;  //stop looking for other fitting devices 
                 }
             }
@@ -386,7 +382,12 @@ namespace FF_control.Bluetooth
 
         public void ConnectToDevice(BluetoothDeviceInfo DevName)
         {
+            var t = new System.Threading.Thread(() => ConnectToDeviceAsync(DevName));
+            t.Start();
+        }
 
+        private void ConnectToDeviceAsync(BluetoothDeviceInfo DevName)
+        {
             ConnectedDevice = DevName;      //set the deviceinfo of the connected device
             BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
 
@@ -394,6 +395,8 @@ namespace FF_control.Bluetooth
             {
                 bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac), ConnectedDevice); //connect 
             }
+            else
+                OnDeviceConnectedFailed();
         }
 
         public void DisconnectFromDevice()
@@ -670,6 +673,14 @@ namespace FF_control.Bluetooth
         {
             if (DeviceConnected != null)
                 DeviceConnected(this, new EventArgs());
+        }
+
+        public event EventHandler DeviceConnectedFailed;
+
+        protected virtual void OnDeviceConnectedFailed()
+        {
+            if (DeviceConnectedFailed != null)
+                DeviceConnectedFailed(this, new EventArgs());
         }
 
         public event EventHandler DeviceDisconnected;

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              d:DesignHeight="200" d:DesignWidth="900">
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
@@ -13,10 +14,13 @@
             <ColumnDefinition Width="*"/>            
         </Grid.ColumnDefinitions>
         <ScrollViewer Grid.Column="0" Name="scrollviewer">
-            <StackPanel  HorizontalAlignment="Stretch" MinWidth="400">
-                <StackPanel Name="stackpanel">
+            <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                <StackPanel  HorizontalAlignment="Stretch" MinWidth="400">
+                    <StackPanel Name="stackpanel">
+                    </StackPanel>
+                    <Button Content="Search for Devices" Name="button_refresh" Click="button_refresh_Click"/>
                 </StackPanel>
-                <Button Content="Search for Devices" Name="button_refresh" Click="button_refresh_Click"/>
+                <Image gif:ImageBehavior.AnimatedSource="C:\Users\Fabian\Documents\GitHub\FF_control\FF_control\Visual\Pics\Infinity.gif"  Height="100" Visibility="Collapsed" Name="infinitygif"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

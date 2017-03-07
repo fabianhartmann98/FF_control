@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
 using FF_control.Bluetooth;
+using System.Diagnostics;
 
 namespace FF_control.Visual
 {
@@ -26,17 +27,30 @@ namespace FF_control.Visual
     public partial class Connection : UserControl
     {
         public MainWindow parent { get; set; }
-
+        public string MyGif { get; set; }
         public Connection(MainWindow p)
         {
             InitializeComponent();
             parent = p;
 
+
             parent.bt_connection.DeviceConnected += bt_DeviceConnected;
             parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
             parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;
+            parent.bt_connection.DeviceConnectedFailed += bt_connection_DeviceConnectedFailed;
 
+            infinitygif.Visibility = Visibility.Visible;
             parent.bt_connection.GetAvailableDevicesAsync();            //get de AvailableDevices Async 
+        }
+
+        void bt_connection_DeviceConnectedFailed(object sender, EventArgs e)
+        {
+            if(!infinitygif.Dispatcher.CheckAccess())
+            {
+                infinitygif.Dispatcher.Invoke((Action<object, EventArgs>)bt_connection_DeviceConnectedFailed, sender, e);
+            }
+            else
+                infinitygif.Visibility = Visibility.Collapsed;
         }        
 
         void bt_DiscoverDevicesEnded(object sender, EventArgs e)        //now able to get the devices 
@@ -48,6 +62,7 @@ namespace FF_control.Visual
             }
             else
             {
+                infinitygif.Visibility = Visibility.Collapsed;
                 stackpanel.Children.Clear();
 
                 foreach (var item in parent.bt_connection.infos)        //for each available Device, set up a new connection_DeviceModul
@@ -61,6 +76,7 @@ namespace FF_control.Visual
 
         void cdm_Dis_ConnectDevice(object sender, RoutedEventArgs e)        //connecting or disconnecting from device
         {
+            infinitygif.Visibility = Visibility.Visible;
             Connection_DeviceModule cdm = (Connection_DeviceModule)((Button)sender).Tag;
             if (cdm.Device == parent.bt_connection.ConnectedDevice && cdm.Device.Connected)        //if it is the same device which is connected to the bt_connection  => disconnect
                 parent.bt_connection.DisconnectFromDevice();
@@ -76,6 +92,7 @@ namespace FF_control.Visual
             }
             else
             {
+                infinitygif.Visibility = Visibility.Collapsed;
                 stackpanel.Children.Clear();        //delete all Moduls, add the one which it is connected now
                 stackpanel.Children.Add(new Connection_DeviceModule(parent.bt_connection.ConnectedDevice));
             }
@@ -84,11 +101,13 @@ namespace FF_control.Visual
 
         void bt_DeviceDisconnected(object sender, EventArgs e)          //de connection is lost
         {
+            infinitygif.Visibility = Visibility.Visible;
             parent.bt_connection.GetAvailableDevicesAsync();        //search for available devices
         }
 
         private void button_refresh_Click(object sender, RoutedEventArgs e)
         {
+            infinitygif.Visibility = Visibility.Visible;
             parent.bt_connection.GetAvailableDevicesAsync();  //search for available devices
         }
 
