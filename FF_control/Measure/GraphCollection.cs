@@ -270,9 +270,13 @@ namespace FF_control.Measure
 
         #region prop vaiables 
         public double DiffPerScrolePercent { get; set; }       //what does the window (min and max of Axis) change per each scroll
+        [XmlIgnore]
         public int XDiffAccuracy { get; private set; }
+        [XmlIgnore]
         public int YDiffAccuracy { get; private set; }
+        [XmlIgnore]
         public int XLabelPow { get; private set; }
+        [XmlIgnore]
         public int YLabelPow { get; private set; }
         #endregion
 

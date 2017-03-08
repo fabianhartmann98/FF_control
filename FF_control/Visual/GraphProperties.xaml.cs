@@ -68,9 +68,16 @@ namespace FF_control.Visual
 
         public void UpdateProperties()
         {
-            tb_name.Text = graph.Name;
-            tb_time.Text = graph.MeasurementTime.ToString();
-            border_StrokeColor.Background = graph.PlotColor;
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke((Action)UpdateProperties);
+            }
+            else
+            {
+                tb_name.Text = graph.Name;
+                tb_time.Text = graph.MeasurementTime.ToString();
+                border_StrokeColor.Background = graph.PlotColor;
+            }
         }
     }
 }

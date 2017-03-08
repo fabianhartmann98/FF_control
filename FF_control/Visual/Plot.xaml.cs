@@ -77,13 +77,20 @@ namespace FF_control.Visual
 
         private void Gcollection_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
         {
-            DrawDiagram();
-            if (e.change == GraphCollectionChange.MinMax)
-                dp.update_minmax();
-            if (e.change == GraphCollectionChange.Collection||e.change==GraphCollectionChange.everything)
-                setUpSideTabControl();
-            if (e.change == GraphCollectionChange.Graph)
-                gplist[(int)e.Data].UpdateProperties();
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke((Action<object, GraphCollectionChanged_EventArgs>)Gcollection_GraphCollectionPropertiesChanged, sender, e);
+            }
+            else
+            {
+                DrawDiagram();
+                if (e.change == GraphCollectionChange.MinMax)
+                    dp.update_minmax();
+                if (e.change == GraphCollectionChange.Collection || e.change == GraphCollectionChange.everything)
+                    setUpSideTabControl();
+                if (e.change == GraphCollectionChange.Graph)
+                    gplist[(int)e.Data].UpdateProperties();
+            }
         }
 
         private void open_diagram(object sender, RoutedEventArgs e)

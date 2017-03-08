@@ -100,18 +100,25 @@ namespace FF_control.Visual
 
         public void update_minmax()
         {
-            if (tb_xmin != null)
-            { 
-                int xdecimals = diagram.XDiffAccuracy + diagram.XLabelPow;
-                if (xdecimals<0)
-                    xdecimals = 0;
-                int ydecimals = diagram.YDiffAccuracy + diagram.YLabelPow;
-                if (ydecimals<0)
-                    ydecimals = 0;
-                tb_xmin.Text = (diagram.AxisXmin / Math.Pow(10, diagram.XLabelPow)).ToString("F" + (xdecimals+1).ToString()) + "E" + diagram.XLabelPow;
-                tb_xmax.Text = (diagram.AxisXmax / Math.Pow(10, diagram.XLabelPow)).ToString("F" + (xdecimals+1).ToString()) + "E" + diagram.XLabelPow;
-                tb_ymin.Text = (diagram.AxisYmin / Math.Pow(10, diagram.YLabelPow)).ToString("F" + (ydecimals+1).ToString()) + "E" + diagram.YLabelPow;
-                tb_ymax.Text = (diagram.AxisYmax / Math.Pow(10, diagram.YLabelPow)).ToString("F" + (ydecimals+1).ToString()) + "E" + diagram.YLabelPow;
+            if (!tb_xmin.Dispatcher.CheckAccess())
+            {
+                tb_xmin.Dispatcher.Invoke((Action)update_minmax);
+            }
+            else
+            {
+                if (tb_xmin != null)
+                {
+                    int xdecimals = diagram.XDiffAccuracy + diagram.XLabelPow;
+                    if (xdecimals < 0)
+                        xdecimals = 0;
+                    int ydecimals = diagram.YDiffAccuracy + diagram.YLabelPow;
+                    if (ydecimals < 0)
+                        ydecimals = 0;
+                    tb_xmin.Text = (diagram.AxisXmin / Math.Pow(10, diagram.XLabelPow)).ToString("F" + (xdecimals + 1).ToString()) + "E" + diagram.XLabelPow;
+                    tb_xmax.Text = (diagram.AxisXmax / Math.Pow(10, diagram.XLabelPow)).ToString("F" + (xdecimals + 1).ToString()) + "E" + diagram.XLabelPow;
+                    tb_ymin.Text = (diagram.AxisYmin / Math.Pow(10, diagram.YLabelPow)).ToString("F" + (ydecimals + 1).ToString()) + "E" + diagram.YLabelPow;
+                    tb_ymax.Text = (diagram.AxisYmax / Math.Pow(10, diagram.YLabelPow)).ToString("F" + (ydecimals + 1).ToString()) + "E" + diagram.YLabelPow;
+                }
             }
         }
     }

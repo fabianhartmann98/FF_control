@@ -20,7 +20,7 @@
                     </StackPanel>
                     <Button Content="Search for Devices" Name="button_refresh" Click="button_refresh_Click"/>
                 </StackPanel>
-                <Image gif:ImageBehavior.AnimatedSource="C:\Users\Fabian\Documents\GitHub\FF_control\FF_control\Visual\Pics\Infinity.gif"  Height="100" Visibility="Collapsed" Name="infinitygif"/>
+                <Image gif:ImageBehavior.AnimatedSource="C:\Users\Fabian\Documents\Git_Projekte\FF_control\FF_control\Visual\Pics\Infinity.gif"  Height="100" Visibility="Collapsed" Name="infinitygif"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -56,6 +56,7 @@ namespace FF_control.Visual
 
         private void Diagram_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
         {
+
             if (e.change == GraphCollectionChange.Collection || e.change == GraphCollectionChange.everything)
             {
                 setUpSideTabControl();
@@ -66,93 +67,116 @@ namespace FF_control.Visual
                 gplist[(int)e.Data].UpdateProperties();
                 CreateTable();
             }
+
         }
 
         private void setUpSideTabControl()
         {
-            selected_tabindex = SideTabControl.SelectedIndex; //get the last index, set back to it after redoing them
-            SideTabControl.Items.Clear();       //delete all Items 
-
-            gplist.Clear();
-
-            for (int i = 0; i < parent.gcollection.Graphs.Count; i++)//for each graph, creat an own tab
+            if (!SideTabControl.Dispatcher.CheckAccess())
             {
-                TabItem ti = new TabItem(); //creat Tab
-                ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
-                ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
+                this.Dispatcher.Invoke((Action)setUpSideTabControl);
+            }
+            else
+            {
+                selected_tabindex = SideTabControl.SelectedIndex; //get the last index, set back to it after redoing them
+                SideTabControl.Items.Clear();       //delete all Items 
 
-                GraphProperties gp = new GraphProperties(parent.gcollection.Graphs[i], parent.gcollection);
-                gplist.Add(gp);
+                gplist.Clear();
 
-                ti.Content = gp;
-                SideTabControl.Items.Add(ti);
-            }            
+                for (int i = 0; i < parent.gcollection.Graphs.Count; i++)//for each graph, creat an own tab
+                {
+                    TabItem ti = new TabItem(); //creat Tab
+                    ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
+                    ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
+
+                    GraphProperties gp = new GraphProperties(parent.gcollection.Graphs[i], parent.gcollection);
+                    gplist.Add(gp);
+
+                    ti.Content = gp;
+                    SideTabControl.Items.Add(ti);
+                }
+            }      
         }
 
         void bt_connection_MeasuredDataReceived(object sender, ReceivedData_EventArgs e) //received a new Data
         {
-            ReceivedData_EventArgs args = e;
-            int number = (int)args.ArrayL[0];//get number (are saved in ArrayList) (order is importent)
-            int time = (int)args.ArrayL[1];//get time
-            int actvalue = (int)args.ArrayL[2]; //get actual value
-
-            int index = parent.gcollection.Graphs.Count - 1; //get the index of the graph to be added
-
-            if(number==0) //if number is 0 => new Graph
+            if (!this.Dispatcher.CheckAccess())
             {
-                parent.gcollection.addGraph(new Measure.Graph(parent.gcollection)); //add Graph
-                parent.gcollection.Graphs[index].MeasurementTime=DateTime.Now;  //set the MeasurementTime
-                parent.gcollection.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position; 
+                this.Dispatcher.Invoke((Action<object,ReceivedData_EventArgs>)bt_connection_MeasuredDataReceived,sender,e);
             }
-            parent.gcollection.Graphs[index].AddPoint(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
-            parent.gcollection.setScalingAuto();
-            parent.v_plot.DrawDiagram();            
+            else
+            {
+                ReceivedData_EventArgs args = e;
+                int number = (int)args.ArrayL[0];//get number (are saved in ArrayList) (order is importent)
+                int time = (int)args.ArrayL[1];//get time
+                int actvalue = (int)args.ArrayL[2]; //get actual value
+
+                int index = parent.gcollection.Graphs.Count - 1; //get the index of the graph to be added
+
+                if (number == 0) //if number is 0 => new Graph
+                {
+                    parent.gcollection.addGraph(new Measure.Graph(parent.gcollection)); //add Graph
+                    index++;
+                    parent.gcollection.Graphs[index].MeasurementTime = DateTime.Now;  //set the MeasurementTime
+                    parent.gcollection.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position;
+                }
+                parent.gcollection.Graphs[index].AddPoint(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
+                parent.gcollection.setScalingAuto();
+                parent.v_plot.DrawDiagram();
+            }         
         }
 
 
         public void CreateTable()
         {
-            stackpanel_dg.Children.Clear(); //delete all Grids
-            dglist.Clear(); 
-            for (int i = 0; i < parent.gcollection.Graphs.Count; i++)
+            if (!stackpanel_dg.Dispatcher.CheckAccess())
             {
-                DataGrid dg = new DataGrid();
-                dg.MouseDoubleClick += dg_MouseDoubleClick;
-                dg.Tag = i;
-                //dg.Height = this.Height;                //setting height to NaN (this.Height is never set) decreases lag
-                dg.AutoGenerateColumns = false;
-                //dg.EnableColumnVirtualization = true;
-                //dg.EnableRowVirtualization = true;
-                dg.MaxHeight = this.ActualHeight;
-                
+                stackpanel_dg.Dispatcher.Invoke((Action)CreateTable);
+            }
+            else
+            {
+                stackpanel_dg.Children.Clear(); //delete all Grids
+                dglist.Clear();
+                for (int i = 0; i < parent.gcollection.Graphs.Count; i++)
+                {
+                    DataGrid dg = new DataGrid();
+                    dg.MouseDoubleClick += dg_MouseDoubleClick;
+                    dg.Tag = i;
+                    //dg.Height = this.Height;                //setting height to NaN (this.Height is never set) decreases lag
+                    dg.AutoGenerateColumns = false;
+                    //dg.EnableColumnVirtualization = true;
+                    //dg.EnableRowVirtualization = true;
+                    dg.MaxHeight = this.ActualHeight;
 
-                DataGridTextColumn dgtc = new DataGridTextColumn();
-                dgtc.Header = "Number";
-                Binding bindingmeasurementnumber = new Binding();
-                bindingmeasurementnumber.IsAsync = true;
-                bindingmeasurementnumber.Path = new PropertyPath("MeasurementNumber");
-                dgtc.Binding = bindingmeasurementnumber;
-                dg.Columns.Add(dgtc);
 
-                dgtc = new DataGridTextColumn();
-                dgtc.Header = "Time";
-                Binding bindingtime = new Binding();
-                bindingtime.IsAsync = true;
-                bindingtime.Path = new PropertyPath("Time");
-                dgtc.Binding = bindingtime;
-                dg.Columns.Add(dgtc);
+                    DataGridTextColumn dgtc = new DataGridTextColumn();
+                    dgtc.Header = "Number";
+                    Binding bindingmeasurementnumber = new Binding();
+                    bindingmeasurementnumber.IsAsync = true;
+                    bindingmeasurementnumber.Path = new PropertyPath("MeasurementNumber");
+                    dgtc.Binding = bindingmeasurementnumber;
+                    dg.Columns.Add(dgtc);
 
-                dgtc = new DataGridTextColumn();
-                dgtc.Header = "Value";
-                Binding bindingvalue = new Binding();
-                bindingvalue.IsAsync = true;
-                bindingvalue.Path = new PropertyPath("I_Value");
-                dgtc.Binding = bindingvalue;
-                dg.Columns.Add(dgtc);
+                    dgtc = new DataGridTextColumn();
+                    dgtc.Header = "Time";
+                    Binding bindingtime = new Binding();
+                    bindingtime.IsAsync = true;
+                    bindingtime.Path = new PropertyPath("Time");
+                    dgtc.Binding = bindingtime;
+                    dg.Columns.Add(dgtc);
 
-                dg.ItemsSource = parent.gcollection.Graphs[i].Mps;
-                stackpanel_dg.Children.Add(dg);
-                dglist.Add(dg);
+                    dgtc = new DataGridTextColumn();
+                    dgtc.Header = "Value";
+                    Binding bindingvalue = new Binding();
+                    bindingvalue.IsAsync = true;
+                    bindingvalue.Path = new PropertyPath("I_Value");
+                    dgtc.Binding = bindingvalue;
+                    dg.Columns.Add(dgtc);
+
+                    dg.ItemsSource = parent.gcollection.Graphs[i].Mps;
+                    stackpanel_dg.Children.Add(dg);
+                    dglist.Add(dg);
+                }
             }
 
         }
