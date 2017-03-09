@@ -75,6 +75,8 @@ namespace FF_control.Bluetooth
             set { pin = value; }
         }
 
+        private System.Threading.Thread ConnectThread; 
+
         #region staying alive
         Timer staying_alive_timer;
         int count_missing_StayingAlive;
@@ -382,8 +384,11 @@ namespace FF_control.Bluetooth
 
         public void ConnectToDevice(BluetoothDeviceInfo DevName)
         {
-            var t = new System.Threading.Thread(() => ConnectToDeviceAsync(DevName));
-            t.Start();
+            if (ConnectThread==null||!ConnectThread.IsAlive)
+            {
+                ConnectThread = new System.Threading.Thread(() => ConnectToDeviceAsync(DevName));
+                ConnectThread.Start();
+            }
         }
 
         private void ConnectToDeviceAsync(BluetoothDeviceInfo DevName)

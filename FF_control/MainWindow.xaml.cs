@@ -72,5 +72,91 @@ namespace FF_control
             Plot_grid.Height = dockpanel.ActualHeight;
             Table_grid.Height = dockpanel.ActualHeight;
         }
+
+        private void menu_SaveCollection(object sender, RoutedEventArgs e)
+        {
+            gcollection.Save_diagram_xml();
+        }
+
+        private void menu_SaveSingleGraph(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("not implemented yet");
+        }
+
+        private void menu_Open(object sender, RoutedEventArgs e)
+        {
+            GraphCollection temp = GraphCollection.Open_diagram_xml();
+            if (temp == null)
+                return;
+            gcollection.Clone(temp, v_plot.can);
+        }
+
+        private void menu_Include(object sender, RoutedEventArgs e)
+        {
+            Graph[] g = GraphCollection.Open_graph_xml();             //show the Open File dialog an other stuff
+            if (g != null)
+                foreach (var item in g)
+                {
+                    gcollection.addGraph(item);
+                }
+        }
+
+        private void menu_New(object sender, RoutedEventArgs e)
+        {
+            gcollection.Clone(new GraphCollection(v_plot.can));
+        }
+
+        private void menu_Close(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void menu_ScaleAuto(object sender, RoutedEventArgs e)
+        {
+            gcollection.setScalingAuto();
+        }
+
+        private void menu_RemoveGraphs(object sender, RoutedEventArgs e)
+        {
+            while (gcollection.Graphs.Count!=0)
+            {
+                gcollection.removeGraph(0);
+            }
+        }
+
+        private void menu_HighliteAll(object sender, RoutedEventArgs e)
+        {
+            gcollection.higliteallgraphs(((MenuItem)sender).IsChecked);
+        }
+
+        private void menu_DiagramEdit(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("not implemented yet");
+        }
+
+        private void menu_GraphEdit(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("not implemented yet");
+        }
+
+        private void menu_SaveClipboard(object sender, RoutedEventArgs e)
+        {
+            gcollection.save_to_clipboard();
+        }
+
+        private void menu_SavePng(object sender, RoutedEventArgs e)
+        {
+            gcollection.save_as_png();
+        }
+
+        private void menu_SaveCSV(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("not implemented yet");
+        }
+
+        private void menu_Help(object sender, RoutedEventArgs e)
+        {
+            mainTabControl.SelectedIndex = mainTabControl.Items.Count - 1;
+        }
     }
 }

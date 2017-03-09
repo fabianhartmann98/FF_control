@@ -279,7 +279,14 @@ namespace FF_control.Measure
             foreach (var item in mps)
             {
                 item.Highlited = v;
+                InformParent();
             }
+        }
+
+        public void highlitepoint(int index, bool v)
+        {
+            mps[index].Highlited = v;
+            InformParent();
         }
 
         private Point scalingPoint(Point p, double offsetX,double offsetY, double scaleX, double scaleY, double plotheight)

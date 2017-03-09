@@ -185,7 +185,7 @@ namespace FF_control.Visual
         {
             DataGrid dg = sender as DataGrid;
             if(dg.SelectedIndex!=-1)
-                parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited = !parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited;
+                parent.gcollection.Graphs[(int)(dg.Tag)].highlitepoint(dg.SelectedIndex, !parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited);
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)

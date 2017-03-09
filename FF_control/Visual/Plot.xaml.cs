@@ -43,13 +43,11 @@ namespace FF_control.Visual
             parent = p;
             selected_tabindex = 0;          //set the default selected_tabindex
 
-            InitializeComponent();
-            this.IsVisibleChanged += Plot_IsVisibleChanged;         //needet to set up the SideTabControl               
-
             parent.gcollection.Can = can;
             parent.gcollection.setScalingAuto();
             parent.gcollection.GraphCollectionPropertiesChanged += Gcollection_GraphCollectionPropertiesChanged;
             DrawDiagram();
+            setUpSideTabControl();
 
             ContextMenu cm = new ContextMenu();
             MenuItem mi = new MenuItem();
@@ -212,15 +210,6 @@ namespace FF_control.Visual
         public void DrawDiagram(string x)
         {
             DrawDiagram();
-        }
-
-        void Plot_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (this.IsVisible)
-            {
-                setUpSideTabControl();
-                DrawDiagram();
-            }
         }
 
         private void can_MouseWheel(object sender, MouseWheelEventArgs e)

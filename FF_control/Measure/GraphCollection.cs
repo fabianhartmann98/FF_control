@@ -1076,6 +1076,8 @@ namespace FF_control.Measure
         /// </summary>
         public void save_to_clipboard()
         {
+            if (can == null)
+                return;
             Rect rect = new Rect(can.RenderSize);
             RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Right,
               (int)rect.Bottom, 96d, 96d, System.Windows.Media.PixelFormats.Default);
