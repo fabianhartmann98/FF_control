@@ -26,8 +26,8 @@ namespace FF_control.Visual
     public partial class Plot : UserControl
     {
         public MainWindow parent { get; set; }
-        
-        
+
+        private const double MaxDistanceToleranz = 200; 
 
         //this is displayed in the ADD Tab
         private Button b_add;                       //host an OnClick 
@@ -54,29 +54,6 @@ namespace FF_control.Visual
 
             DisplayingValueLabel = new Label();
             DisplayingValueLabel.Background = Brushes.White;
-
-            ContextMenu cm = new ContextMenu();
-            MenuItem mi = new MenuItem();
-            mi.Header = "Dehighlite all";
-            mi.Click += new RoutedEventHandler(qwertzclick);
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Save as png";
-            mi.Click += new RoutedEventHandler(save_canvas_png);
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Save to Clipboard";
-            mi.Click += new RoutedEventHandler(save_to_clipboard);
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Save Diagram";
-            mi.Click += new RoutedEventHandler(save_diagram);
-            cm.Items.Add(mi);
-            mi = new MenuItem();
-            mi.Header = "Open Diagram";
-            mi.Click += new RoutedEventHandler(open_diagram);
-            cm.Items.Add(mi);
-            can.ContextMenu = cm;
         }
 
         private void Gcollection_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
@@ -118,12 +95,6 @@ namespace FF_control.Visual
         private void save_canvas_png(object sender, RoutedEventArgs e)
         {
             parent.gcollection.save_as_png();
-        }
-
-        private void qwertzclick(object sender, EventArgs e)
-        {
-            parent.gcollection.higliteallgraphs(false);
-            DrawDiagram();
         }
 
         private void setUpSideTabControl()
@@ -241,7 +212,7 @@ namespace FF_control.Visual
             else
             {
                 prevmousePosition.X = -100;
-                if (parent.gcollection.Graphs.Count != 0 && parent.gcollection.get_nearest_point(e, ref graphindex, ref pointindex) < 500)
+                if (parent.gcollection.Graphs.Count != 0 && parent.gcollection.get_nearest_point(e, ref graphindex, ref pointindex) < MaxDistanceToleranz)
                 {
                     if (graphindex != -1 && pointindex != -1)
                         DisplayPoint(graphindex,  pointindex);
@@ -263,6 +234,13 @@ namespace FF_control.Visual
         private void can_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             prevmousePosition = e.GetPosition(can);                 //get the first prevmouse as a reference
+            if (e.ClickCount == 2)      //if double click on pont highlite the specific point (if is in range)
+            {
+                int graphindex = 0;
+                int pointindex = 0;
+                if(parent.gcollection.get_nearest_point(e as MouseEventArgs, ref graphindex, ref pointindex)< MaxDistanceToleranz) //get neares point and if it isn't to far away -> toggle highlite
+                    parent.gcollection.Graphs[graphindex].highlitepoint(pointindex, !parent.gcollection.Graphs[graphindex].Mps[pointindex].Highlited);
+            }
         }
 
         private void can_SizeChanged(object sender, SizeChangedEventArgs e)

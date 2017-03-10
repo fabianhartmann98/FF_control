@@ -28,15 +28,13 @@ namespace FF_control.Visual
         public MainWindow parent { get; set; }              //saves the parent MainWindow (used to access bt_connection and graph) 
 
         private int selected_tabindex;                      //what tabindex was selected, before redoing SideTabItems 
-        private List<GraphProperties> gplist;
+        private List<GraphProperties> gplist;           
         private List<DataGrid> dglist; 
 
         public Table(MainWindow p)
         {
             InitializeComponent();
             parent = p;
-
-            this.Loaded += Table_Loaded;
 
             gplist = new List<GraphProperties>();
             dglist = new List<DataGrid>();
@@ -48,21 +46,14 @@ namespace FF_control.Visual
             parent.gcollection.GraphCollectionPropertiesChanged += Diagram_GraphCollectionPropertiesChanged;
         }
 
-        private void Table_Loaded(object sender, RoutedEventArgs e)
-        {
-            //CreateTable();
-            //setUpSideTabControl();
-        }
-
         private void Diagram_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
         {
-
-            if (e.change == GraphCollectionChange.Collection || e.change == GraphCollectionChange.everything)
+            if (e.change == GraphCollectionChange.Collection || e.change == GraphCollectionChange.everything) //if the whole collection or everything changed
             {
                 setUpSideTabControl();
                 CreateTable();
             }
-            if (e.change == GraphCollectionChange.Graph)
+            if (e.change == GraphCollectionChange.Graph) //if only one graph changed 
             {
                 gplist[(int)e.Data].UpdateProperties();
                 CreateTable();
@@ -116,7 +107,7 @@ namespace FF_control.Visual
                 if (number == 0) //if number is 0 => new Graph
                 {
                     parent.gcollection.addGraph(new Measure.Graph(parent.gcollection)); //add Graph
-                    index++;
+                    index++;        //increase the index to adapt to new last element
                     parent.gcollection.Graphs[index].MeasurementTime = DateTime.Now;  //set the MeasurementTime
                     parent.gcollection.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position;
                 }
@@ -184,8 +175,8 @@ namespace FF_control.Visual
         void dg_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             DataGrid dg = sender as DataGrid;
-            if(dg.SelectedIndex!=-1)
-                parent.gcollection.Graphs[(int)(dg.Tag)].highlitepoint(dg.SelectedIndex, !parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited);
+            if(dg.SelectedIndex!=-1)    //if any was selected
+                parent.gcollection.Graphs[(int)(dg.Tag)].highlitepoint(dg.SelectedIndex, !parent.gcollection.Graphs[(int)(dg.Tag)].Mps[dg.SelectedIndex].Highlited); //togle the highlite of the element
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -205,7 +196,7 @@ namespace FF_control.Visual
             double actheight = this.ActualHeight;
             foreach (var item in dglist)
             {
-                item.MaxHeight = actheight;
+                item.MaxHeight = actheight; //adapt new maxheight
             }
         }
     }

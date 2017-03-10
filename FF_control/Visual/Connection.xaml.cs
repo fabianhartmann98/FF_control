@@ -34,18 +34,18 @@ namespace FF_control.Visual
             parent = p;
 
 
-            parent.bt_connection.DeviceConnected += bt_DeviceConnected;
-            parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded;
-            parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected;
-            parent.bt_connection.DeviceConnectedFailed += bt_connection_DeviceConnectedFailed;
+            parent.bt_connection.DeviceConnected += bt_DeviceConnected;     //to react if the divice is connected
+            parent.bt_connection.DiscoverDevicesEnded += bt_DiscoverDevicesEnded; //to get all available devices in range
+            parent.bt_connection.DeviceDisconnected += bt_DeviceDisconnected; //if it wasn't able to reach ist
+            parent.bt_connection.DeviceConnectedFailed += bt_connection_DeviceConnectedFailed; //if it wasn't able to connect to the device
 
-            infinitygif.Visibility = Visibility.Visible;
+            infinitygif.Visibility = Visibility.Visible; //set it to visible (because starting to search)
             parent.bt_connection.GetAvailableDevicesAsync();            //get de AvailableDevices Async 
         }
 
         void bt_connection_DeviceConnectedFailed(object sender, EventArgs e)
         {
-            if(!infinitygif.Dispatcher.CheckAccess())
+            if(!infinitygif.Dispatcher.CheckAccess()) //setting the loading gif as collapsed (not visible)
             {
                 infinitygif.Dispatcher.Invoke((Action<object, EventArgs>)bt_connection_DeviceConnectedFailed, sender, e);
             }
@@ -63,7 +63,7 @@ namespace FF_control.Visual
             else
             {
                 infinitygif.Visibility = Visibility.Collapsed;
-                stackpanel.Children.Clear();
+                stackpanel.Children.Clear();        //creat new list with all the found devices
 
                 foreach (var item in parent.bt_connection.infos)        //for each available Device, set up a new connection_DeviceModul
                 {
@@ -99,7 +99,7 @@ namespace FF_control.Visual
  
         }
 
-        void bt_DeviceDisconnected(object sender, EventArgs e)          //de connection is lost
+        void bt_DeviceDisconnected(object sender, EventArgs e)          //the connection is lost
         {
             infinitygif.Visibility = Visibility.Visible;
             parent.bt_connection.GetAvailableDevicesAsync();        //search for available devices

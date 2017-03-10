@@ -24,6 +24,14 @@
             Background="AliceBlue"
             ClipToBounds="True" 
             SizeChanged="can_SizeChanged">
+            <Canvas.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Save as png" Click="save_canvas_png"/>
+                    <MenuItem Header="Save to Clipboard" Click="save_to_clipboard"/>
+                    <MenuItem Header="Save Diagram" Click="save_diagram"/>
+                    <MenuItem Header="Open Diagram" Click="open_diagram"/>
+                </ContextMenu>
+            </Canvas.ContextMenu>
         </Canvas>
     </Grid>
 </UserControl>

@@ -158,5 +158,15 @@ namespace FF_control
         {
             mainTabControl.SelectedIndex = mainTabControl.Items.Count - 1;
         }
+
+        private void menu_lightTheme(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menu_darkTheme(object sender, RoutedEventArgs e)
+        {             
+            ChangeToDarkTheme();
+        }
     }
 }

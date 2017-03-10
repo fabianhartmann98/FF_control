@@ -13,7 +13,7 @@ namespace FF_control.Measure
         private double i_value;             //whats the Current (Strom) value
         private double time;                //when was this recorded
         private int measurementNumber;      //whats the measurement number (not really needed) 
-        private bool highlited;
+        private bool highlited;             //if it should draw a circle arount it 
 
         public bool Highlited
         {
@@ -70,6 +70,10 @@ namespace FF_control.Measure
             return "Time:"+time.ToString()+"\nValue:"+i_value.ToString();
         }
 
+        /// <summary>
+        /// gets the distance to this point 
+        /// </summary>
+        /// <returns>distance ^2</returns>
         internal double getDistance(Point p, double scalex, double scaley, double offsetX, double offsetY, double plotheight)
         {
             Point scaledpoint = GraphCollection.scalingPoint(this.getPoint(), offsetX, offsetY, scalex, scaley, plotheight);

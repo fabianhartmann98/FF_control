@@ -32,20 +32,6 @@ namespace FF_control.Bluetooth
             file.Close();
 
         }
-
-        private double aim_position;        //saves the gap in mm
-        /// <summary>
-        /// aim position in mm
-        /// </summary>
-        public double Aim_position
-        {
-            get { return aim_position; }
-            set 
-            { 
-                aim_position = value;
-                SendMotorAdjusting(Convert.ToInt32(aim_position * 100));
-            }
-        }
         
         public double Lastupdated_position {get; private set;}      //saves the gap in mm
         public byte Lastupdated_status{get; private set;}
@@ -63,6 +49,8 @@ namespace FF_control.Bluetooth
         int rx_head = 0;                    //what we have already read (should always be 0)
         int rx_tail = 0;                    //the length in the array thath is filled but not read yet 
 
+        private System.Threading.Thread ConnectThread;
+
         static byte[] crc_table = new byte[256];        //the table to compute te crc8
          // x8 + x7 + x6 + x4 + x2 + 1
         const byte crc_poly = 0xd5;                     //the key for the crc8 = 111010101=0x1d5
@@ -75,7 +63,19 @@ namespace FF_control.Bluetooth
             set { pin = value; }
         }
 
-        private System.Threading.Thread ConnectThread; 
+        private double aim_position;        //saves the gap in mm
+        /// <summary>
+        /// aim position in mm
+        /// </summary>
+        public double Aim_position
+        {
+            get { return aim_position; }
+            set
+            {
+                aim_position = value;
+                SendMotorAdjusting(Convert.ToInt32(aim_position * BT_Protocoll.MMtoSendFormat));
+            }
+        }
 
         #region staying alive
         Timer staying_alive_timer;
@@ -83,6 +83,9 @@ namespace FF_control.Bluetooth
         const int max_count_missing_StayingAlive = 20;
         const double staying_alive_timer_interval = 1000;
 
+        /// <summary>
+        /// is starting a new timer to send staying alive every staying_alive_timer_interval
+        /// </summary>
         public void startStayingAliveTimer()
         {
             staying_alive_timer = new Timer(staying_alive_timer_interval);
@@ -90,10 +93,17 @@ namespace FF_control.Bluetooth
             staying_alive_timer.Start();
         }
 
+        /// <summary>
+        /// Sends a staying alive
+        /// when more than max_count_missing_StayingAlive send and didn't receive anything
+        /// ->OnDiviceDisconnected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void staying_alive_timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            count_missing_StayingAlive++;
-            if (count_missing_StayingAlive > max_count_missing_StayingAlive)
+            count_missing_StayingAlive++;                                       //to determin when the last stayingAliveAnswer was received
+            if (count_missing_StayingAlive > max_count_missing_StayingAlive)    //to long since one received -> Disconnect
             {
                 OnDeviceDisconnected();
             }
@@ -103,7 +113,7 @@ namespace FF_control.Bluetooth
 
         public BT_connection()
         {
-            DeletLogger();
+            DeletLogger();      //clear Log 
             crc_CreateTable(); 
             //todo: activate StayinAliveTimer
 
@@ -132,6 +142,11 @@ namespace FF_control.Bluetooth
             return names;
         }
 
+        /// <summary>
+        /// getting al the available Devices in the areia
+        /// need to subscribe to DiscoverDevicesEnded
+        /// get info out of Infos
+        /// </summary>
         public void GetAvailableDevicesAsync()
         {
             bc = new BluetoothClient();
@@ -147,7 +162,6 @@ namespace FF_control.Bluetooth
                 OnDiscoverDevicesEnded();
             }
         }
-        //event in in region Event
         #endregion
 
         #region Reading
@@ -162,23 +176,16 @@ namespace FF_control.Bluetooth
             int read = s.EndRead(ar);
             rx_tail += read;
             BytesReceived += read;
-            //ArrayList al = new ArrayList();
-            //for (int i = 0; i+1< rx_tail-rx_head; i+=2)
-            //{
-            //    int high = AccessRXBuf(i + rx_head);
-            //    int low = AccessRXBuf(i + rx_head + 1);
-            //    int x = (high << 8) + low;
-            //    al.Add(x);
-            //}
             DataManager();
 
             s.BeginRead(RX_buf, rx_tail, buf_len-rx_tail, beginRead_cal, s);            
-            //s.BeginRead(RX_buf, rx_tail, buf_len, beginRead_cal, s);
-
+            //starting at rx_tail (doesn't have to be 0)
+            //buf_len -rx-tail is the remaining free space 
+            //call this again if received something
         }
 
         /// <summary>
-        /// modules the input to the buf_len so no out of Range can appear
+        /// the input % buf_len so no out of Range can appear
         /// </summary>
         /// <param name="i">index of where data should come from</param>
         /// <returns>value in the RX_Buf at the index</returns>
@@ -238,7 +245,7 @@ namespace FF_control.Bluetooth
                     if (AccessRXBuf(rx_head + BT_Protocoll.FrameLengthOverhead + framelength - 1) != BT_Protocoll.CarriageReturn)
                     {
                         Logger("Received something which shouldn't be here; in the packet");
-                        shiftingRXBuf(1);
+                        shiftingRXBuf(1); 
                         break;
                     }
 
@@ -253,7 +260,7 @@ namespace FF_control.Bluetooth
                     switch (AccessRXBuf(rx_head + 3))       //which Command is it
                     {
                         case (BT_Protocoll.StayingAliveAnswer):
-                            count_missing_StayingAlive = 0;
+                            count_missing_StayingAlive = 0;         //set counter of time till last StayingAlive Answer received (don't call OnDeviceDisconnected)
                             Logger("received StayingAliveAnswer");
                             break;                                               
                         case (BT_Protocoll.InitAnswer):
@@ -265,7 +272,7 @@ namespace FF_control.Bluetooth
                             int data = Convert.ToInt32((AccessRXBuf(rx_head + 8) << 8) + AccessRXBuf(rx_head + 9));
                             byte followup = AccessRXBuf(rx_head + 10);
                             OnMeasuredDataReceived(number, time,data);
-                            //SendMeasuredDataAnswer(followup);
+                            //SendMeasuredDataAnswer(followup); //not doing it to reduce traffic on MCU while sending
                             Logger("received MeasuredDataCommand");
                             break;                                               
                         case (BT_Protocoll.MotorAdjustingAnswer):
@@ -350,11 +357,11 @@ namespace FF_control.Bluetooth
         {
             if (ar.IsCompleted)
             {
-                if (bc.Connected)
+                if (bc.Connected)   //if it was able to connect to the device
                 {
                     Logger("connected to Device: " + ConnectedDevice.DeviceName + " with Address " + ConnectedDevice.DeviceAddress);
                     if (s != null)
-                        s.Close();
+                        s.Close();      //close the old one
                     s = bc.GetStream(); //get the Stream to read and write on
                     s.BeginRead(RX_buf, rx_tail, buf_len - rx_tail, beginRead_cal, s);  //start reading    
                     OnDeviceConnected(); //calling the Event DeviceConnected
@@ -382,9 +389,14 @@ namespace FF_control.Bluetooth
             }
         }
 
+        /// <summary>
+        /// pairs to the device (using pin); does it async
+        /// trys to connect
+        /// </summary>
+        /// <param name="DevName"></param>
         public void ConnectToDevice(BluetoothDeviceInfo DevName)
         {
-            if (ConnectThread==null||!ConnectThread.IsAlive)
+            if (ConnectThread==null||!ConnectThread.IsAlive)    //look if it is running (not allowed to run multiple times)
             {
                 ConnectThread = new System.Threading.Thread(() => ConnectToDeviceAsync(DevName));
                 ConnectThread.Start();
@@ -404,6 +416,10 @@ namespace FF_control.Bluetooth
                 OnDeviceConnectedFailed();
         }
 
+        /// <summary>
+        /// closing all streams
+        /// stop Staying alive
+        /// </summary>
         public void DisconnectFromDevice()
         {
             try
@@ -500,7 +516,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);         //set the präamble 
-            b[2] = (byte)BT_Protocoll.InitLength;   //set the length
+            b[2] = BT_Protocoll.InitLength;   //set the length
             b[3] = BT_Protocoll.InitCommand;        //set the command
 
             b[packetlength - 2] = crc_ComputeChecksum(b); //set the checksum
@@ -514,7 +530,7 @@ namespace FF_control.Bluetooth
             int packetlength = BT_Protocoll.StayingAliveLength + BT_Protocoll.FrameLengthOverhead;
             byte[] b= new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.StayingAliveLength;
+            b[2] = BT_Protocoll.StayingAliveLength;
             b[3] = BT_Protocoll.StayingAliveCommand;
 
             b[packetlength-2] = crc_ComputeChecksum(b);
@@ -533,7 +549,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.MeasuredDataAnswerLength;
+            b[2] = BT_Protocoll.MeasuredDataAnswerLength;
             b[3] = BT_Protocoll.MeasuredDataAnswer;
 
             b[4] = notlastData;
@@ -554,7 +570,7 @@ namespace FF_control.Bluetooth
             int i_gap = Convert.ToInt32(Math.Round(gap * 100));
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.MotorAdjustingLength;
+            b[2] = BT_Protocoll.MotorAdjustingLength;
             b[3] = BT_Protocoll.MotorAdjustingCommand;
 
             b[4] = (byte)(i_gap >> 8);
@@ -572,7 +588,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.StatusRequestLength;
+            b[2] = BT_Protocoll.StatusRequestLength;
             b[3] = BT_Protocoll.StatusRequestCommand;
 
             b[packetlength-2] = crc_ComputeChecksum(b);
@@ -587,7 +603,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.PositionRequestLength;
+            b[2] = BT_Protocoll.PositionRequestLength;
             b[3] = BT_Protocoll.PositionRequestCommand;
 
             b[packetlength-2] = crc_ComputeChecksum(b);
@@ -602,7 +618,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.MaxGapRequestLength;
+            b[2] = BT_Protocoll.MaxGapRequestLength;
 
             b[3] = BT_Protocoll.MaxGapRequestCommand;
 
@@ -618,7 +634,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.ReferenzPlacementLength;
+            b[2] = BT_Protocoll.ReferenzPlacementLength;
 
             b[3] = BT_Protocoll.ReferenzPlacementCommand;
 
@@ -634,7 +650,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.RunLength;
+            b[2] = BT_Protocoll.RunLength;
 
             b[3] = BT_Protocoll.RunCommand;
 
@@ -650,7 +666,7 @@ namespace FF_control.Bluetooth
 
             byte[] b = new byte[packetlength];
             SettingPräamble(ref b);
-            b[2] = (byte)BT_Protocoll.StopLenght;
+            b[2] = BT_Protocoll.StopLenght;
 
             b[3] = BT_Protocoll.StopCommand;
 
@@ -667,14 +683,13 @@ namespace FF_control.Bluetooth
                 s.Write(b, 0, b.Length);
                 BytesSend += b.Length;
             }
-            //s.Write(new byte[] {0x01}, 0, 1);
         }
         #endregion
 
         #region Events
         public event EventHandler DeviceConnected;
 
-        protected virtual void OnDeviceConnected()
+        protected virtual void OnDeviceConnected()  //device connected
         {
             if (DeviceConnected != null)
                 DeviceConnected(this, new EventArgs());
@@ -682,7 +697,7 @@ namespace FF_control.Bluetooth
 
         public event EventHandler DeviceConnectedFailed;
 
-        protected virtual void OnDeviceConnectedFailed()
+        protected virtual void OnDeviceConnectedFailed()    //not able to connect to device
         {
             if (DeviceConnectedFailed != null)
                 DeviceConnectedFailed(this, new EventArgs());
@@ -690,7 +705,7 @@ namespace FF_control.Bluetooth
 
         public event EventHandler DeviceDisconnected;
 
-        protected virtual void OnDeviceDisconnected()
+        protected virtual void OnDeviceDisconnected()   //device not not reachable (stayingAlive)
         {
             DisconnectFromDevice(); 
             if (DeviceDisconnected != null)
@@ -699,7 +714,7 @@ namespace FF_control.Bluetooth
 
         public event EventHandler DiscoverDevicesEnded;
 
-        protected virtual void OnDiscoverDevicesEnded()
+        protected virtual void OnDiscoverDevicesEnded() //finished searching for devices
         {
             if (DiscoverDevicesEnded != null)
                 DiscoverDevicesEnded(this, new EventArgs());
@@ -707,7 +722,7 @@ namespace FF_control.Bluetooth
 
         public event EventHandler<ReceivedData_EventArgs> MeasuredDataReceived;
 
-        protected virtual void OnMeasuredDataReceived(int number, int time, int act_value)
+        protected virtual void OnMeasuredDataReceived(int number, int time, int act_value) //received new MeasurementData
         {
             if (MeasuredDataReceived != null)
                 MeasuredDataReceived(this, new ReceivedData_EventArgs(number,time,act_value));
@@ -715,7 +730,7 @@ namespace FF_control.Bluetooth
 
         public event EventHandler StatusReceived;
 
-        protected virtual void OnStatusReceived(byte status)
+        protected virtual void OnStatusReceived(byte status) //Received new Status
         {
             Lastupdated_status = status;
             if (StatusReceived != null)

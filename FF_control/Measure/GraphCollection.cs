@@ -49,16 +49,16 @@ namespace FF_control.Measure
         private int LabelMarginTopY = -10;         //whats the Margin to the Label Marker YAxis
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
         private double PlottingMargin = 0.05;       //used to  set a small marging (top, bottom, right and left)  
-        public static double AxisMargin = 40;
-        private double LabelRounding = 5;
+        public static double AxisMargin = 40;       //where the plotcan is beginning at the left and the margin at the botton
+        private double LabelRounding = 5;           //determin when it schould round 
         private double Rounding2dot0 = 5;
-        private const int LabelMinAverage = 2;
-        private const int LabelMaxAverage = 2000;
+        private const int LabelMinAverage = 2;      //when it should display it with 3-4 digits
+        private const int LabelMaxAverage = 2000;   //when it should display it with 1-2 digits
 
 
         private double DefaultPlotHeightWidth = 100;
-        public static string FileFilter = "H2B2 (*.h2b2)|*.h2b2|All Files (*.*)|*.*";
-        public static string FileFilterCSV = "CSV (*.csv)|*.csv|All Files (*.*)|*.*";
+        public static string FileFilter = "H2B2 (*.h2b2)|*.h2b2|All Files (*.*)|*.*"; //used for saving plots
+        public static string FileFilterCSV = "CSV (*.csv)|*.csv|All Files (*.*)|*.*"; //used for saving data (csv)
 
         #endregion
 
@@ -72,15 +72,16 @@ namespace FF_control.Measure
         private Canvas can;                         //the canvas to draw on 
         private int xAxisLabelCount = 5;                //how many labels should be placed on the x Axis (default = 5)
         private int yAxisLabelCount = 5;                //how many labels should be placed on the y Axis  (default = 5)
-        private Canvas plotcan;
-        private string axisColor_hex;
+        private Canvas plotcan;                     //the can to which is all scaled on and where the graph is going to be displayed
+        private string axisColor_hex;               //the hex of the AxisColoer (used for XML)
         private string axisLabelColor_hex;
         private string backgroundColor_hex;
         private Brush backgroundColor;
         private Brush axisColor;
         private Brush axisLabelColor;
-        private List<Graph> graphs;
-        private double xDiffPerLabel;
+
+        private List<Graph> graphs;                 //the list of Graphs
+        private double xDiffPerLabel;               //the difference between the labels (not able to set it yet (isn't doing any thing)
         private double yDiffPerLabel;
 
         public double YDiffPerLabel
@@ -301,6 +302,7 @@ namespace FF_control.Measure
             plotcan = new Canvas();
             plotcan.ClipToBounds = true;
         }
+
         public GraphCollection(List<Point> Points) : this()         //calls Plot() first
         {
             Graph g = new Graph(this);
@@ -310,6 +312,7 @@ namespace FF_control.Measure
             }
             this.addGraph(g);
         }
+
         public GraphCollection(Canvas ca) : this()                 //calls Plot() first
         {
             can = ca;
@@ -370,25 +373,50 @@ namespace FF_control.Measure
             Export_as_CSV(sfd.FileName);
         }
         
+        /// <summary>
+        /// saves all the data to a csv file (multiple graphs)
+        /// </summary>
+        /// <param name="filename">the Location to save the file to</param>
         public void Export_as_CSV(string filename)
         {
-            StreamWriter sw = new StreamWriter(filename);
-            StringBuilder sb = new StringBuilder();
-            if (graphs.Count == 0)
+            if (graphs.Count == 0)  //if nothing to save -> return
                 return;
-            int maxpoints = graphs[0].Mps.Count;
-            sb.Append(graphs[0].Name);
-            sb.Append(";;;");
+            StreamWriter sw = new StreamWriter(filename);   //streamwriter to the the file
+            StringBuilder sb = new StringBuilder();
+            
+            int maxpoints = graphs[0].Mps.Count;    //get the max number of points in any measurement
+            sb.Append(graphs[0].Name);  //set the name of the Graph in the Top-Line 
+            sb.Append(";;;"); //used for data 
             for (int i = 1; i < graphs.Count; i++)
             {
-                sb.Append(";");
+                sb.Append(";");//use one column as a seperator
                 sb.Append(graphs[i].Name);
                 sb.Append(";;;");
                 if (maxpoints < graphs[i].Mps.Count)
                     maxpoints = graphs[1].Mps.Count; 
             }
+            sb.Append("\n"); //set new line -> start with meta-data
+            foreach (var item in graphs)
+            {
+                sb.Append("Gap:;");
+                sb.Append(item.MeasurementGap.ToString());
+                sb.Append(";mm;;"); 
+            }
+            sb.Append("\n");
+            foreach (var item in graphs)
+            {
+                sb.Append("Time:;");
+                sb.Append(item.MeasurementTime.ToString());
+                sb.Append(";;;");
+            }
             sb.Append("\n");
 
+            sb.Append("\n");
+            foreach (var item in graphs) //include Headlines
+            {
+                sb.Append("Number;Time;Value;;");
+            }
+            sb.Append("\n"); //set new line -> start with data
             for (int i = 0; i < maxpoints; i++)
             {
                 foreach (var item in graphs)
@@ -402,9 +430,9 @@ namespace FF_control.Measure
                         sb.Append(item.Mps[i].I_Value);
                         sb.Append(";");
                     }
-                    sb.Append(";");
+                    sb.Append(";"); //as a seperator
                 }
-                sb.Append("\n");
+                sb.Append("\n"); //next data
             }
             sw.Write(sb.ToString());
             sw.Close();
@@ -908,6 +936,9 @@ namespace FF_control.Measure
         }
 
         #region addGraph removeGraph
+        /// <summary>
+        /// adds a new graph to the list
+        /// </summary>
         public void addGraph()
         {
             addGraph(new Graph(this));            
@@ -932,6 +963,11 @@ namespace FF_control.Measure
             OnGraphCollectionPropertiesChanged(GraphCollectionChange.Collection);
         }
 
+        /// <summary>
+        /// gets all the information from the given parameter 
+        /// informs that something has changed
+        /// </summary>
+        /// <param name="g"></param>
         public void Clone(GraphCollection g)
         {
             axisColor = g.AxisColor;
@@ -944,7 +980,7 @@ namespace FF_control.Measure
             can = g.Can;
             DiffPerScrolePercent = g.DiffPerScrolePercent;
             graphs = g.Graphs;
-            foreach (var item in graphs)
+            foreach (var item in graphs)    //need to set new parent
             {
                 item.parent = this;
             }
@@ -952,7 +988,7 @@ namespace FF_control.Measure
             xAxisLabelCount = g.XAxisLabelCount;
             yAxisLabelCount = g.YAxisLabelCount;
             OffsetScaleCalculation();
-            OnGraphCollectionPropertiesChanged(GraphCollectionChange.everything);       
+            OnGraphCollectionPropertiesChanged(GraphCollectionChange.everything);       //inform that something has changed
         }
 
         public void Clone(GraphCollection g, Canvas can)
@@ -989,8 +1025,8 @@ namespace FF_control.Measure
             Graph p = new Graph(parent);
             for (int i = 0; i < 20; i++)        //20 points
             {
-                //p.addPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
-                p.AddPoint(new MeasurementPoint(new Point(i,0),i));
+                p.AddPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
+                //p.AddPoint(new MeasurementPoint(new Point(i,0),i));
             }
             return p; 
         }
@@ -1060,6 +1096,13 @@ namespace FF_control.Measure
             OffsetScaleCalculation();  //scale new offset and scale
         }
 
+        /// <summary>
+        /// get the distance to the nearest point 
+        /// </summary>
+        /// <param name="e">need this to get the position</param>
+        /// <param name="graphindex">which graph is the closest</param>
+        /// <param name="pointindex">which point is the closest in the graph</param>
+        /// <returns>the distance ^2</returns>
         public double get_nearest_point(MouseEventArgs e, ref int graphindex, ref int pointindex)
         {
             graphindex = -1;
@@ -1068,20 +1111,20 @@ namespace FF_control.Measure
             if (graphs.Count == 0)
                 return -1;
             graphindex = 0;
-            double nearest =graphs[0].get_nearest_point(p, ref pointindex, scaleX, scaleY, offsetX, offsetY, plotheight);
+            double nearest =graphs[0].get_nearest_point(p, ref pointindex, scaleX, scaleY, offsetX, offsetY, plotheight); //get the nearest point of graph 0 to start with
             double temp = 0;
-            int temppointindex=0;
+            int temppointindex=0; //only set pointindex if it is closer (not every time)
             for (int i = 1; i < graphs.Count; i++)
             {
-                temp = graphs[i].get_nearest_point(p, ref temppointindex, scaleX, scaleY, offsetX, offsetY, plotheight);
+                temp = graphs[i].get_nearest_point(p, ref temppointindex, scaleX, scaleY, offsetX, offsetY, plotheight); 
                 if (temp < nearest)
                 {
                     nearest = temp;
-                    pointindex = temppointindex;
+                    pointindex = temppointindex; //only set if it is closer
                     graphindex = i;
                 }
             }
-            return nearest;            
+            return nearest;            //retunr the distance ^2
         }
 
         /// <summary>
@@ -1167,6 +1210,13 @@ namespace FF_control.Measure
             return q;
         }
 
+        /// <summary>
+        /// allowes to seht height and widht on the given canvas
+        /// uses dispatcher if not able to access
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
         private void can_set_heigt_width(Canvas c, double height, double width)
         {
             if (!c.Dispatcher.CheckAccess())
@@ -1180,6 +1230,9 @@ namespace FF_control.Measure
             }
         }
 
+        /// <summary>
+        /// corrects x/y max and min if they are the same or in wrong order
+        /// </summary>
         private void check_max_min()
         {
             if (xmin == xmax)

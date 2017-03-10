@@ -16,10 +16,10 @@ namespace FF_control.Measure
     public class Graph
     {
         [XmlIgnore]
-        public GraphCollection parent;
-        public Guid uid;
+        public GraphCollection parent;  //the parent of this element (in which Collection is it stored in) (used for InformParent())
+        public Guid uid;        //is a uniq ID to identifie it by
         #region Prop
-        private ObservableCollection<MeasurementPoint> mps;
+        private ObservableCollection<MeasurementPoint> mps; //saves all Measurement Points
 
         public ObservableCollection<MeasurementPoint> Mps
         {
@@ -30,7 +30,7 @@ namespace FF_control.Measure
                 InformParent();
             }
         }
-        public string SaveLocation { get; set; }
+        public string SaveLocation { get; set; } //the Location where this is saved at
         
         private string name;            //name of the measurementrow
         [XmlIgnore]private Brush plotColor;        //the color which is going to be displayed
@@ -60,8 +60,7 @@ namespace FF_control.Measure
                 gap = value;
                 InformParent();
             }
-        }
-        
+        }        
 
         public DateTime MeasurementTime
         {
@@ -83,7 +82,7 @@ namespace FF_control.Measure
             }
         }
 
-        public string PlotColor_hex
+        public string PlotColor_hex //only realy used for savin in xml
         {
             get { return ((SolidColorBrush)PlotColor).Color.ToString(); }
             set 
@@ -246,11 +245,11 @@ namespace FF_control.Measure
         /// <summary>
         /// draw on the canvas and use the scale of the given values
         /// </summary>
-        /// <param name="can"></param>
-        /// <param name="offsetX"></param>
-        /// <param name="offsetY"></param>
-        /// <param name="ScaleX"></param>
-        /// <param name="ScaleY"></param>
+        /// <param name="can">The canvas, where to draw the things on</param>
+        /// <param name="offsetX">the offset on X axis</param>
+        /// <param name="offsetY">the offset on Y axis</param>
+        /// <param name="ScaleX">the scale used for X Axis</param>
+        /// <param name="ScaleY">the scale used for Y Axis</param>
         public void draw(Canvas can, double offsetX, double offsetY, double ScaleX, double ScaleY, double plotheight)
         {
 
@@ -283,26 +282,43 @@ namespace FF_control.Measure
             InformParent();
         }
 
+        /// <summary>
+        /// highlite a Point in the List
+        /// use this instead of [].Highlited = xxx, because of InformParent
+        /// </summary>
+        /// <param name="index">which point to highlite</param>
+        /// <param name="v">the value to whicht it should be set</param>
         public void highlitepoint(int index, bool v)
         {
             mps[index].Highlited = v;
             InformParent();
         }
 
+        /// <summary>
+        /// get the nearest point in the collection
+        /// </summary>
+        /// <param name="p">the point on Canvas</param>
+        /// <param name="pointindex">which mps has the lowest one</param>
+        /// <param name="scalex">scale of X Axis</param>
+        /// <param name="scaley">scale of Y Axis</param>
+        /// <param name="offsetX">offset used for X Axis</param>
+        /// <param name="offsetY">offset used for Y Axis</param>
+        /// <param name="plotheight">the hight of the Plotcan</param>
+        /// <returns>the distance between mousepoint and neares point ^2</returns>
         public double get_nearest_point(Point p, ref int pointindex, double scalex, double scaley, double offsetX, double offsetY, double plotheight)
         {
-            pointindex = -1;
+            pointindex = -1; //set for default (if none existing)
             if (mps.Count==0)
                 return -1;
-            double nearest = mps[0].getDistance(p,scalex,scaley, offsetX, offsetY, plotheight);
-            pointindex = 0;
+            double nearest = mps[0].getDistance(p,scalex,scaley, offsetX, offsetY, plotheight); //start with the first one
+            pointindex = 0; //set the pointindex on 0 (because its the first one, if none are smalle, this is the smallest)
             double temp; 
             for (int i = 1; i < mps.Count; i++)
             {
                 temp = mps[i].getDistance(p,scalex,scaley, offsetX, offsetY, plotheight);
-                if (temp < nearest)
+                if (temp < nearest)//only set if closer
                 {
-                    pointindex = i;
+                    pointindex = i; 
                     nearest = temp;
                 }
             }
