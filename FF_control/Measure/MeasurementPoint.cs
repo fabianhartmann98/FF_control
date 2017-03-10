@@ -63,7 +63,20 @@ namespace FF_control.Measure
         public Point getPoint()
         {
             return new Point(time, i_value); 
-        }       
+        }
+
+        public override string ToString()
+        {
+            return "Time:"+time.ToString()+"\nValue:"+i_value.ToString();
+        }
+
+        internal double getDistance(Point p, double scalex, double scaley, double offsetX, double offsetY, double plotheight)
+        {
+            Point scaledpoint = GraphCollection.scalingPoint(this.getPoint(), offsetX, offsetY, scalex, scaley, plotheight);
+            double dx = scaledpoint.X - p.X;
+            double dy = scaledpoint.Y - p.Y;
+            return Math.Pow(dx, 2) + Math.Pow(dy, 2);
+        }
         #endregion
     }
 }

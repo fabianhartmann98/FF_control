@@ -27,6 +27,7 @@ namespace FF_control.Visual
     {
         public MainWindow parent { get; set; }
         
+        
 
         //this is displayed in the ADD Tab
         private Button b_add;                       //host an OnClick 
@@ -36,6 +37,8 @@ namespace FF_control.Visual
         private int selected_tabindex;
 
         Point prevmousePosition;
+
+        private Label DisplayingValueLabel;
 
         public Plot(MainWindow p)
         {
@@ -48,6 +51,9 @@ namespace FF_control.Visual
             parent.gcollection.GraphCollectionPropertiesChanged += Gcollection_GraphCollectionPropertiesChanged;
             DrawDiagram();
             setUpSideTabControl();
+
+            DisplayingValueLabel = new Label();
+            DisplayingValueLabel.Background = Brushes.White;
 
             ContextMenu cm = new ContextMenu();
             MenuItem mi = new MenuItem();
@@ -219,9 +225,13 @@ namespace FF_control.Visual
 
         private void can_MouseMove(object sender, MouseEventArgs e)
         {
+            int graphindex = 0;
+            int pointindex = 0;
+
+
             if (e.LeftButton == MouseButtonState.Pressed && prevmousePosition.X != -100)
             {
-                
+
                 double dx = e.GetPosition(can).X - prevmousePosition.X;   //get the differenz to the previous position
                 double dy = e.GetPosition(can).Y - prevmousePosition.Y;
 
@@ -229,7 +239,25 @@ namespace FF_control.Visual
                 parent.gcollection.Shift(-dx, dy);                          //shift the diagram
             }
             else
+            {
                 prevmousePosition.X = -100;
+                if (parent.gcollection.Graphs.Count != 0 && parent.gcollection.get_nearest_point(e, ref graphindex, ref pointindex) < 500)
+                {
+                    if (graphindex != -1 && pointindex != -1)
+                        DisplayPoint(graphindex,  pointindex);
+                }
+            }
+        }
+
+        private void DisplayPoint( int graphindex,  int pointindex)
+        {
+            MeasurementPoint mp = parent.gcollection.Graphs[graphindex].Mps[pointindex];
+            DisplayingValueLabel.Content = mp.ToString();
+            Canvas.SetLeft(DisplayingValueLabel, parent.gcollection.scalingPoint(mp.getPoint()).X+GraphCollection.AxisMargin);
+            Canvas.SetTop(DisplayingValueLabel, parent.gcollection.scalingPoint(mp.getPoint()).Y);
+            can.Children.Remove(DisplayingValueLabel);
+            can.Children.Add(DisplayingValueLabel);      
+
         }
 
         private void can_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

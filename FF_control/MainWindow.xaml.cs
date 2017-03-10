@@ -151,7 +151,7 @@ namespace FF_control
 
         private void menu_SaveCSV(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("not implemented yet");
+            gcollection.Export_as_CSV();
         }
 
         private void menu_Help(object sender, RoutedEventArgs e)

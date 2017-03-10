@@ -49,7 +49,7 @@ namespace FF_control.Measure
         private int LabelMarginTopY = -10;         //whats the Margin to the Label Marker YAxis
         private int LabelMarginLeftY = -25;        //Margin to the Label Marker YAxis
         private double PlottingMargin = 0.05;       //used to  set a small marging (top, bottom, right and left)  
-        private double AxisMargin = 40;
+        public static double AxisMargin = 40;
         private double LabelRounding = 5;
         private double Rounding2dot0 = 5;
         private const int LabelMinAverage = 2;
@@ -58,6 +58,7 @@ namespace FF_control.Measure
 
         private double DefaultPlotHeightWidth = 100;
         public static string FileFilter = "H2B2 (*.h2b2)|*.h2b2|All Files (*.*)|*.*";
+        public static string FileFilterCSV = "CSV (*.csv)|*.csv|All Files (*.*)|*.*";
 
         #endregion
 
@@ -358,6 +359,55 @@ namespace FF_control.Measure
             }
             writer.Close();
             sww.Close();
+        }
+
+        public void Export_as_CSV()
+        { 
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = FileFilterCSV;
+            if (!(bool)sfd.ShowDialog())
+                return;
+            Export_as_CSV(sfd.FileName);
+        }
+        
+        public void Export_as_CSV(string filename)
+        {
+            StreamWriter sw = new StreamWriter(filename);
+            StringBuilder sb = new StringBuilder();
+            if (graphs.Count == 0)
+                return;
+            int maxpoints = graphs[0].Mps.Count;
+            sb.Append(graphs[0].Name);
+            sb.Append(";;;");
+            for (int i = 1; i < graphs.Count; i++)
+            {
+                sb.Append(";");
+                sb.Append(graphs[i].Name);
+                sb.Append(";;;");
+                if (maxpoints < graphs[i].Mps.Count)
+                    maxpoints = graphs[1].Mps.Count; 
+            }
+            sb.Append("\n");
+
+            for (int i = 0; i < maxpoints; i++)
+            {
+                foreach (var item in graphs)
+                {
+                    if (item.Mps.Count > i)
+                    {
+                        sb.Append(item.Mps[i].MeasurementNumber);
+                        sb.Append(";");
+                        sb.Append(item.Mps[i].Time);
+                        sb.Append(";");
+                        sb.Append(item.Mps[i].I_Value);
+                        sb.Append(";");
+                    }
+                    sb.Append(";");
+                }
+                sb.Append("\n");
+            }
+            sw.Write(sb.ToString());
+            sw.Close();
         }
 
         static public GraphCollection Open_diagram_xml()
@@ -961,46 +1011,6 @@ namespace FF_control.Measure
 
         }
 
-        private void check_max_min()
-        {
-            if (xmin == xmax)
-            {
-                xmin--;
-                xmax++;
-            }
-            if (ymin == ymax)
-            {
-                ymin--;
-                ymax++;
-            }
-            if (xmax < xmin)
-            {
-                double temp = xmin;
-                xmin = xmax;
-                xmax = temp;
-            }
-            if (ymax < ymin)
-            {
-                double temp = ymin;
-                ymin = ymax;
-                ymax = temp;
-            }
-        }
-
-        private void can_set_heigt_width(Canvas c, double height, double width)
-        {
-            // der Textbox einen Text hinzufügen
-            if (!c.Dispatcher.CheckAccess())
-            {
-                c.Dispatcher.Invoke((Action<Canvas, double,double>)can_set_heigt_width, c,height, width);
-            }
-            else
-            {
-                c.Height = height;
-                c.Width = width;
-            }
-        }
-
         /// <summary>
         /// scrolling with a sensetifity set in DiffPerScrolePersen [0,100]
         /// needs to be called by every wheel event
@@ -1048,6 +1058,30 @@ namespace FF_control.Measure
             ymax += dy / scaleY;
             ymin += dy / scaleY;
             OffsetScaleCalculation();  //scale new offset and scale
+        }
+
+        public double get_nearest_point(MouseEventArgs e, ref int graphindex, ref int pointindex)
+        {
+            graphindex = -1;
+            pointindex = -1;
+            Point p = e.GetPosition(plotcan);
+            if (graphs.Count == 0)
+                return -1;
+            graphindex = 0;
+            double nearest =graphs[0].get_nearest_point(p, ref pointindex, scaleX, scaleY, offsetX, offsetY, plotheight);
+            double temp = 0;
+            int temppointindex=0;
+            for (int i = 1; i < graphs.Count; i++)
+            {
+                temp = graphs[i].get_nearest_point(p, ref temppointindex, scaleX, scaleY, offsetX, offsetY, plotheight);
+                if (temp < nearest)
+                {
+                    nearest = temp;
+                    pointindex = temppointindex;
+                    graphindex = i;
+                }
+            }
+            return nearest;            
         }
 
         /// <summary>
@@ -1117,12 +1151,59 @@ namespace FF_control.Measure
         /// </summary>
         /// <param name="p">edits this point</param>
         /// <returns>scaled point with fitting values for plot and canvas</returns>
-        private Point scalingPoint(Point p)
+        public Point scalingPoint(Point p)
         {
             Point q = new Point();
             q.X = (p.X - offsetX) * scaleX;
             q.Y = plotheight - (p.Y - offsetY) * scaleY; //start at the top -> height - YValue
             return q; 
+        }
+
+        public static Point scalingPoint(Point p, double offsetX, double offsetY, double scaleX, double scaleY, double plotheight)
+        {
+            Point q = new Point();
+            q.X = (p.X - offsetX) * scaleX;
+            q.Y = plotheight - (p.Y - offsetY) * scaleY; //start at the top -> height - YValue
+            return q;
+        }
+
+        private void can_set_heigt_width(Canvas c, double height, double width)
+        {
+            if (!c.Dispatcher.CheckAccess())
+            {
+                c.Dispatcher.Invoke((Action<Canvas, double, double>)can_set_heigt_width, c, height, width);
+            }
+            else
+            {
+                c.Height = height;
+                c.Width = width;
+            }
+        }
+
+        private void check_max_min()
+        {
+            if (xmin == xmax)
+            {
+                xmin--;
+                xmax++;
+            }
+            if (ymin == ymax)
+            {
+                ymin--;
+                ymax++;
+            }
+            if (xmax < xmin)
+            {
+                double temp = xmin;
+                xmin = xmax;
+                xmax = temp;
+            }
+            if (ymax < ymin)
+            {
+                double temp = ymin;
+                ymin = ymax;
+                ymax = temp;
+            }
         }
         #endregion
 

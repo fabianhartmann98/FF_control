@@ -259,15 +259,15 @@ namespace FF_control.Measure
             pl.Stroke = PlotColor;
             foreach (MeasurementPoint item in mps)       //adding the Point in the list
             {
-                pl.Points.Add(scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,plotheight));   //editing the points to fit to Canvas an plot 
+                pl.Points.Add(GraphCollection.scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,plotheight));   //editing the points to fit to Canvas an plot 
                 if (item.Highlited)
                 { 
                     Ellipse e = new Ellipse();
                     e.Fill=PlotColor;
                     e.Height=highlitedPointCircleRadius;
                     e.Width=highlitedPointCircleRadius;
-                    Canvas.SetTop(e,scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).Y-highlitedPointCircleRadius/2);
-                    Canvas.SetLeft(e,scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).X-highlitedPointCircleRadius/2);
+                    Canvas.SetTop(e, GraphCollection.scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).Y-highlitedPointCircleRadius/2);
+                    Canvas.SetLeft(e, GraphCollection.scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).X-highlitedPointCircleRadius/2);
                     can.Children.Add(e);
                 }
             }
@@ -279,8 +279,8 @@ namespace FF_control.Measure
             foreach (var item in mps)
             {
                 item.Highlited = v;
-                InformParent();
             }
+            InformParent();
         }
 
         public void highlitepoint(int index, bool v)
@@ -289,12 +289,24 @@ namespace FF_control.Measure
             InformParent();
         }
 
-        private Point scalingPoint(Point p, double offsetX,double offsetY, double scaleX, double scaleY, double plotheight)
+        public double get_nearest_point(Point p, ref int pointindex, double scalex, double scaley, double offsetX, double offsetY, double plotheight)
         {
-            Point q = new Point();
-            q.X = (p.X - offsetX) * scaleX;
-            q.Y = plotheight - (p.Y - offsetY) * scaleY; //start at the top -> height - YValue
-            return q;
-        }        
+            pointindex = -1;
+            if (mps.Count==0)
+                return -1;
+            double nearest = mps[0].getDistance(p,scalex,scaley, offsetX, offsetY, plotheight);
+            pointindex = 0;
+            double temp; 
+            for (int i = 1; i < mps.Count; i++)
+            {
+                temp = mps[i].getDistance(p,scalex,scaley, offsetX, offsetY, plotheight);
+                if (temp < nearest)
+                {
+                    pointindex = i;
+                    nearest = temp;
+                }
+            }
+            return nearest;
+        }
     }
 }
