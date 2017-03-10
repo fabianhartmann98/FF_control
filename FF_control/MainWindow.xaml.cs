@@ -165,8 +165,9 @@ namespace FF_control
         }
 
         private void menu_darkTheme(object sender, RoutedEventArgs e)
-        {             
-            ChangeToDarkTheme();
+        {
+            var app = App.Current as App;
+            app.ChangeToDarkTheme();
         }
     }
 }

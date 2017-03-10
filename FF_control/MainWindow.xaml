@@ -38,6 +38,10 @@
                 <MenuItem Header="Save Diagram as PNG" Click="menu_SavePng"/>
                 <MenuItem Header="Save as CSV" Click="menu_SaveCSV"/>
             </MenuItem>
+            <MenuItem Header="Theme">
+                <MenuItem Header="Dark Theme" Click="menu_darkTheme"/>
+                <MenuItem Header="Light Theme" Click="menu_lightTheme"/>
+            </MenuItem>
             <MenuItem Header="Help" Click="menu_Help"/>
         </Menu>
         <DockPanel Grid.Row="1" LastChildFill="True" x:Name="dockpanel">                       

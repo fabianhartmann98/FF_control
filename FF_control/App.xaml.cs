@@ -53,5 +53,11 @@ namespace FF_control
             Theme_used = Themes.Dark_Theme;
             ChangeDynamicResources();
         }
+        // Example Usage (anywhere in app)
+        public void ChangeToLightTheme()
+        {
+            Theme_used = Themes.Light_Theme;
+            ChangeDynamicResources();
+        }
     }
 }
