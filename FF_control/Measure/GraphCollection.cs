@@ -476,6 +476,7 @@ namespace FF_control.Measure
         static public void Save_graph_xml(Graph g)
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = FileFilter;
             if (!(bool)sfd.ShowDialog())
                 return;
             Save_graph_xml(g, sfd.FileName);

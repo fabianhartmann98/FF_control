@@ -31,6 +31,10 @@ namespace FF_control.Visual
             gcollection = d;
             tb_name.Text = g.Name;
             tb_time.Text = g.MeasurementTime.ToString();
+            string[] splited = g.SaveLocation.Split('\\');
+            l_saveloc.Content = splited[splited.Length-1];
+            if (g.SaveLocation == null || g.SaveLocation == "")
+                l_saveloc.Content = "not saved yet"; 
             border_StrokeColor.Background = g.PlotColor;
         }
 
@@ -39,12 +43,6 @@ namespace FF_control.Visual
             graph.Name = tb_name.Text;
             if (b_remove.IsMouseOver)           //if b_remove was clicked it loses fokus but doesn't call b_remove_Click
                 b_remove_Click(b_remove, e);
-        }
-
-        private void b_saveloc_Click(object sender, RoutedEventArgs e)
-        {
-            GraphCollection.Save_graph_xml(graph);
-            l_saveloc.Content = graph.SaveLocation;
         }
 
         private void border_StrokeColor_MouseUp(object sender, MouseButtonEventArgs e)

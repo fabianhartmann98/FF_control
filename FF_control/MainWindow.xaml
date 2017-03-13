@@ -17,12 +17,17 @@
             <MenuItem Header="File">
                 <MenuItem Header="Save">
                     <MenuItem Header="Collection of Graphs" Click="menu_SaveCollection"/>
-                    <MenuItem Header="Single Graph" Click="menu_SaveSingleGraph"/>
+                    <MenuItem Header="Single Graph" Name="menuitem_SaveSingleGraph"/>
                 </MenuItem>
                 <MenuItem Header="Open" Click="menu_Open"/>
                 <MenuItem Header="Include" Click="menu_Include"/>
+                <MenuItem Header="Export">
+                    <MenuItem Header="Export Diagram to Clipboard" Click="menu_SaveClipboard"/>
+                    <MenuItem Header="Export Diagram as PNG" Click="menu_SavePng"/>
+                    <MenuItem Header="Export as CSV" Click="menu_SaveCSV"/>
+                </MenuItem>
                 <MenuItem Header="New" Click="menu_New"/>
-                <MenuItem Header="Close" Click="menu_Close"/>
+                <MenuItem Header="Close" Click="menu_Close"/>                
             </MenuItem>
             <MenuItem Header="Diagram">
                 <MenuItem Header="Set Scale Auto" Click="menu_ScaleAuto"/>
@@ -32,11 +37,6 @@
             </MenuItem>
             <MenuItem Header="Graph">
                 <MenuItem Header="Edit" Click="menu_GraphEdit"/>
-            </MenuItem>
-            <MenuItem Header="Export">
-                <MenuItem Header="Save Diagram to Clipboard" Click="menu_SaveClipboard"/>
-                <MenuItem Header="Save Diagram as PNG" Click="menu_SavePng"/>
-                <MenuItem Header="Save as CSV" Click="menu_SaveCSV"/>
             </MenuItem>
             <MenuItem Header="Theme">
                 <MenuItem Header="Dark Theme" Click="menu_darkTheme"/>

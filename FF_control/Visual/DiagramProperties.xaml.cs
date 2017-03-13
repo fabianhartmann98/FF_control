@@ -33,7 +33,6 @@ namespace FF_control.Visual
 
         private void tb_minmax_LostFocus(object sender, RoutedEventArgs e)
         {
-
             try
             {
                 switch (((TextBox)sender).Tag.ToString())       //tag specifies which item was changed

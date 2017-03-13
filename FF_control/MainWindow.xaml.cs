@@ -31,6 +31,8 @@ namespace FF_control
         public Plot v_plot;
         public FF_control.Visual.Table v_table;
 
+        private List<MenuItem> SaveGraphMenuItemCollection; 
+
         public MainWindow()
         {            
             InitializeComponent();
@@ -57,6 +59,45 @@ namespace FF_control
             Plot_grid.Children.Add(v_plot);
             v_table = new FF_control.Visual.Table(this);
             Table_grid.Children.Add(v_table);
+
+            SaveGraphMenuItemCollection = new List<MenuItem>();
+            gcollection.GraphCollectionPropertiesChanged += Gcollection_GraphCollectionPropertiesChanged;
+            SetUpSaveSingleGraphMenuItems();
+
+        }
+
+        private void Gcollection_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
+        {
+            if (e.change == GraphCollectionChange.Graph || e.change == GraphCollectionChange.Collection)
+            {
+                SetUpSaveSingleGraphMenuItems();
+            }
+        }
+
+        private void SetUpSaveSingleGraphMenuItems()
+        {            
+            menuitem_SaveSingleGraph.Items.Clear();        
+
+            int i = 0;
+            SaveGraphMenuItemCollection.Clear();
+            foreach (var item in gcollection.Graphs)
+            {
+                MenuItem mi = new MenuItem();
+                mi.Header = item.Name;
+                if (item.Name == "")
+                    mi.Header = i.ToString();
+                mi.Tag = i;
+                mi.Click += menuitem_SaveSingleGraph_Click;
+                SaveGraphMenuItemCollection.Add(mi);
+                menuitem_SaveSingleGraph.Items.Add(mi);
+                i++;
+            }
+        }
+
+        private void menuitem_SaveSingleGraph_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            gcollection.Save_graph_xml((int)mi.Tag);
         }
 
         private void TabControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -76,11 +117,6 @@ namespace FF_control
         private void menu_SaveCollection(object sender, RoutedEventArgs e)
         {
             gcollection.Save_diagram_xml();
-        }
-
-        private void menu_SaveSingleGraph(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("not implemented yet");
         }
 
         private void menu_Open(object sender, RoutedEventArgs e)

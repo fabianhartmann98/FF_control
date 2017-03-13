@@ -18,9 +18,8 @@
             <TextBox Name="tb_time"/>
         </WrapPanel>
         <WrapPanel>
-            <Label Content="Save Location:"/>
+            <Label Content="File-Name:"/>
             <Label Name="l_saveloc"/>
-            <Button Name="b_saveloc" Click="b_saveloc_Click" Visibility="Collapsed" Content="Save"/>
         </WrapPanel>
         <WrapPanel>
             <Label Content="Stroke Color"/>
