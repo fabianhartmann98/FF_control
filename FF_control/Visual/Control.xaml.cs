@@ -123,5 +123,20 @@ namespace FF_control.Visual
             cd.MinWidth = columnwidth;
             control_grid.ColumnDefinitions.Add(cd);
         }
+
+        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                try
+                {
+                    slider_gap.Value = Convert.ToDouble(((TextBox)sender).Text.Replace('.',',')); //use , as Komma (seperator)to Convert
+                }
+                catch (Exception)
+                {
+                    ((TextBox)sender).Text = slider_gap.Value.ToString("F2").Replace(',','.');  //always display . as seperator (komma)
+                }
+            }
+        }
     }
 }
