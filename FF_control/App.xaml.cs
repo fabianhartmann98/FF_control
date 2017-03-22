@@ -39,25 +39,11 @@ namespace FF_control
         // Place in App.xaml.cs
         public void ChangeDynamicResources()
         {
-            Application.Current.Resources.MergedDictionaries.Clear();
-            ResourceDictionary resourceDict = Application.LoadComponent(themes_uri[(int)Theme_used]) as ResourceDictionary;
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+            Application.Current.Resources.MergedDictionaries.Clear();   //remove old ResourceDictionary
+            ResourceDictionary resourceDict = Application.LoadComponent(themes_uri[(int)Theme_used]) as ResourceDictionary; //get Theme dictionary ( (int)Theme_use is the index)
+            Application.Current.Resources.MergedDictionaries.Add(resourceDict);     //add it to the merged Dictionaries
             resourceDict = Application.LoadComponent(languages_uri[(int)Language_used]) as ResourceDictionary;
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
-
-        }
-
-        // Example Usage (anywhere in app)
-        public void ChangeToDarkTheme()
-        {
-            Theme_used = Themes.Dark_Theme;
-            ChangeDynamicResources();
-        }
-        // Example Usage (anywhere in app)
-        public void ChangeToLightTheme()
-        {
-            Theme_used = Themes.Light_Theme;
-            ChangeDynamicResources();
+            Application.Current.Resources.MergedDictionaries.Add(resourceDict); //add it to the merged Dictionaries
         }
     }
 }

@@ -34,13 +34,14 @@ namespace FF_control.Visual
             string[] splited = g.SaveLocation.Split('\\');
             l_saveloc.Content = splited[splited.Length-1];
             if (g.SaveLocation == null || g.SaveLocation == "")
-                l_saveloc.Content = "not saved yet"; 
+                l_saveloc.Content = FindResource("s_NotSavedGraphProp"); 
             border_StrokeColor.Background = g.PlotColor;
         }
 
         private void tb_name_LostFocus(object sender, RoutedEventArgs e)
         {
-            graph.Name = tb_name.Text;
+            if(graph.Name!=tb_name.Text)
+                graph.Name = tb_name.Text;
             if (b_remove.IsMouseOver)           //if b_remove was clicked it loses fokus but doesn't call b_remove_Click
                 b_remove_Click(b_remove, e);
         }

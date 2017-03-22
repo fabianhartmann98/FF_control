@@ -197,13 +197,30 @@ namespace FF_control
 
         private void menu_lightTheme(object sender, RoutedEventArgs e)
         {
-
+            var app = App.Current as App;
+            app.Theme_used = App.Themes.Light_Theme;
+            app.ChangeDynamicResources();
         }
 
         private void menu_darkTheme(object sender, RoutedEventArgs e)
         {
             var app = App.Current as App;
-            app.ChangeToDarkTheme();
+            app.Theme_used = App.Themes.Dark_Theme;
+            app.ChangeDynamicResources();
+        }
+
+        private void menu_German(object sender, RoutedEventArgs e)
+        {
+            var app = App.Current as App;
+            app.Language_used = App.Languages.German;
+            app.ChangeDynamicResources();
+        }
+
+        private void menu_English(object sender, RoutedEventArgs e)
+        {
+            var app = App.Current as App;
+            app.Language_used = App.Languages.English;
+            app.ChangeDynamicResources();
         }
     }
 }

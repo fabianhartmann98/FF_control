@@ -53,7 +53,8 @@ namespace FF_control.Visual
             setUpSideTabControl();
 
             DisplayingValueLabel = new Label();
-            DisplayingValueLabel.Background = Brushes.White;
+            DisplayingValueLabel.Background = parent.gcollection.BackgroundColor;
+            DisplayingValueLabel.Foreground = parent.gcollection.AxisColor;
         }
 
         private void Gcollection_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
@@ -106,7 +107,7 @@ namespace FF_control.Visual
 
             #region Tab Diagram
             TabItem ti = new TabItem();
-            ti.Header = "Diagram";
+            ti.Header = FindResource("s_DiagramSideTab").ToString();
             ti.Style = (Style)FindResource("Style_SideTabItem");
 
             dp = new DiagramProperties(parent.gcollection);
@@ -118,7 +119,7 @@ namespace FF_control.Visual
             for (int i = 0; i < parent.gcollection.Graphs.Count; i++)
 			{			
                 ti = new TabItem();
-                ti.Header = "Plot"+i.ToString();
+                ti.Header = FindResource("s_PlotSideTab").ToString()+i.ToString();
                 ti.Style = (Style)FindResource("Style_SideTabItem");               
 
                 GraphProperties gp = new GraphProperties(parent.gcollection.Graphs[i],parent.gcollection);
@@ -131,13 +132,13 @@ namespace FF_control.Visual
 
             #region Add Plot    
             ti = new TabItem();
-            ti.Header = "Add Plot";
+            ti.Header = FindResource("s_AddPlotSideTab");
             ti.Style = (Style)FindResource("Style_SideTabItem");
             StackPanel mainstack = new StackPanel();
 
             WrapPanel wp = new WrapPanel();
             b_add = new Button();
-            b_add.Content = "Hinzufügen";
+            b_add.Content = FindResource("s_AddPlotSideTab");
             b_add.Click += b_add_Click;
             wp.Children.Add(b_add);
             mainstack.Children.Add(wp);

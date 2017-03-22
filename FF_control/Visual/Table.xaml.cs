@@ -77,7 +77,7 @@ namespace FF_control.Visual
                 for (int i = 0; i < parent.gcollection.Graphs.Count; i++)//for each graph, creat an own tab
                 {
                     TabItem ti = new TabItem(); //creat Tab
-                    ti.Header = "Plot" + i.ToString(); //set Header to Plot0 for Graphs[0]
+                    ti.Header = FindResource("s_PlotSideTab").ToString() + i.ToString(); //set Header to Plot0 for Graphs[0]
                     ti.Style = (Style)FindResource("Style_SideTabItem");//set the Style
 
                     GraphProperties gp = new GraphProperties(parent.gcollection.Graphs[i], parent.gcollection);
@@ -141,7 +141,7 @@ namespace FF_control.Visual
 
 
                     DataGridTextColumn dgtc = new DataGridTextColumn();
-                    dgtc.Header = "Number";
+                    dgtc.Header = FindResource("s_NumberDataGrid").ToString();
                     Binding bindingmeasurementnumber = new Binding();
                     bindingmeasurementnumber.IsAsync = true;
                     bindingmeasurementnumber.Path = new PropertyPath("MeasurementNumber");
@@ -149,7 +149,7 @@ namespace FF_control.Visual
                     dg.Columns.Add(dgtc);
 
                     dgtc = new DataGridTextColumn();
-                    dgtc.Header = "Time";
+                    dgtc.Header = FindResource("s_TimeDataGrid").ToString();
                     Binding bindingtime = new Binding();
                     bindingtime.IsAsync = true;
                     bindingtime.Path = new PropertyPath("Time");
@@ -157,7 +157,7 @@ namespace FF_control.Visual
                     dg.Columns.Add(dgtc);
 
                     dgtc = new DataGridTextColumn();
-                    dgtc.Header = "Value";
+                    dgtc.Header = FindResource("s_ValueDataGrid").ToString();
                     Binding bindingvalue = new Binding();
                     bindingvalue.IsAsync = true;
                     bindingvalue.Path = new PropertyPath("I_Value");

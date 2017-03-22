@@ -14,35 +14,39 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>    
         <Menu>
-            <MenuItem Header="File">
-                <MenuItem Header="Save">
-                    <MenuItem Header="Collection of Graphs" Click="menu_SaveCollection"/>
-                    <MenuItem Header="Single Graph" Name="menuitem_SaveSingleGraph"/>
+            <MenuItem Header="{DynamicResource s_FileMenu}">
+                <MenuItem Header="{DynamicResource s_SaveMenu}">
+                    <MenuItem Header="{DynamicResource s_SaveCollectionMenu}" Click="menu_SaveCollection"/>
+                    <MenuItem Header="{DynamicResource s_SaveGraphMenu}" Name="menuitem_SaveSingleGraph"/>
                 </MenuItem>
-                <MenuItem Header="Open" Click="menu_Open"/>
-                <MenuItem Header="Include" Click="menu_Include"/>
-                <MenuItem Header="Export">
-                    <MenuItem Header="Export Diagram to Clipboard" Click="menu_SaveClipboard"/>
-                    <MenuItem Header="Export Diagram as PNG" Click="menu_SavePng"/>
-                    <MenuItem Header="Export as CSV" Click="menu_SaveCSV"/>
+                <MenuItem Header="{DynamicResource s_OpenMenu}" Click="menu_Open"/>
+                <MenuItem Header="{DynamicResource s_ImportMenu}" Click="menu_Include"/>
+                <MenuItem Header="{DynamicResource s_ExportMenu}">
+                    <MenuItem Header="{DynamicResource s_ExportDiagramClipboardMenu}" Click="menu_SaveClipboard"/>
+                    <MenuItem Header="{DynamicResource s_ExportDiagramPngMenu}" Click="menu_SavePng"/>
+                    <MenuItem Header="{DynamicResource s_ExportCsvMenu}" Click="menu_SaveCSV"/>
                 </MenuItem>
-                <MenuItem Header="New" Click="menu_New"/>
-                <MenuItem Header="Close" Click="menu_Close"/>                
+                <MenuItem Header="{DynamicResource s_NewMenu}" Click="menu_New"/>
+                <MenuItem Header="{DynamicResource s_CloseMenu}" Click="menu_Close"/>                
             </MenuItem>
-            <MenuItem Header="Diagram">
-                <MenuItem Header="Set Scale Auto" Click="menu_ScaleAuto"/>
-                <MenuItem Header="Remove all Graphs" Click="menu_RemoveGraphs"/>
-                <MenuItem IsCheckable="True" Header="Higlite all Points" Click="menu_HighliteAll"/>
-                <MenuItem Header="Edit" Click="menu_DiagramEdit"/>
+            <MenuItem Header="{DynamicResource s_DiagramMenu}">
+                <MenuItem Header="{DynamicResource s_ScaleAutoMenu}" Click="menu_ScaleAuto"/>
+                <MenuItem Header="{DynamicResource s_RemoveGraphsMenu}" Click="menu_RemoveGraphs"/>
+                <MenuItem IsCheckable="True" Header="{DynamicResource s_HighlitePointsMenu}" Click="menu_HighliteAll"/>
+                <MenuItem Header="{DynamicResource s_DiagramEditMenu}" Click="menu_DiagramEdit"/>
             </MenuItem>
-            <MenuItem Header="Graph">
-                <MenuItem Header="Edit" Click="menu_GraphEdit"/>
+            <MenuItem Header="{DynamicResource s_GraphMenu}">
+                <MenuItem Header="{DynamicResource s_GraphEditMenu}" Click="menu_GraphEdit"/>
             </MenuItem>
-            <MenuItem Header="Theme">
-                <MenuItem Header="Dark Theme" Click="menu_darkTheme"/>
-                <MenuItem Header="Light Theme" Click="menu_lightTheme"/>
+            <MenuItem Header="{DynamicResource s_ThemeMenu}">
+                <MenuItem Header="{DynamicResource s_DarkThemeMenu}" Click="menu_darkTheme"/>
+                <MenuItem Header="{DynamicResource s_LightThemeMenu}" Click="menu_lightTheme"/>
             </MenuItem>
-            <MenuItem Header="Help" Click="menu_Help"/>
+            <MenuItem Header="{DynamicResource s_LanguageMenu}">
+                <MenuItem Header="{DynamicResource s_GermanMenu}" Click="menu_German"/>
+                <MenuItem Header="{DynamicResource s_EnglishMenu}" Click="menu_English"/>
+            </MenuItem>
+            <MenuItem Header="{DynamicResource s_HelpMenu}" Click="menu_Help"/>
         </Menu>
         <DockPanel Grid.Row="1" LastChildFill="True" x:Name="dockpanel">                       
             <TabControl DockPanel.Dock="Left" VerticalContentAlignment="Stretch" SizeChanged="TabControl_SizeChanged" Name="mainTabControl">
@@ -50,7 +54,7 @@
                     <TabItem.Header>                        
                         <DockPanel>
                             <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource bluetooth_png}"/>
-                            <Label Content="Bluetooth"/>
+                            <Label Content="{DynamicResource s_BluetoothTab}"/>
                         </DockPanel>
                     </TabItem.Header>
                     <Grid Name="Connection_grid">
@@ -60,7 +64,7 @@
                     <TabItem.Header>
                         <DockPanel>
                             <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource ff_png}"/>
-                            <Label Content="Control"/>
+                            <Label Content="{DynamicResource s_ControlTab}"/>
                         </DockPanel>
                     </TabItem.Header>
                     <Grid Name="Control_grid">
@@ -70,7 +74,7 @@
                     <TabItem.Header>
                         <DockPanel>
                             <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource diagram_png}"/>
-                            <Label Content="Plot"/>
+                            <Label Content="{DynamicResource s_PlotTab}"/>
                         </DockPanel>
                     </TabItem.Header>
                     <Grid Name="Plot_grid">                        
@@ -80,7 +84,7 @@
                     <TabItem.Header>
                         <DockPanel>
                             <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource table_png}"/>
-                            <Label Content="Table"/>
+                            <Label Content="{DynamicResource s_TableTab}"/>
                         </DockPanel>
                     </TabItem.Header>
                     <Grid Name="Table_grid">
@@ -90,7 +94,7 @@
                     <TabItem.Header>
                         <DockPanel>
                             <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource help_png}"/>
-                            <Label Content="Help"/>
+                            <Label Content="{DynamicResource s_HelpTab}"/>
                         </DockPanel>
                     </TabItem.Header>
                 </TabItem>
