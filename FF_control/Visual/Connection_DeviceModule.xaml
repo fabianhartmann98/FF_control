@@ -23,6 +23,7 @@
                 <Label Name="l_connected" Content="{Binding Path=Connected}"/>
             </WrapPanel>
             <Button Grid.Column="1" Content="{DynamicResource s_ConnectDevice}" Name="button" Style="{StaticResource Style_ConnectButton}"/>
+
         </Grid>        
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Grid.MouseEnter">

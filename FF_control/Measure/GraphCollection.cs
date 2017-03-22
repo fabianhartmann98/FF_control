@@ -343,7 +343,7 @@ namespace FF_control.Measure
         }
 
         /// <summary>
-        /// saves this diagram as xml-file ont the location of filename
+        /// saves this diagram as xml-file on the location of filename
         /// </summary>
         /// <param name="filename">location of file</param>
         public void Save_diagram_xml(string filename)
@@ -352,7 +352,7 @@ namespace FF_control.Measure
             XmlWriter writer = XmlWriter.Create(sww);
             try
             {
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));//create an xmlSerializer
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));//create an xmlSerializer, use this class to serialeze
                 
                 xsSubmit.Serialize(writer, this);//write to the file
             }
@@ -454,10 +454,10 @@ namespace FF_control.Measure
         /// <returns>the diagram which was opended</returns>
         static public GraphCollection Open_diagram_xml(string filename)
         {
-            StreamReader sr = new StreamReader(filename);
+            StreamReader sr = new StreamReader(filename); //open the file
             try
             {                
-                XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection));
+                XmlSerializer xsSubmit = new XmlSerializer(typeof(GraphCollection)); //create serializer, using this class to serialize
 
                 GraphCollection d =  (GraphCollection) xsSubmit.Deserialize(sr);
                 sr.Close();

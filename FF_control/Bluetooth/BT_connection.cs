@@ -143,7 +143,7 @@ namespace FF_control.Bluetooth
         }
 
         /// <summary>
-        /// getting al the available Devices in the areia
+        /// getting all the available Devices in the area
         /// need to subscribe to DiscoverDevicesEnded
         /// get info out of Infos
         /// </summary>
@@ -159,7 +159,7 @@ namespace FF_control.Bluetooth
             if (ar.IsCompleted)
             {
                 infos = bc.EndDiscoverDevices(ar);
-                OnDiscoverDevicesEnded();
+                OnDiscoverDevicesEnded(); //call event
             }
         }
         #endregion
