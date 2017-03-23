@@ -53,7 +53,7 @@
                 <TabItem Style="{StaticResource Style_MainTabItem}">
                     <TabItem.Header>                        
                         <DockPanel>
-                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource bluetooth_png}"/>
+                            <Image Height="20" DockPanel.Dock="Left" Source="{DynamicResource bluetooth_png}"/>
                             <Label Content="{DynamicResource s_BluetoothTab}"/>
                         </DockPanel>
                     </TabItem.Header>
@@ -63,7 +63,7 @@
                 <TabItem Style="{StaticResource Style_MainTabItem}">
                     <TabItem.Header>
                         <DockPanel>
-                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource ff_png}"/>
+                            <Image Height="20" DockPanel.Dock="Left" Source="{DynamicResource ff_png}"/>
                             <Label Content="{DynamicResource s_ControlTab}"/>
                         </DockPanel>
                     </TabItem.Header>
@@ -73,7 +73,7 @@
                 <TabItem Style="{StaticResource Style_MainTabItem}">
                     <TabItem.Header>
                         <DockPanel>
-                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource diagram_png}"/>
+                            <Image Height="20" DockPanel.Dock="Left" Source="{DynamicResource diagram_png}"/>
                             <Label Content="{DynamicResource s_PlotTab}"/>
                         </DockPanel>
                     </TabItem.Header>
@@ -83,7 +83,7 @@
                 <TabItem Style="{StaticResource Style_MainTabItem}">
                     <TabItem.Header>
                         <DockPanel>
-                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource table_png}"/>
+                            <Image Height="20" DockPanel.Dock="Left" Source="{DynamicResource table_png}"/>
                             <Label Content="{DynamicResource s_TableTab}"/>
                         </DockPanel>
                     </TabItem.Header>
@@ -93,7 +93,7 @@
                 <TabItem Style="{StaticResource Style_MainTabItem}">
                     <TabItem.Header>
                         <DockPanel>
-                            <Image Height="25" DockPanel.Dock="Left" Source="{DynamicResource help_png}"/>
+                            <Image Height="20" DockPanel.Dock="Left" Source="{DynamicResource help_png}"/>
                             <Label Content="{DynamicResource s_HelpTab}"/>
                         </DockPanel>
                     </TabItem.Header>

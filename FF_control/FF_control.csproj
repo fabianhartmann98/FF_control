@@ -183,11 +183,16 @@
     <Resource Include="Visual\Pics\Infinity.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Visual\Pics\Symbols\Bluetoothsymb.png" />
-    <Resource Include="Visual\Pics\Symbols\Diagramsymb.png" />
-    <Resource Include="Visual\Pics\Symbols\ffsymb.png" />
-    <Resource Include="Visual\Pics\Symbols\Questionsymb.png" />
-    <Resource Include="Visual\Pics\Symbols\Tablesymb.png" />
+    <Resource Include="Visual\Pics\Symbols\Bluetoothsymb2.png" />
+    <Resource Include="Visual\Pics\Symbols\Bluetoothsymb2_o.png" />
+    <Resource Include="Visual\Pics\Symbols\Diagrammsymb2.png" />
+    <Resource Include="Visual\Pics\Symbols\Diagrammsymb2_o.png" />
+    <Resource Include="Visual\Pics\Symbols\ffsymb2.png" />
+    <Resource Include="Visual\Pics\Symbols\ffsymb2_o.png" />
+    <Resource Include="Visual\Pics\Symbols\Questionsymb2.png" />
+    <Resource Include="Visual\Pics\Symbols\Questionsymb2_o.png" />
+    <Resource Include="Visual\Pics\Symbols\Tablesymb2.png" />
+    <Resource Include="Visual\Pics\Symbols\Tablesymb2_o.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

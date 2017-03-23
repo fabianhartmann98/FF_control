@@ -2,20 +2,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <BitmapImage x:Key="ff_png" UriSource="\Visual\Pics\Symbols\ffsymb.png"/>
-    <BitmapImage x:Key="help_png" UriSource="\Visual\Pics\Symbols\Questionsymb.png"/>
-    <BitmapImage x:Key="diagram_png" UriSource="\Visual\Pics\Symbols\Diagramsymb.png"/>
-    <BitmapImage x:Key="bluetooth_png" UriSource="\Visual\Pics\Symbols\Bluetoothsymb.png"/>
-    <BitmapImage x:Key="table_png" UriSource="\Visual\Pics\Symbols\Tablesymb.png"/>
+    <BitmapImage x:Key="ff_png" UriSource="\Visual\Pics\Symbols\ffsymb2_o.png"/>
+    <BitmapImage x:Key="help_png" UriSource="\Visual\Pics\Symbols\Questionsymb2_o.png"/>
+    <BitmapImage x:Key="diagram_png" UriSource="\Visual\Pics\Symbols\Diagrammsymb2_o.png"/>
+    <BitmapImage x:Key="bluetooth_png" UriSource="\Visual\Pics\Symbols\Bluetoothsymb2_o.png"/>
+    <BitmapImage x:Key="table_png" UriSource="\Visual\Pics\Symbols\Tablesymb2_o.png"/>
 
-    <SolidColorBrush x:Key="BasicForeground" Color="LightBlue"/>
-    <SolidColorBrush x:Key="BasicBackground" Color="#22272727"/>
+    <Color x:Key="BasicForegroundColor">#FFFF9000</Color>
+    <Color x:Key="BasicBackgroundColor" >#FF3A3A3A</Color>
+    <SolidColorBrush x:Key="BasicForeground" Color="{StaticResource BasicForegroundColor}"/>
+    <SolidColorBrush x:Key="BasicBackground" Color="{StaticResource BasicBackgroundColor}"/>
 
 
-    <SolidColorBrush x:Key="ModulBorderBrush" Color="LightBlue"/>
-    <SolidColorBrush x:Key="ModulBackround" Color="#44474747"/>
-    <Color x:Key="ModulShadowColor">#FF222222</Color>
-    <SolidColorBrush x:Key="BasicButton_Background" Color="LightGray"/>
+    <SolidColorBrush x:Key="ModulBorderBrush" Color="White"/>
+    <SolidColorBrush x:Key="ModulBackround" Color="#FF3A3A3A"/>
+    <Color x:Key="ModulShadowColor">#FFFFFFFF</Color>
 
     <SolidColorBrush x:Key="ComboBoxNormalBorderBrush" Color="#e3e9ef" />
     <SolidColorBrush x:Key="ComboBoxNormalBackgroundBrush" Color="#fff" />
@@ -26,12 +27,12 @@
     <SolidColorBrush x:Key="ComboBoxArrowCheckedFill" Color="#FF8D979E"/>
     <SolidColorBrush x:Key="ComboBoxPopUpBackground" Color="White"/>
 
-    <SolidColorBrush x:Key="MainTabItemSelectedBackground" Color="#44212121"/>
-    <SolidColorBrush x:Key="MainTabItemNotSelectedBackground" Color="#44474747"/>
+    <SolidColorBrush x:Key="MainTabItemSelectedBackground" Color="#FF212121"/>
+    <SolidColorBrush x:Key="MainTabItemNotSelectedBackground" Color="#FF474747"/>
     <SolidColorBrush x:Key="TabControlBackground" Color="#44474747"/>
 
-    <SolidColorBrush x:Key="SideTabItemSelectedBackground" Color="#44552211"/>
-    <SolidColorBrush x:Key="SideTabItemNotSelectedBackground" Color="#33552211"/>
+    <SolidColorBrush x:Key="SideTabItemSelectedBackground" Color="#FF3A2C18"/>
+    <SolidColorBrush x:Key="SideTabItemNotSelectedBackground" Color="#FF7D5041"/>
     <SolidColorBrush x:Key="SideTabControlBackground" Color="#44556622"/>
 
     <SolidColorBrush x:Key="ConnectButtonBackground" Color="#FF65FF6C"/>
@@ -39,5 +40,10 @@
     <SolidColorBrush x:Key="ConnectButtonHoverBackground" Color="#FF60DA44"/>
     <SolidColorBrush x:Key="DisconnectButtonBackground" Color="#FFFF6565"/>
     <SolidColorBrush x:Key="DisonnectButtonHoverBackground" Color="#FFE45353"/>
+
+    <SolidColorBrush x:Key="BasicButtonBackground" Color="#FF6F6F6F"/>
+    <SolidColorBrush x:Key="BasicButtonBorder" Color="#FFC1C1C1"/>
+    <SolidColorBrush x:Key="BasicButtonForeground" Color="{StaticResource BasicForegroundColor}"/>
+    <SolidColorBrush x:Key="BasicButtonHoverBackground" Color="#FF7C6D53"/>
 
 </ResourceDictionary>
