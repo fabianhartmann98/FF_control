@@ -48,4 +48,14 @@
     <SolidColorBrush x:Key="BasicButtonBorder" Color="#FF000000"/>
     <SolidColorBrush x:Key="BasicButtonForeground" Color="{StaticResource BasicForegroundColor}"/>
     <SolidColorBrush x:Key="BasicButtonHoverBackground" Color="#FFF8AF89"/>
+
+    <!-- Brushes used in Styling of ScrollViewer -->
+    <SolidColorBrush x:Key="Scrole_SelectedBackgroundBrush" Color="Gray" />
+    <SolidColorBrush x:Key="Scrole_SelectedForegroundBrush" Color="White" />
+    <SolidColorBrush x:Key="Scrole_DisabledForegroundBrush" Color="#CCC" />
+    <SolidColorBrush x:Key="Scrole_NormalBrush" Color="#EEE" />
+    <SolidColorBrush x:Key="Scrole_NormalBorderBrush" Color="#EEE" />
+    <SolidColorBrush x:Key="Scrole_ArrowFill" Color="#444" />
+    <SolidColorBrush x:Key="Scrole_ArrowPressed" Color="#FF87AACD" />
+    <SolidColorBrush x:Key="Scrole_ThumbBackground" Color="#FFDDDDEB" />
 </ResourceDictionary>

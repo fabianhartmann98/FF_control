@@ -156,8 +156,8 @@ namespace FF_control.Visual
         void b_add_Click(object sender, RoutedEventArgs e)
         {            
             Graph[] g = GraphCollection.Open_graph_xml();             //show the Open File dialog an other stuff
-            if(g!=null)
-                foreach (var item in g)
+            if(g!=null) //if successfully found one
+                foreach (var item in g)     //add all grpahs to the current one
                 {
                     parent.gcollection.addGraph(item);
                 }
@@ -168,7 +168,7 @@ namespace FF_control.Visual
             // der Textbox einen Text hinzufügen
             if (!can.Dispatcher.CheckAccess())
             {
-                can.Dispatcher.Invoke((Action<string>)DrawDiagram, "0");
+                can.Dispatcher.Invoke((Action)DrawDiagram);
             }
             else
             {
@@ -184,10 +184,6 @@ namespace FF_control.Visual
                 //}
             }
             
-        }
-        public void DrawDiagram(string x)
-        {
-            DrawDiagram();
         }
 
         private void can_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -218,6 +214,8 @@ namespace FF_control.Visual
                     if (graphindex != -1 && pointindex != -1)
                         DisplayPoint(graphindex,  pointindex);
                 }
+                else
+                    Canvas.SetTop(DisplayingValueLabel,-100); //removing label if not in range
             }
         }
 

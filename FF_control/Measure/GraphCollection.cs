@@ -950,6 +950,7 @@ namespace FF_control.Measure
         }
         public void addGraph(Graph g)
         {
+            g.parent = this;
             Graphs.Add(g);
             OnGraphCollectionPropertiesChanged(GraphCollectionChange.Collection);
         }
