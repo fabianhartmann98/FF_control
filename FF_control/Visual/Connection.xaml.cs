@@ -45,12 +45,14 @@ namespace FF_control.Visual
 
         void bt_connection_DeviceConnectedFailed(object sender, EventArgs e)
         {
-            if(!infinitygif.Dispatcher.CheckAccess()) //setting the loading gif as collapsed (not visible)
+            if (!infinitygif.Dispatcher.CheckAccess()) //setting the loading gif as collapsed (not visible)
             {
                 infinitygif.Dispatcher.Invoke((Action<object, EventArgs>)bt_connection_DeviceConnectedFailed, sender, e);
             }
             else
+            {
                 infinitygif.Visibility = Visibility.Collapsed;
+            }
         }        
 
         void bt_DiscoverDevicesEnded(object sender, EventArgs e)        //now able to get the devices 
@@ -102,12 +104,14 @@ namespace FF_control.Visual
         void bt_DeviceDisconnected(object sender, EventArgs e)          //the connection is lost
         {
             infinitygif.Visibility = Visibility.Visible;
+            scrollviewer.ScrollToBottom();
             parent.bt_connection.GetAvailableDevicesAsync();        //search for available devices
         }
 
         private void button_refresh_Click(object sender, RoutedEventArgs e)
         {
             infinitygif.Visibility = Visibility.Visible;
+            scrollviewer.ScrollToBottom();
             parent.bt_connection.GetAvailableDevicesAsync();  //search for available devices
         }
 

@@ -180,9 +180,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Visual\Pics\Infinity.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Visual\Pics\Symbols\Bluetoothsymb2.png" />
     <Resource Include="Visual\Pics\Symbols\Bluetoothsymb2_o.png" />
     <Resource Include="Visual\Pics\Symbols\Diagrammsymb2.png" />
@@ -193,6 +190,10 @@
     <Resource Include="Visual\Pics\Symbols\Questionsymb2_o.png" />
     <Resource Include="Visual\Pics\Symbols\Tablesymb2.png" />
     <Resource Include="Visual\Pics\Symbols\Tablesymb2_o.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Visual\Pics\Infinity.gif" />
+    <Resource Include="Visual\Pics\Infinity_o.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

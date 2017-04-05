@@ -8,6 +8,9 @@
     <BitmapImage x:Key="bluetooth_png" UriSource="\Visual\Pics\Symbols\Bluetoothsymb2.png"/>
     <BitmapImage x:Key="table_png" UriSource="\Visual\Pics\Symbols\Tablesymb2.png"/>
 
+    <BitmapImage x:Key="loading_gif" UriSource="\Visual\Pics\Infinity.gif"/>
+
+
     <Color x:Key="BasicForegroundColor">#FF000000</Color>
     <Color x:Key="BasicBackgroundColor" >#FFF7F7F7</Color>
     <SolidColorBrush x:Key="BasicForeground" Color="{StaticResource BasicForegroundColor}"/>

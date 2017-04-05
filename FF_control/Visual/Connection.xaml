@@ -18,9 +18,9 @@
                 <StackPanel  HorizontalAlignment="Stretch" MinWidth="400">
                     <StackPanel Name="stackpanel">
                     </StackPanel>
+                    <Image gif:ImageBehavior.AnimatedSource="{DynamicResource loading_gif}"  Height="100" Visibility="Collapsed" Name="infinitygif" />
                     <Button Content="{DynamicResource s_RefreshDevices}" Name="button_refresh" Click="button_refresh_Click"/>
                 </StackPanel>
-                <Image gif:ImageBehavior.AnimatedSource="\Visual\Pics\Infinity.gif"  Height="100" Visibility="Collapsed" Name="infinitygif" />
             </StackPanel>
         </ScrollViewer>
     </Grid>
