@@ -41,6 +41,8 @@
     <SolidColorBrush x:Key="SideTabItemNotSelectedBackground" Color="#FFF7F7F7"/>
     <SolidColorBrush x:Key="SideTabControlBackground" Color="#FFF7F7F7"/>
 
+    <SolidColorBrush x:Key="GridSplitterBackground" Color="#FF800080"/>
+
     <SolidColorBrush x:Key="ConnectButtonBackground" Color="#FF65FF6C"/>
     <SolidColorBrush x:Key="ConnectButtonBorderBrush" Color="Transparent"/>
     <SolidColorBrush x:Key="ConnectButtonHoverBackground" Color="#FF60DA44"/>
@@ -61,4 +63,9 @@
     <SolidColorBrush x:Key="Scrole_ThumbBackground" Color="#FFDDDDEB" />
     <SolidColorBrush x:Key="Scrole_ThumbBackgroundHover" Color="#FF9C9CE6" />
 
+    <SolidColorBrush x:Key="SliderOuterBackground" Color="#5534B4E3"/>
+    <SolidColorBrush x:Key="SliderInnerBackground" Color="#FF34B4E3"/>
+    <SolidColorBrush x:Key="SliderDisabledBackground" Color="#55ACACAC"/>
+    <SolidColorBrush x:Key="SliderTrackBackground" Color="#FFBBBBBB"/>
+    <SolidColorBrush x:Key="SliderTrickBarFill" Color="#FFBBBBBB"/>
 </ResourceDictionary>

@@ -24,7 +24,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="75"/>
+                    <RowDefinition Height="90"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="150"/>
@@ -34,7 +34,7 @@
                 <Border Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
                 <Label Content="{DynamicResource s_DistanceSettings}" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center">
-                    <Slider Minimum="0" Maximum="{Binding ElementName=l_maxgap, Path=Content}" Value="0" Name="slider_gap"/>
+                    <Slider Minimum="0" Maximum="{Binding ElementName=l_maxgap, Path=Content}" Value="0" Name="slider_gap" Margin="0,10,0,0"/>
                     <WrapPanel HorizontalAlignment="Center">
                         <TextBox Text="{Binding ElementName=slider_gap, Path=Value, Mode=TwoWay, StringFormat=F2}" HorizontalAlignment="Center" KeyUp="TextBox_KeyUp"/>
                         <Label Content="{DynamicResource s_mmUnit}"/>
@@ -44,9 +44,9 @@
 
                 <Border Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource Style_ModulBorder}"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Label Content="{DynamicResource s_maxGapSettings}"/>
-                    <Label Content="50" Name="l_maxgap" Margin="0,5,0,5"/>
-                    <Label Content="{DynamicResource s_mmUnit}" Margin="0,5,5,5"/>
+                    <Label Content="{DynamicResource s_maxGapSettings}" VerticalAlignment="Center"/>
+                    <Label Content="50" Name="l_maxgap" Margin="0,5,0,5" VerticalAlignment="Center"/>
+                    <Label Content="{DynamicResource s_mmUnit}" Margin="0,5,5,5" VerticalAlignment="Center"/>
                     <Button Content="{DynamicResource s_RefreshSettings}" Name="b_maxgap" Click="b_maxgap_Click"/>
                 </StackPanel>
 

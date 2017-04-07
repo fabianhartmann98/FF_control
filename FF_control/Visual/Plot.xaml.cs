@@ -53,8 +53,11 @@ namespace FF_control.Visual
             setUpSideTabControl();
 
             DisplayingValueLabel = new Label();
-            DisplayingValueLabel.Background = parent.gcollection.BackgroundColor;
+            DisplayingValueLabel.Margin = new Thickness(0);
+            DisplayingValueLabel.Background = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255));
             DisplayingValueLabel.Foreground = parent.gcollection.AxisColor;
+            //DisplayingValueLabel.BorderBrush = parent.gcollection.AxisColor;
+            //DisplayingValueLabel.BorderThickness = new Thickness(1);
         }
 
         private void Gcollection_GraphCollectionPropertiesChanged(object sender, GraphCollectionChanged_EventArgs e)
@@ -64,12 +67,14 @@ namespace FF_control.Visual
                 this.Dispatcher.Invoke((Action<object, GraphCollectionChanged_EventArgs>)Gcollection_GraphCollectionPropertiesChanged, sender, e);
             }
             else
-            {
+            {   
                 DrawDiagram();
                 if (e.change == GraphCollectionChange.MinMax)
                     dp.update_minmax();
                 if (e.change == GraphCollectionChange.Collection || e.change == GraphCollectionChange.everything)
-                    setUpSideTabControl();
+                {
+                    setUpSideTabControl();                    
+                }
                 if (e.change == GraphCollectionChange.Graph)
                     gplist[(int)e.Data].UpdateProperties();
             }
@@ -223,6 +228,8 @@ namespace FF_control.Visual
         {
             MeasurementPoint mp = parent.gcollection.Graphs[graphindex].Mps[pointindex];
             DisplayingValueLabel.Content = mp.ToString();
+            DisplayingValueLabel.Foreground = parent.gcollection.Graphs[graphindex].PlotColor;
+
             Canvas.SetLeft(DisplayingValueLabel, parent.gcollection.scalingPoint(mp.getPoint()).X+GraphCollection.AxisMargin);
             Canvas.SetTop(DisplayingValueLabel, parent.gcollection.scalingPoint(mp.getPoint()).Y);
             can.Children.Remove(DisplayingValueLabel);
