@@ -19,7 +19,10 @@
 
     <SolidColorBrush x:Key="ModulBorderBrush" Color="Black"/>
     <SolidColorBrush x:Key="ModulBackround" Color="White"/>
-    <Color x:Key="ModulShadowColor">#FF222222</Color> 
+    <Color x:Key="ModulShadowColor">#FF222222</Color>
+
+    <SolidColorBrush x:Key="TextBoxBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TextBoxBorder" Color="#FF000000"/>
 
     <SolidColorBrush x:Key="ComboBoxNormalBorderBrush" Color="#e3e9ef" />
     <SolidColorBrush x:Key="ComboBoxNormalBackgroundBrush" Color="#fff" />
@@ -50,12 +53,12 @@
     <SolidColorBrush x:Key="BasicButtonHoverBackground" Color="#FFF8AF89"/>
 
     <!-- Brushes used in Styling of ScrollViewer -->
-    <SolidColorBrush x:Key="Scrole_SelectedBackgroundBrush" Color="Gray" />
-    <SolidColorBrush x:Key="Scrole_SelectedForegroundBrush" Color="White" />
     <SolidColorBrush x:Key="Scrole_DisabledForegroundBrush" Color="#CCC" />
     <SolidColorBrush x:Key="Scrole_NormalBrush" Color="#EEE" />
     <SolidColorBrush x:Key="Scrole_NormalBorderBrush" Color="#EEE" />
     <SolidColorBrush x:Key="Scrole_ArrowFill" Color="#444" />
     <SolidColorBrush x:Key="Scrole_ArrowPressed" Color="#FF87AACD" />
     <SolidColorBrush x:Key="Scrole_ThumbBackground" Color="#FFDDDDEB" />
+    <SolidColorBrush x:Key="Scrole_ThumbBackgroundHover" Color="#FF9C9CE6" />
+
 </ResourceDictionary>
