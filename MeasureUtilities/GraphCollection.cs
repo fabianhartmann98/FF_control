@@ -59,6 +59,7 @@ namespace MeasureUtilities
         private double DefaultPlotHeightWidth = 100;
         public static string FileFilter = "H2B2 (*.h2b2)|*.h2b2|All Files (*.*)|*.*"; //used for saving plots
         public static string FileFilterCSV = "CSV (*.csv)|*.csv|All Files (*.*)|*.*"; //used for saving data (csv)
+        public static string FileFilterPNG = "Pic (*.png)|*.png|All Files (*.*)|*.*"; //used for saving plot (png)
 
         #endregion
 
@@ -337,6 +338,7 @@ namespace MeasureUtilities
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = FileFilter;
+            sfd.FileName = "Diagram"+ DateTime.Today.ToString("yyyy_MM_dd") + ".h2b2"; ;
             if (!(bool)sfd.ShowDialog())
                 return;
             Save_diagram_xml(sfd.FileName);
@@ -368,6 +370,7 @@ namespace MeasureUtilities
         { 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = FileFilterCSV;
+            sfd.FileName = "Measurement" + DateTime.Today.ToString("yyyy_MM_dd")+ ".csv";
             if (!(bool)sfd.ShowDialog())
                 return;
             Export_as_CSV(sfd.FileName);
@@ -477,6 +480,7 @@ namespace MeasureUtilities
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = FileFilter;
+            sfd.FileName="Graph"+DateTime.Today.ToString("yyyy_MM_dd") + ".h2b2";
             if (!(bool)sfd.ShowDialog())
                 return;
             Save_graph_xml(g, sfd.FileName);
@@ -1147,7 +1151,13 @@ namespace MeasureUtilities
 
             pngEncoder.Save(ms);
             ms.Close();
-            System.IO.File.WriteAllBytes("logo.png", ms.ToArray()); //save the png
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = FileFilterPNG;
+            sfd.DefaultExt = ".png";
+            sfd.FileName = "Diagram"+DateTime.Today.ToString("yyyy_MM_dd")+ ".png";;
+            if (sfd.ShowDialog()==true)
+                System.IO.File.WriteAllBytes(sfd.FileName, ms.ToArray()); //save the png
         }
 
         /// <summary>

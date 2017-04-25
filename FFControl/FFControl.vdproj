@@ -244,13 +244,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8424ABA9694C41A518476539975EDA34"
+        "OwnerKey" = "8:_7D5B31224E0A9CD8D7DF5A149B29E815"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -262,7 +256,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7D5B31224E0A9CD8D7DF5A149B29E815"
+        "OwnerKey" = "8:_8424ABA9694C41A518476539975EDA34"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -467,11 +467,6 @@
             "AssemblyAsmDisplayName" = "8:InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_46FD43CC7D6ED59918809FF01FA69977"
-                    {
-                    "Name" = "8:InTheHand.Net.Personal.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:InTheHand.Net.Personal.dll"
             "TargetName" = "8:"
@@ -598,11 +593,6 @@
             "AssemblyAsmDisplayName" = "8:BluetoothUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7D5B31224E0A9CD8D7DF5A149B29E815"
-                    {
-                    "Name" = "8:BluetoothUtilities.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:BluetoothUtilities.dll"
             "TargetName" = "8:"
@@ -629,11 +619,6 @@
             "AssemblyAsmDisplayName" = "8:WpfAnimatedGif, Version=1.4.14.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8424ABA9694C41A518476539975EDA34"
-                    {
-                    "Name" = "8:WpfAnimatedGif.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:WpfAnimatedGif.dll"
             "TargetName" = "8:"
@@ -700,11 +685,6 @@
             "AssemblyAsmDisplayName" = "8:MeasureUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8F4DE72BED4A425FC2912C264D57B6C7"
-                    {
-                    "Name" = "8:MeasureUtilities.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:MeasureUtilities.dll"
             "TargetName" = "8:"

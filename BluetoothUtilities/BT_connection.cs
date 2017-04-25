@@ -17,9 +17,10 @@ namespace BluetoothUtilities
 
         private void Logger(String lines)
         {
+            string applicationdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             // Write the string to a file.append mode is enabled so that the log
             // lines get appended to  test.txt than wiping content and writing the log
-            System.IO.StreamWriter file = new System.IO.StreamWriter("Log.txt", true);
+            System.IO.StreamWriter file = new System.IO.StreamWriter(applicationdata + @"FFControl\Log.txt", true);
             file.Write(DateTime.Now.ToString() + ": ");
             file.WriteLine(lines);
             file.Close();
@@ -27,10 +28,11 @@ namespace BluetoothUtilities
 
         private void DeletLogger()
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter("Log.txt", false);
+            string applicationdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            Directory.CreateDirectory(applicationdata + @"\FFControl");
+            System.IO.StreamWriter file = new System.IO.StreamWriter(applicationdata+@"\FFControl\Log.txt",false);
             file.Write("");
             file.Close();
-
         }
         
         public double Lastupdated_position {get; private set;}      //saves the gap in mm
