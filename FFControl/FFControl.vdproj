@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0BD3784D6EF7C75F402F23019DAA77E9"
+        "OwnerKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0C8D99987E2A4D69A0853D2DACE95918"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,20 +45,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_34C1705B7FF840D6A99B30AD7502EDF0"
+        "MsmKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_46FD43CC7D6ED59918809FF01FA69977"
-        "OwnerKey" = "8:_7D5B31224E0A9CD8D7DF5A149B29E815"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_46FD43CC7D6ED59918809FF01FA69977"
-        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
+        "MsmKey" = "8:_34C1705B7FF840D6A99B30AD7502EDF0"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -75,6 +75,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_65322472F5CBFC702D8EE05B2AAB25F2"
+        "OwnerKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_65322472F5CBFC702D8EE05B2AAB25F2"
+        "OwnerKey" = "8:_0BD3784D6EF7C75F402F23019DAA77E9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_705E6C72AAE2430282F590E0464EE1CF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -87,14 +99,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7D5B31224E0A9CD8D7DF5A149B29E815"
-        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8424ABA9694C41A518476539975EDA34"
-        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
+        "MsmKey" = "8:_84373EAB06A0F2DBC25DB632C4D45029"
+        "OwnerKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -111,8 +117,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8F4DE72BED4A425FC2912C264D57B6C7"
-        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
+        "MsmKey" = "8:_9873707510AC82C877218906651B7F14"
+        "OwnerKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -219,12 +225,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F5103F01B6E44E189CF5EDC54944C1AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -238,31 +238,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_46FD43CC7D6ED59918809FF01FA69977"
+        "OwnerKey" = "8:_65322472F5CBFC702D8EE05B2AAB25F2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7D5B31224E0A9CD8D7DF5A149B29E815"
+        "OwnerKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8F4DE72BED4A425FC2912C264D57B6C7"
+        "OwnerKey" = "8:_84373EAB06A0F2DBC25DB632C4D45029"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8424ABA9694C41A518476539975EDA34"
+        "OwnerKey" = "8:_9873707510AC82C877218906651B7F14"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E69DAA84B25A4040A91E50B6771117C1"
+        "OwnerKey" = "8:_0BD3784D6EF7C75F402F23019DAA77E9"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -400,6 +400,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0BD3784D6EF7C75F402F23019DAA77E9"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:BluetoothUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_0BD3784D6EF7C75F402F23019DAA77E9"
+                    {
+                    "Name" = "8:BluetoothUtilities.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:BluetoothUtilities.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6384621C719A4F69A05A6FC5412248EF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0C8D99987E2A4D69A0853D2DACE95918"
             {
             "SourcePath" = "8:..\\FF_control\\Visual\\Plot.xaml"
@@ -458,32 +489,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_46FD43CC7D6ED59918809FF01FA69977"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:InTheHand.Net.Personal.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_6384621C719A4F69A05A6FC5412248EF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4E70BF3DD3FF46FEA269D82E6B290986"
@@ -546,6 +551,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_65322472F5CBFC702D8EE05B2AAB25F2"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_65322472F5CBFC702D8EE05B2AAB25F2"
+                    {
+                    "Name" = "8:InTheHand.Net.Personal.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:InTheHand.Net.Personal.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6384621C719A4F69A05A6FC5412248EF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_705E6C72AAE2430282F590E0464EE1CF"
             {
             "SourcePath" = "8:..\\FF_control\\Visual\\Connection_DeviceModule.xaml.cs"
@@ -586,39 +622,18 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7D5B31224E0A9CD8D7DF5A149B29E815"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BluetoothUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:BluetoothUtilities.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_6384621C719A4F69A05A6FC5412248EF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8424ABA9694C41A518476539975EDA34"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_84373EAB06A0F2DBC25DB632C4D45029"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:WpfAnimatedGif, Version=1.4.14.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_84373EAB06A0F2DBC25DB632C4D45029"
+                    {
+                    "Name" = "8:WpfAnimatedGif.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:WpfAnimatedGif.dll"
             "TargetName" = "8:"
@@ -678,13 +693,18 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8F4DE72BED4A425FC2912C264D57B6C7"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9873707510AC82C877218906651B7F14"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:MeasureUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_9873707510AC82C877218906651B7F14"
+                    {
+                    "Name" = "8:MeasureUtilities.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:MeasureUtilities.dll"
             "TargetName" = "8:"
@@ -1316,20 +1336,6 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D6D013D8FB314F88B0C6490FDB0F2E4F"
-            {
-            "Name" = "8:FF_control"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:"
-            "Folder" = "8:_D9E330F3DA294A418E7F68940E567A62"
-            "WorkingFolder" = "8:_6384621C719A4F69A05A6FC5412248EF"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
         }
         "UserInterface"
         {
@@ -1729,7 +1735,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E69DAA84B25A4040A91E50B6771117C1"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2CE735BC763E4B2DB6FC07278A507F63"
             {
             "SourcePath" = "8:..\\FF_control\\obj\\Debug\\FF_control.exe"
             "TargetName" = "8:"
