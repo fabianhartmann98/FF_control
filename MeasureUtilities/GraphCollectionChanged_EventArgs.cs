@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FF_control.Measure
+namespace MeasureUtilities
 {
     public enum GraphCollectionChange { Graph , MinMax, Color, Collection , somethingelse, LabelCount, everything}
     public class GraphCollectionChanged_EventArgs : EventArgs

@@ -13,8 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using FF_control.Bluetooth;
-using FF_control.Measure;
+using BluetoothUtilities;
+using MeasureUtilities;
 using FF_control.Visual; 
 
 namespace FF_control

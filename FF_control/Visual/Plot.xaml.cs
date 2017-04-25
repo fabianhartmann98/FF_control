@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using FF_control.Measure;
+using MeasureUtilities;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;

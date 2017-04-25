@@ -10,7 +10,7 @@ using System.Timers;
 using System.Collections;
 using System.Windows;
 
-namespace FF_control.Bluetooth
+namespace BluetoothUtilities
 {
     public class BT_connection
     {

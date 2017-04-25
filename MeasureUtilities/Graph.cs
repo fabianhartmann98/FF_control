@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
 
-namespace FF_control.Measure
+namespace MeasureUtilities
 {
     public class Graph
     {

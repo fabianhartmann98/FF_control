@@ -5,6 +5,12 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF_control", "FF_control\FF_control.csproj", "{D39FECAB-68EA-4F6B-9958-5B92AEB958A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothUtilities", "BluetoothUtilities\BluetoothUtilities.csproj", "{3E5C5860-D073-471A-B5DF-E8D739B07ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasureUtilities", "MeasureUtilities\MeasureUtilities.csproj", "{6B4C9AFA-3E89-43AF-A833-DBA5AAC8D6E2}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FFControl", "FFControl\FFControl.vdproj", "{04C1FF2C-909E-4D59-AB2D-FAF623B6E76D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,16 @@ Global
 		{D39FECAB-68EA-4F6B-9958-5B92AEB958A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D39FECAB-68EA-4F6B-9958-5B92AEB958A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D39FECAB-68EA-4F6B-9958-5B92AEB958A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E5C5860-D073-471A-B5DF-E8D739B07ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E5C5860-D073-471A-B5DF-E8D739B07ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E5C5860-D073-471A-B5DF-E8D739B07ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E5C5860-D073-471A-B5DF-E8D739B07ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B4C9AFA-3E89-43AF-A833-DBA5AAC8D6E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B4C9AFA-3E89-43AF-A833-DBA5AAC8D6E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B4C9AFA-3E89-43AF-A833-DBA5AAC8D6E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B4C9AFA-3E89-43AF-A833-DBA5AAC8D6E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04C1FF2C-909E-4D59-AB2D-FAF623B6E76D}.Debug|Any CPU.ActiveCfg = Debug
+		{04C1FF2C-909E-4D59-AB2D-FAF623B6E76D}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

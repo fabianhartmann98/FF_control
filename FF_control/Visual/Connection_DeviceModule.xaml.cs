@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
-using FF_control.Bluetooth;
+using BluetoothUtilities;
 using System.Windows.Media.Animation;
 
 

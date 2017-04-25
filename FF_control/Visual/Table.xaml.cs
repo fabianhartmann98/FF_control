@@ -1,5 +1,5 @@
-﻿using FF_control.Bluetooth;
-using FF_control.Measure;
+﻿using BluetoothUtilities;
+using MeasureUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,12 +106,12 @@ namespace FF_control.Visual
 
                 if (number == 0) //if number is 0 => new Graph
                 {
-                    parent.gcollection.addGraph(new Measure.Graph(parent.gcollection)); //add Graph
+                    parent.gcollection.addGraph(new MeasureUtilities.Graph(parent.gcollection)); //add Graph
                     index++;        //increase the index to adapt to new last element
                     parent.gcollection.Graphs[index].MeasurementTime = DateTime.Now;  //set the MeasurementTime
                     parent.gcollection.Graphs[index].MeasurementGap = parent.bt_connection.Lastupdated_position;
                 }
-                parent.gcollection.Graphs[index].AddPoint(new Measure.MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
+                parent.gcollection.Graphs[index].AddPoint(new MeasurementPoint(actvalue, time, Convert.ToInt32(number))); //add the point
                 parent.gcollection.setScalingAuto();
                 parent.v_plot.DrawDiagram();
             }         
