@@ -68,4 +68,12 @@
     <SolidColorBrush x:Key="SliderDisabledBackground" Color="#55ACACAC"/>
     <SolidColorBrush x:Key="SliderTrackBackground" Color="#FFBBBBBB"/>
     <SolidColorBrush x:Key="SliderTrickBarFill" Color="#FFBBBBBB"/>
+
+    <SolidColorBrush x:Key="DataGridColumnHeaderBackground" Color="#FF9C9CE6"/>
+    <SolidColorBrush x:Key="DataGridColumnHeaderBorder" Color="Black"/>
+    <SolidColorBrush x:Key="DataGridCellBacground" Color="#FFEEEEEE"/>
+    <SolidColorBrush x:Key="DataGridCellBorder" Color="#FFD1DBF6"/>
+    <SolidColorBrush x:Key="DataGridCellSelectedBackground" Color="#FFD4CBFB"/>
+    <SolidColorBrush x:Key="DataGridCellSelectedForeground" Color="Black"/>
+
 </ResourceDictionary>

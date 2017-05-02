@@ -319,19 +319,26 @@
         <Setter Property="ColumnHeaderStyle">
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
-                    <!--<Setter Property="Background" Value="#FFE1E1E1"/>-->
+                    <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderBackground}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource DataGridColumnHeaderBorder}"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="MinWidth" Value="60"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
                 </Style>
             </Setter.Value>
         </Setter>
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Background" Value="Red"/>
-                    <Setter Property="BorderBrush" Value="Blue"/>
-                    <Setter Property="BorderThickness" Value="4"/>
+                    <Setter Property="Background" Value="{DynamicResource DataGridCellBacground}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource DataGridCellBorder}"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Margin" Value="0"/>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="Green"/>
+                            <Setter Property="Background" Value="{DynamicResource DataGridCellSelectedBackground}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource DataGridCellSelectedForeground}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
