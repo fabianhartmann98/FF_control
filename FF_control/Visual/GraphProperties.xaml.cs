@@ -35,7 +35,7 @@ namespace FF_control.Visual
             l_saveloc.Content = splited[splited.Length-1];
             if (g.SaveLocation == null || g.SaveLocation == "")
                 l_saveloc.Content = FindResource("s_NotSavedGraphProp"); 
-            border_StrokeColor.Background = g.PlotColor;
+            border_StrokeColor.Background = g.GraphColor;
         }
 
         private void tb_name_LostFocus(object sender, RoutedEventArgs e)
@@ -56,7 +56,7 @@ namespace FF_control.Visual
                 System.Drawing.Color c = cd.Color;
                 Brush b = new SolidColorBrush(Color.FromArgb(c.A, c.R, c.G, c.B));
                 border_StrokeColor.Background = b;
-                graph.PlotColor = b;
+                graph.GraphColor = b;
             }
         }
 
@@ -75,8 +75,21 @@ namespace FF_control.Visual
             {
                 tb_name.Text = graph.Name;
                 tb_time.Text = graph.MeasurementTime.ToString();
-                border_StrokeColor.Background = graph.PlotColor;
+                border_StrokeColor.Background = graph.GraphColor;
+                string[] splited = graph.SaveLocation.Split('\\');
+                l_saveloc.Content = splited[splited.Length - 1];
+                if (graph.SaveLocation == null || graph.SaveLocation == "")
+                    l_saveloc.Content = FindResource("s_NotSavedGraphProp");
             }
+        }
+
+        private void l_saveloc_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            GraphCollection.Save_graph_xml(graph);
+            string[] splited = graph.SaveLocation.Split('\\');              //need to do this for the edit (gets not informed by changes)
+            l_saveloc.Content = splited[splited.Length - 1];
+            if (graph.SaveLocation == null || graph.SaveLocation == "")
+                l_saveloc.Content = FindResource("s_NotSavedGraphProp");
         }
     }
 }

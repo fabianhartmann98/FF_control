@@ -26,12 +26,26 @@ namespace FF_control.Visual
         {
             parent = p;
             InitializeComponent();
+            parent.bt_connection.DeviceConnected += bt_connection_DeviceConnected;
+            parent.bt_connection.DeviceDisconnected += Bt_connection_DeviceDisconnected;
             parent.bt_connection.MaxGapReceived += bt_connection_MaxGapReceived;
             parent.bt_connection.PositionReceived += bt_connection_PositionReceived;
             parent.bt_connection.StatusReceived += bt_connection_StatusReceived;
             parent.bt_connection.ReferenzPlacementReceived += Bt_connection_ReferenzPlacementReceived;
             parent.bt_connection.StopReceived += Bt_connection_StopReceived;
             parent.bt_connection.RunReceived += Bt_connection_RunReceived;
+
+            control_grid.IsEnabled = false; 
+        }
+
+        private void Bt_connection_DeviceDisconnected(object sender, EventArgs e)
+        {
+            control_grid.IsEnabled = false;
+        }
+
+        private void bt_connection_DeviceConnected(object sender, EventArgs e)
+        {
+            control_grid.IsEnabled = true;
         }
 
         private void Bt_connection_RunReceived(object sender, EventArgs e)

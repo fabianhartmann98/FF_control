@@ -228,7 +228,7 @@ namespace FF_control.Visual
         {
             MeasurementPoint mp = parent.gcollection.Graphs[graphindex].Mps[pointindex];
             DisplayingValueLabel.Content = mp.ToString();
-            DisplayingValueLabel.Foreground = parent.gcollection.Graphs[graphindex].PlotColor;
+            DisplayingValueLabel.Foreground = parent.gcollection.Graphs[graphindex].GraphColor;
 
             Canvas.SetLeft(DisplayingValueLabel, parent.gcollection.scalingPoint(mp.getPoint()).X+GraphCollection.AxisMargin);
             Canvas.SetTop(DisplayingValueLabel, parent.gcollection.scalingPoint(mp.getPoint()).Y);

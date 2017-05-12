@@ -40,16 +40,17 @@ namespace FF_control
             bt_connection = new BT_connection(); 
 
             gcollection = new GraphCollection();
-            gcollection.addGraph(GraphCollection.createTestingPlot(gcollection));
+            gcollection.addGraph(GraphCollection.createTestingGraph(gcollection));
             Graph g = new Graph(gcollection);
             g.AddPoint(new MeasurementPoint(new Point(-5, 2)));
             g.AddPoint(new MeasurementPoint(new Point(-2, 4)));
             g.AddPoint(new MeasurementPoint(new Point(2, -2)));
             g.AddPoint(new MeasurementPoint(new Point(5, 4)));
+            g.Name = "Second TestGraph";
             gcollection.addGraph(g);
 
-            gcollection.Graphs[1].PlotColor = Brushes.Blue;
-            gcollection.Graphs[0].PlotColor = Brushes.Green;
+            gcollection.Graphs[1].GraphColor = Brushes.Blue;
+            gcollection.Graphs[0].GraphColor = Brushes.Green;
 
             v_connection = new Connection(this);
             Connection_grid.Children.Add(v_connection);
@@ -85,7 +86,7 @@ namespace FF_control
                 MenuItem mi = new MenuItem();
                 mi.Header = item.Name;
                 if (item.Name == "")
-                    mi.Header = i.ToString();
+                    mi.Header = "Graph"+i.ToString();
                 mi.Tag = i;
                 mi.Click += menuitem_SaveSingleGraph_Click;
                 SaveGraphMenuItemCollection.Add(mi);
@@ -167,12 +168,38 @@ namespace FF_control
 
         private void menu_DiagramEdit(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("not implemented yet");
+            Window window = new Window //disply it in a window
+            {
+                Title = "Edit Diagram",
+                Content = new Visual.DiagramProperties(gcollection),  //content is the user-control used in sidetab
+                Height = 300, 
+                Width = 200
+            };
+            window.ShowDialog();
         }
 
         private void menu_GraphEdit(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("not implemented yet");
+            TabControl tc = new TabControl();
+            tc.Style = (Style)FindResource("Style_SideTabControl");
+            foreach (var item in gcollection.Graphs)
+            {
+                TabItem ti = new TabItem();
+                ti.Style = (Style)FindResource("Style_SideTabItem");
+
+                ti.Header = item.Name;
+                ti.Content = new Visual.GraphProperties(item, gcollection);
+                tc.Items.Add(ti);
+            }            
+
+            Window window = new Window //disply it in a window
+            {
+                Title = "Edit Diagram",
+                Content = tc,  //content is the user-control used in sidetab
+                Height = 500,
+                Width = 500
+            };
+            window.ShowDialog();
         }
 
         private void menu_SaveClipboard(object sender, RoutedEventArgs e)

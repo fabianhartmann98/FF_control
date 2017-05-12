@@ -20,7 +20,7 @@ namespace BluetoothUtilities
             string applicationdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             // Write the string to a file.append mode is enabled so that the log
             // lines get appended to  test.txt than wiping content and writing the log
-            System.IO.StreamWriter file = new System.IO.StreamWriter(applicationdata + @"FFControl\Log.txt", true);
+            System.IO.StreamWriter file = new System.IO.StreamWriter(applicationdata + @"\FFControl\Log.txt", true);
             file.Write(DateTime.Now.ToString() + ": ");
             file.WriteLine(lines);
             file.Close();
@@ -523,8 +523,8 @@ namespace BluetoothUtilities
 
             b[packetlength - 2] = crc_ComputeChecksum(b); //set the checksum
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;  //set the cr
-            Send(b);
-            Logger("sending Init");
+            if(Send(b))
+                Logger("sending Init");
         }
 
         public void SendStayingAlive()
@@ -537,8 +537,8 @@ namespace BluetoothUtilities
 
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending StayingAlive");
+            if(Send(b))
+                Logger("sending StayingAlive");
         }
 
         /// <summary>
@@ -558,8 +558,8 @@ namespace BluetoothUtilities
 
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending MeasuredDataAnswer");
+            if(Send(b))
+                Logger("sending MeasuredDataAnswer");
         }
 
         /// <summary>
@@ -580,8 +580,8 @@ namespace BluetoothUtilities
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending MotorAdjusting");
+            if(Send(b))
+                Logger("sending MotorAdjusting");
         }
 
         public void SendStatusRequest()
@@ -595,8 +595,8 @@ namespace BluetoothUtilities
 
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending StatusRequest");
+            if(Send(b))
+                Logger("sending StatusRequest");
         }
 
         public void SendPositionRequest()
@@ -610,8 +610,8 @@ namespace BluetoothUtilities
 
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending PositionRequest");
+            if(Send(b))
+                Logger("sending PositionRequest");
         }
 
         public void SendMaxGapRequest()
@@ -626,8 +626,8 @@ namespace BluetoothUtilities
 
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending MaxGapRequest");
+            if(Send(b))
+                Logger("sending MaxGapRequest");
         }
 
         public void SendReferenzPlacement()
@@ -642,8 +642,8 @@ namespace BluetoothUtilities
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending ReferenzPlacement");
+            if(Send(b))
+                Logger("sending ReferenzPlacement");
         }
 
         public void SendRun()
@@ -658,8 +658,8 @@ namespace BluetoothUtilities
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending Stop");
+            if(Send(b))
+                Logger("sending Stop");
         }
 
         public void SendStop()
@@ -674,17 +674,20 @@ namespace BluetoothUtilities
 
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
-            Send(b);
-            Logger("sending Stop");
+            if(Send(b))
+                Logger("sending Stop");
         }
 
-        public void Send(byte[] b)
+        public bool Send(byte[] b)
         {
             if (s != null)
             {
                 s.Write(b, 0, b.Length);
                 BytesSend += b.Length;
+                return true; 
             }
+            Logger("Trying to Send, not Connected");
+            return false;
         }
         #endregion
 

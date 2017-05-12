@@ -46,10 +46,11 @@
     <Style TargetType="Button" BasedOn="{StaticResource ControlBaseStyle}">
         <Setter Property="Background" Value="{DynamicResource BasicButtonBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource BasicForegroundBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BasicButtonBorder}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BasicButtonBorder}" BorderThickness="1">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
                     </Border>
                 </ControlTemplate>
@@ -58,6 +59,10 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource BasicButtonHoverBackground}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource BasicButtonDisabledForeground}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BasicButtonDisabledForeground}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

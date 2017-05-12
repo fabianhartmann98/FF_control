@@ -30,14 +30,23 @@ namespace MeasureUtilities
                 InformParent();
             }
         }
-        public string SaveLocation { get; set; } //the Location where this is saved at
+        private string saveLocation;
+        public string SaveLocation
+        {
+            get { return saveLocation; }
+            set
+            {
+                saveLocation = value;
+                InformParent();
+            }
+        } //the Location where this is saved at
         
         private string name;            //name of the measurementrow
-        [XmlIgnore]private Brush plotColor;        //the color which is going to be displayed
-        private string plotColor_hex;
+        [XmlIgnore]private Brush graphColor;        //the color which is going to be displayed
+        private string graphColor_hex;
 
         
-        private double plotStrokeThickness; //how thick is the grpah going to be
+        private double graphStrokeThickness; //how thick is the grpah going to be
         private DateTime measurementTime;   //when was the row measured (start Time) 
         private double gap;                 //the gap in mm
         private double highlitedPointCircleRadius = 10;
@@ -72,34 +81,34 @@ namespace MeasureUtilities
             }
         }
 
-        public double PlotStrokeThickness
+        public double GraphStrokeThickness
         {
-            get { return plotStrokeThickness; }
+            get { return graphStrokeThickness; }
             set
             {
-                plotStrokeThickness = value;
+                graphStrokeThickness = value;
                 InformParent();
             }
         }
 
-        public string PlotColor_hex //only realy used for savin in xml
+        public string GraphColor_hex //only realy used for savin in xml
         {
-            get { return ((SolidColorBrush)PlotColor).Color.ToString(); }
+            get { return ((SolidColorBrush)graphColor).Color.ToString(); }
             set 
             { 
-                plotColor_hex = value;
+                graphColor_hex = value;
                 var converter = new System.Windows.Media.BrushConverter();
-                PlotColor = (Brush)converter.ConvertFromString(plotColor_hex);
+                graphColor = (Brush)converter.ConvertFromString(graphColor_hex);
             }
         }
 
         [XmlIgnore]
-        public Brush PlotColor
+        public Brush GraphColor
         {
-            get { return plotColor; }
+            get { return graphColor; }
             set
             {
-                plotColor = value;
+                graphColor = value;
                 InformParent();
             }
         }
@@ -205,8 +214,8 @@ namespace MeasureUtilities
         public Graph(GraphCollection p)
         {
             mps = new ObservableCollection<MeasurementPoint>();
-            plotStrokeThickness = 3;
-            PlotColor = Brushes.Black;
+            graphStrokeThickness = 3;
+            graphColor = Brushes.Black;
             SaveLocation="";
             name = "";
             parent = p;
@@ -216,8 +225,8 @@ namespace MeasureUtilities
         private Graph()
         {
             mps = new ObservableCollection<MeasurementPoint>();
-            plotStrokeThickness = 3;
-            PlotColor = Brushes.Black;
+            graphStrokeThickness = 3;
+            graphColor = Brushes.Black;
             SaveLocation = "";
             name = "";
             parent = null;
@@ -254,15 +263,15 @@ namespace MeasureUtilities
         {
 
             Polyline pl = new Polyline();       //defining new Polyline (Thickness = 3, Color = Black) 
-            pl.StrokeThickness = PlotStrokeThickness;
-            pl.Stroke = PlotColor;
+            pl.StrokeThickness = graphStrokeThickness;
+            pl.Stroke = graphColor;
             foreach (MeasurementPoint item in mps)       //adding the Point in the list
             {
                 pl.Points.Add(GraphCollection.scalingPoint(item.getPoint(), offsetX,offsetY,ScaleX,ScaleY,plotheight));   //editing the points to fit to Canvas an plot 
                 if (item.Highlited)
                 { 
                     Ellipse e = new Ellipse();
-                    e.Fill=PlotColor;
+                    e.Fill=graphColor;
                     e.Height=highlitedPointCircleRadius;
                     e.Width=highlitedPointCircleRadius;
                     Canvas.SetTop(e, GraphCollection.scalingPoint(item.getPoint(),offsetX,offsetY,ScaleX,ScaleY,plotheight).Y-highlitedPointCircleRadius/2);

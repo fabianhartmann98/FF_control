@@ -21,7 +21,7 @@
         </WrapPanel>
         <WrapPanel>
             <Label Content="{DynamicResource s_FileNameProp}"/>
-            <Label x:Name="l_saveloc"/>
+            <Label x:Name="l_saveloc" MouseUp="l_saveloc_MouseUp"/>
         </WrapPanel>
         <WrapPanel>
             <Label Content="{DynamicResource s_StrokeColorProp}"/>

@@ -493,10 +493,10 @@ namespace MeasureUtilities
         /// <param name="filename">the location to save the file</param>
         static public void Save_graph_xml(Graph g, string filename)
         {
+            g.SaveLocation = filename; //need to set before getting add to d (needs to inform parents about change)
             GraphCollection d = new GraphCollection();
             d.addGraph(g);
-            d.setScalingAuto();
-            g.SaveLocation = filename;
+            d.setScalingAuto();     //Scale auto, so if kused as diagram, nice view
             d.Save_diagram_xml(filename);
         }
 
@@ -518,6 +518,7 @@ namespace MeasureUtilities
         public static Graph[] Open_graph_xml()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = FileFilter;
             if (!(bool)ofd.ShowDialog())
                 return null;
             return Open_graph_xml(ofd.FileName);
@@ -1026,7 +1027,7 @@ namespace MeasureUtilities
         /// creating a small sample to test plotting
         /// </summary>
         /// <returns></returns>
-        public static Graph createTestingPlot(GraphCollection parent)
+        public static Graph createTestingGraph(GraphCollection parent)
         {
             Graph p = new Graph(parent);
             for (int i = 0; i < 20; i++)        //20 points
@@ -1034,6 +1035,7 @@ namespace MeasureUtilities
                 p.AddPoint(new MeasurementPoint(new Point(i-5, 5-i%10), i));        //function for the points generated
                 //p.AddPoint(new MeasurementPoint(new Point(i,0),i));
             }
+            p.Name = "TestingGraph";
             return p; 
         }
 
