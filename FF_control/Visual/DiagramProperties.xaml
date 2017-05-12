@@ -9,37 +9,51 @@
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
-        <WrapPanel>
-            <Label Content="{DynamicResource s_XminProp}"/>
-            <TextBox Name="tb_xmin" Tag="xmin"
-                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/> 
+        <WrapPanel Visibility="{Binding Path=ExpandedVisibility}" Name="asdf">
+            <TextBlock Text="Change Properties, which belong to the whole plot erea."
+                       TextWrapping="Wrap"/>
         </WrapPanel>
-        <WrapPanel>
-            <Label Content="{DynamicResource s_XmaxProp}"/>
-            <TextBox Name="tb_xmax" Tag="xmax"
-                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
-        </WrapPanel>
-        <WrapPanel>
-            <Label Content="{DynamicResource s_YminProp}"/>
-            <TextBox Name="tb_ymin" Tag="ymin"
-                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
-        </WrapPanel>
-        <WrapPanel>
-            <Label Content="{DynamicResource s_YmaxProp}"/>
-            <TextBox Name="tb_ymax" Tag="ymax"
-                     LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
-        </WrapPanel>
-        <WrapPanel>
-            <Label Content="{DynamicResource s_BackgroundColorProp}"/>
-            <Border Name="border_BackgroundColor" 
-                    MouseUp="border_BackgroundColor_MouseUp"
-                    Style="{StaticResource Style_ColorBorder}"/>
-        </WrapPanel>
-        <WrapPanel>
-            <Label Content="{DynamicResource s_AxisColorProp}"/>
-            <Border Name="border_AxisColor" 
-                    MouseUp="border_AxisColor_MouseUp"
-                    Style="{StaticResource Style_ColorBorder}"/>
-        </WrapPanel>
+        <StackPanel Orientation="Vertical">
+            <Label Content="Window" Style="{StaticResource Style_LabelHeading}" Visibility="{Binding Path=ExpandedVisibility}"/>
+            <WrapPanel Margin="10,0,0,0">
+                <Label Content="{DynamicResource s_XminProp}" MinWidth="80"/>
+                <TextBox Name="tb_xmin" Tag="xmin"
+                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/> 
+            </WrapPanel>
+            <WrapPanel Margin="10,0,0,0">
+                <Label Content="{DynamicResource s_XmaxProp}" MinWidth="80"/>
+                <TextBox Name="tb_xmax" Tag="xmax"
+                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+            </WrapPanel>
+            <WrapPanel Margin="10,0,0,0">
+                <Label Content="{DynamicResource s_YminProp}" MinWidth="80"/>
+                <TextBox Name="tb_ymin" Tag="ymin"
+                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+            </WrapPanel>
+            <WrapPanel Margin="10,0,0,0">
+                <Label Content="{DynamicResource s_YmaxProp}" MinWidth="80"/>
+                <TextBox Name="tb_ymax" Tag="ymax"
+                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel>
+            <Label Content="Colors" Style="{StaticResource Style_LabelHeading}" Visibility="{Binding Path=ExpandedVisibility}"/>
+            <WrapPanel Margin="10,0,0,0">
+                <Label Content="{DynamicResource s_BackgroundColorProp}"/>
+                <Border Name="border_BackgroundColor" 
+                        MouseUp="border_BackgroundColor_MouseUp"
+                        Style="{StaticResource Style_ColorBorder}"/>
+            </WrapPanel>
+            <WrapPanel Margin="10,0,0,0">
+                <Label Content="{DynamicResource s_AxisColorProp}"/>
+                <Border Name="border_AxisColor" 
+                        MouseUp="border_AxisColor_MouseUp"
+                        Style="{StaticResource Style_ColorBorder}"/>
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel Visibility="{Binding Path=ExpandedVisibility}">
+            <Label Content="Colors" Style="{StaticResource Style_LabelHeading}"/>
+
+        </StackPanel>
     </StackPanel>
 </UserControl>

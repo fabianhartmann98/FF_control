@@ -91,13 +91,11 @@ namespace MeasureUtilities
             set { yDiffPerLabel = value; }
         }
 
-
         public double XDiffPerLabel
         {
             get { return xDiffPerLabel; }
             set { xDiffPerLabel = value; }
-        }
-        
+        }        
 
         public List<Graph> Graphs
         {

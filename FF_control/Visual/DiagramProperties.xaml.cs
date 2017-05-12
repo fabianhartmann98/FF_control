@@ -22,6 +22,7 @@ namespace FF_control.Visual
     public partial class DiagramProperties : UserControl
     {
         GraphCollection diagram;
+        public Visibility ExpandedVisibility { get; set; } = Visibility.Collapsed;
         public DiagramProperties(GraphCollection d )
         {
             InitializeComponent();
@@ -29,6 +30,7 @@ namespace FF_control.Visual
             update_minmax();
             border_AxisColor.Background = d.AxisColor;
             border_BackgroundColor.Background = d.BackgroundColor;
+            this.DataContext = this;
         }
 
         private void tb_minmax_LostFocus(object sender, RoutedEventArgs e)
