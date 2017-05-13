@@ -171,9 +171,9 @@ namespace FF_control
             Window window = new Window //disply it in a window
             {
                 Title = "Edit Diagram",
-                Content = new Visual.DiagramProperties(gcollection),  //content is the user-control used in sidetab
-                Height = 300, 
-                Width = 200
+                Content = new Visual.DiagramProperties(gcollection,true),  //content is the user-control used in sidetab
+                Height = 550, 
+                Width = 450
             };
             window.ShowDialog();
         }

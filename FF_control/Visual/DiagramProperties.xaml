@@ -4,56 +4,66 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" Name="uc">
     <UserControl.Resources>
         <ResourceDictionary Source="Styles_dict.xaml"/>
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
-        <WrapPanel Visibility="{Binding Path=ExpandedVisibility}" Name="asdf">
+    <StackPanel Orientation="Vertical" Name="mainstack">
+        <WrapPanel Visibility="{Binding Path=ExpandedVisibility}">
             <TextBlock Text="Change Properties, which belong to the whole plot erea."
-                       TextWrapping="Wrap"/>
+                           TextWrapping="Wrap"/>
         </WrapPanel>
         <StackPanel Orientation="Vertical">
-            <Label Content="Window" Style="{StaticResource Style_LabelHeading}" Visibility="{Binding Path=ExpandedVisibility}"/>
-            <WrapPanel Margin="10,0,0,0">
+            <Label Content="Window" Style="{StaticResource Style_LabelHeading}" 
+                       Visibility="{Binding Path=ExpandedVisibility}" Margin="0,10,0,0"/>
+            <WrapPanel>
                 <Label Content="{DynamicResource s_XminProp}" MinWidth="80"/>
                 <TextBox Name="tb_xmin" Tag="xmin"
-                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/> 
+                             LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
             </WrapPanel>
-            <WrapPanel Margin="10,0,0,0">
+            <WrapPanel>
                 <Label Content="{DynamicResource s_XmaxProp}" MinWidth="80"/>
                 <TextBox Name="tb_xmax" Tag="xmax"
-                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+                             LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
             </WrapPanel>
-            <WrapPanel Margin="10,0,0,0">
+            <WrapPanel>
                 <Label Content="{DynamicResource s_YminProp}" MinWidth="80"/>
                 <TextBox Name="tb_ymin" Tag="ymin"
-                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+                             LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
             </WrapPanel>
-            <WrapPanel Margin="10,0,0,0">
+            <WrapPanel>
                 <Label Content="{DynamicResource s_YmaxProp}" MinWidth="80"/>
                 <TextBox Name="tb_ymax" Tag="ymax"
-                         LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
+                             LostFocus="tb_minmax_LostFocus" KeyDown="tb_minmax_KeyDown"/>
             </WrapPanel>
         </StackPanel>
         <StackPanel>
-            <Label Content="Colors" Style="{StaticResource Style_LabelHeading}" Visibility="{Binding Path=ExpandedVisibility}"/>
-            <WrapPanel Margin="10,0,0,0">
+            <Label Content="Colors" Style="{StaticResource Style_LabelHeading}" 
+                       Visibility="{Binding Path=ExpandedVisibility}" Margin="0,10,0,0"/>
+            <WrapPanel>
                 <Label Content="{DynamicResource s_BackgroundColorProp}"/>
                 <Border Name="border_BackgroundColor" 
-                        MouseUp="border_BackgroundColor_MouseUp"
-                        Style="{StaticResource Style_ColorBorder}"/>
+                            MouseUp="border_BackgroundColor_MouseUp"
+                            Style="{StaticResource Style_ColorBorder}"/>
             </WrapPanel>
-            <WrapPanel Margin="10,0,0,0">
+            <WrapPanel>
                 <Label Content="{DynamicResource s_AxisColorProp}"/>
                 <Border Name="border_AxisColor" 
-                        MouseUp="border_AxisColor_MouseUp"
-                        Style="{StaticResource Style_ColorBorder}"/>
+                            MouseUp="border_AxisColor_MouseUp"
+                            Style="{StaticResource Style_ColorBorder}"/>
             </WrapPanel>
         </StackPanel>
         <StackPanel Visibility="{Binding Path=ExpandedVisibility}">
-            <Label Content="Colors" Style="{StaticResource Style_LabelHeading}"/>
-
+            <Label Content="Axis" Style="{StaticResource Style_LabelHeading}"
+                       Margin="0,10,0,0"/>
+            <WrapPanel>
+                <Label Content="{DynamicResource s_AxisXLabelCount}"/>
+                <TextBox Name="tb_xLabelsCount" Text="{Binding Path=diagram.XAxisLabelCount}"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Content="{DynamicResource s_AxisYLabelCount}"/>
+                <TextBox Name="tb_yLabelsCount" Text="{Binding Path=diagram.YAxisLabelCount}"/>
+            </WrapPanel>
         </StackPanel>
     </StackPanel>
 </UserControl>

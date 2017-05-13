@@ -49,7 +49,7 @@
     <SolidColorBrush x:Key="DisconnectButtonBackground" Color="#FFFF6565"/>
     <SolidColorBrush x:Key="DisonnectButtonHoverBackground" Color="#FFE45353"/>
 
-    <SolidColorBrush x:Key="BasicButtonBackground" Color="#FF6F6F6F"/>
+    <SolidColorBrush x:Key="BasicButtonBackground" Color="#FF2F2F2F"/>
     <SolidColorBrush x:Key="BasicButtonBorder" Color="#FFC1C1C1"/>
     <SolidColorBrush x:Key="BasicButtonForeground" Color="{StaticResource BasicForegroundColor}"/>
     <SolidColorBrush x:Key="BasicButtonHoverBackground" Color="#FF7C6D53"/>

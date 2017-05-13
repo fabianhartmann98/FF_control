@@ -21,9 +21,9 @@ namespace FF_control.Visual
     /// </summary>
     public partial class DiagramProperties : UserControl
     {
-        GraphCollection diagram;
+        public GraphCollection diagram { get; set; }
         public Visibility ExpandedVisibility { get; set; } = Visibility.Collapsed;
-        public DiagramProperties(GraphCollection d )
+        public DiagramProperties(GraphCollection d , bool expanded = false)
         {
             InitializeComponent();
             diagram = d;
@@ -31,6 +31,11 @@ namespace FF_control.Visual
             border_AxisColor.Background = d.AxisColor;
             border_BackgroundColor.Background = d.BackgroundColor;
             this.DataContext = this;
+            if (expanded)
+            {
+                ExpandedVisibility = Visibility.Visible;
+                mainstack.Margin = new Thickness(25, 15, 5, 5);
+            }
         }
 
         private void tb_minmax_LostFocus(object sender, RoutedEventArgs e)

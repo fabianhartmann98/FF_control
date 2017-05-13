@@ -381,6 +381,11 @@ namespace BluetoothUtilities
         /// <param name="DevName">Device name </param>
         public void ConnectToDevice(string DevName)
         {
+            if (infos == null)
+            {
+                OnDeviceConnectedFailed();
+                return;
+            }
             foreach (var item in infos)
             {
                 if (item.DeviceName == DevName)  //if the name of the device has the name we search for
@@ -399,7 +404,7 @@ namespace BluetoothUtilities
         public void ConnectToDevice(BluetoothDeviceInfo DevName)
         {
             if (ConnectThread==null||!ConnectThread.IsAlive)    //look if it is running (not allowed to run multiple times)
-            {
+            {                
                 ConnectThread = new System.Threading.Thread(() => ConnectToDeviceAsync(DevName));
                 ConnectThread.Start();
             }
@@ -408,14 +413,28 @@ namespace BluetoothUtilities
         private void ConnectToDeviceAsync(BluetoothDeviceInfo DevName)
         {
             ConnectedDevice = DevName;      //set the deviceinfo of the connected device
-            BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
-
-            if (ConnectedDevice.Authenticated)
+            if (DevName.LastSeen.Date != DateTime.Today.Date)
             {
-                bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac), ConnectedDevice); //connect 
-            }
-            else
+                Logger(ConnectedDevice.DeviceName + "not last seen today");
                 OnDeviceConnectedFailed();
+                return;
+            }
+            try
+            {
+                BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
+
+                if (ConnectedDevice.Authenticated)
+                {
+                    bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac), ConnectedDevice); //connect 
+                }
+                else
+                    OnDeviceConnectedFailed();
+            }
+            catch (Exception)
+            {
+                OnDeviceConnectedFailed();
+            }
+
         }
 
         /// <summary>
@@ -430,7 +449,7 @@ namespace BluetoothUtilities
                 s.Close();
                 bc.Close();                
             }
-            catch { }
+            finally { s = null; ConnectedDevice = null; OnDeviceDisconnected(); }
         }
         #endregion
 

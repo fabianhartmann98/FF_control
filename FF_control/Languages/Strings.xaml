@@ -71,5 +71,7 @@
     <System:String x:Key="s_LanguageMenu">Language</System:String>
     <System:String x:Key="s_GermanMenu">German</System:String>
     <System:String x:Key="s_EnglishMenu">English</System:String>
+    <System:String x:Key="s_AxisXLabelCount">X Label Count</System:String>
+    <System:String x:Key="s_AxisYLabelCount">Y Label Count</System:String>
 
 </ResourceDictionary>
