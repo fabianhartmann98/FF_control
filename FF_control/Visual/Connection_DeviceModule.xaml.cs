@@ -38,6 +38,7 @@ namespace FF_control.Visual
             {
                 Connected = "Connected";
                 button.Style = (Style)FindResource("Style_DisconnectButton");   //overwrite the default Style
+                button.Content = (String)FindResource("s_DisconnectDevice");
             }
             wp.DataContext = this;      //set the data context (Layout uses Props (DeviceName, DeviceAddress, ClassOfDevice, Connected
         }

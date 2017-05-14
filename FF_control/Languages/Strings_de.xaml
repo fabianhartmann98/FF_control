@@ -7,6 +7,7 @@
     <System:String x:Key="s_stuff">Zeug</System:String>
     <System:String x:Key="s_RefreshDevices">Suchen nach Geräten</System:String>
     <System:String x:Key="s_ConnectDevice">Verbinden</System:String>
+    <System:String x:Key="s_DisconnectDevice">Entfernen</System:String>
     <System:String x:Key="s_DistanceSettings">Abstand</System:String>
     <System:String x:Key="s_mmUnit">mm</System:String>
     <System:String x:Key="s_ConfirmSettings">Bestätigen</System:String>

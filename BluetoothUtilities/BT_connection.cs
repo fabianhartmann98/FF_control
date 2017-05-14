@@ -14,6 +14,14 @@ namespace BluetoothUtilities
 {
     public class BT_connection
     {
+        const string Logger_Error = "\t ||Error";
+        const string Logger_DeviceDisconnected = "\t ||DeviceDisconnected";
+        const string Logger_DeviceConnected = "\t ||DeviceConnected";
+        const string Logger_DeviceConnectedFailed = "\t ||DeviceConnectedFailed";
+        const string Logger_ReceiveError = "\t ||ReceiveError";
+        const string Logger_ReceiveData = "\t ||ReceiveData";
+        const string Logger_SendData = "\t ||SendData";
+
 
         private void Logger(String lines)
         {
@@ -50,6 +58,8 @@ namespace BluetoothUtilities
         byte[] RX_buf = new byte[buf_len];  //the buffer for RX 
         int rx_head = 0;                    //what we have already read (should always be 0)
         int rx_tail = 0;                    //the length in the array thath is filled but not read yet 
+
+        const int MaxMinutesAsAvailable = 20;
 
         private System.Threading.Thread ConnectThread;
 
@@ -107,9 +117,11 @@ namespace BluetoothUtilities
             count_missing_StayingAlive++;                                       //to determin when the last stayingAliveAnswer was received
             if (count_missing_StayingAlive > max_count_missing_StayingAlive)    //to long since one received -> Disconnect
             {
-                OnDeviceDisconnected();
+                Logger("Too many missed StayingAlive -> disconnect"+Logger_DeviceDisconnected);
+                DisconnectFromDevice();
             }
-            SendStayingAlive();
+            else
+                SendStayingAlive();
         }
         #endregion
 
@@ -131,7 +143,7 @@ namespace BluetoothUtilities
         /// uses DiscoverDevices
         /// </summary>
         /// <returns>string array with every name of available devices</returns>
-        public string[] GetAvailableDevices()
+        public string[] GetAvailableDeviceNames()
         {
             bc = new BluetoothClient();
             infos = null;
@@ -160,7 +172,23 @@ namespace BluetoothUtilities
         {
             if (ar.IsCompleted)
             {
-                infos = bc.EndDiscoverDevices(ar);
+                var infos_ = bc.EndDiscoverDevices(ar);
+                int i = 0; 
+                foreach (var item in infos_)
+                {
+                    if ((DateTime.Now-item.LastSeen).TotalMinutes< MaxMinutesAsAvailable)
+                        i++;
+                }
+                infos = new BluetoothDeviceInfo[i];
+                i = 0; 
+                foreach (var item in infos_)
+                {
+                    if ((DateTime.Now - item.LastSeen).TotalMinutes < MaxMinutesAsAvailable)
+                    {
+                        infos[i] = item;
+                        i++;
+                    }
+                }
                 OnDiscoverDevicesEnded(); //call event
             }
         }
@@ -230,7 +258,7 @@ namespace BluetoothUtilities
                     //both combinded: shift(1) because didn't receive correct präamble
                     while (rx_tail > 2 && (AccessRXBuf(0) != BT_Protocoll.PräambleBytes[0] || AccessRXBuf(rx_head + 1) != BT_Protocoll.PräambleBytes[1]))
                     {
-                        Logger("Received something which shouldn't be here; after or before packet arrived");
+                        Logger("Received something which shouldn't be here; after or before packet arrived"+Logger_ReceiveError);
                         shiftingRXBuf(1);
                     }
 
@@ -246,7 +274,7 @@ namespace BluetoothUtilities
                     //if the last Byte is not the CarriageReturn the full packet has arrived but is not correct
                     if (AccessRXBuf(rx_head + BT_Protocoll.FrameLengthOverhead + framelength - 1) != BT_Protocoll.CarriageReturn)
                     {
-                        Logger("Received something which shouldn't be here; in the packet");
+                        Logger("Received something which shouldn't be here; in the packet"+Logger_ReceiveError);
                         shiftingRXBuf(1); 
                         break;
                     }
@@ -263,10 +291,10 @@ namespace BluetoothUtilities
                     {
                         case (BT_Protocoll.StayingAliveAnswer):
                             count_missing_StayingAlive = 0;         //set counter of time till last StayingAlive Answer received (don't call OnDeviceDisconnected)
-                            Logger("received StayingAliveAnswer");
+                            Logger("received StayingAliveAnswer"+Logger_ReceiveData);
                             break;                                               
                         case (BT_Protocoll.InitAnswer):
-                            Logger("received InitAnswer");
+                            Logger("received InitAnswer"+Logger_ReceiveData);
                             break;
                         case (BT_Protocoll.MeasuredDataCommand):
                             int number = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8 )+ AccessRXBuf(rx_head + 5));
@@ -275,68 +303,68 @@ namespace BluetoothUtilities
                             byte followup = AccessRXBuf(rx_head + 10);
                             OnMeasuredDataReceived(number, time,data);
                             //SendMeasuredDataAnswer(followup); //not doing it to reduce traffic on MCU while sending
-                            Logger("received MeasuredDataCommand");
+                            Logger("received MeasuredDataCommand\t ReceivedData");
                             break;                                               
                         case (BT_Protocoll.MotorAdjustingAnswer):
                             int m_act_pos = Convert.ToInt32(Lastupdated_position * BT_Protocoll.ConvertFromMM);                 //using the last position (new position doesn't get sent)
                             int m_aim_pos = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));        //get the real aim_position
                             OnPositionReceived(m_act_pos,m_aim_pos);
-                            Logger("received MotorAdjustingAnswer");
+                            Logger("received MotorAdjustingAnswer" + Logger_ReceiveData);
                             break;                        
                         case (BT_Protocoll.StatusRequestAnswer):
                             OnStatusReceived(AccessRXBuf(rx_head + 4));
-                            Logger("received StatusRequestAnswer");
+                            Logger("received StatusRequestAnswer" + Logger_ReceiveData);
                             break;                        
                         case (BT_Protocoll.PositionRequestAnswer):
                             int act_pos = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));
                             int aim_pos = Convert.ToInt32((AccessRXBuf(rx_head + 6) << 8) + AccessRXBuf(rx_head + 7));
                             OnPositionReceived(act_pos,aim_pos);
-                            Logger("received PositionRequestAnswer");
+                            Logger("received PositionRequestAnswer" + Logger_ReceiveData);
                             break;
                         case (BT_Protocoll.MaxGapRequestAnswer):
                             int i_maxGap = Convert.ToInt32((AccessRXBuf(rx_head + 4) << 8) + AccessRXBuf(rx_head + 5));
                             OnMaxGapReceived(i_maxGap);
-                            Logger("received MaxGapRequestAnswer");
+                            Logger("received MaxGapRequestAnswer" + Logger_ReceiveData);
                             break;
                         case (BT_Protocoll.ReferenzPlacementAnswer):
                             OnReferenzPlacementReceived();
-                            Logger("received ReferenzPlacementAnswer");
+                            Logger("received ReferenzPlacementAnswer" + Logger_ReceiveData);
                             break;
                         case (BT_Protocoll.RunAnswer):
                             OnRunReceived();
-                            Logger("received RunAnswer");
+                            Logger("received RunAnswer" + Logger_ReceiveData);
                             break;
                         case (BT_Protocoll.StopAnswer):
                             OnStopReceived();
-                            Logger("received StopAnswer");
+                            Logger("received StopAnswer" + Logger_ReceiveData);
                             break;
                         #region shouldn't receive any of this
                         case (BT_Protocoll.InitCommand):
-                            Logger("received InitCommand\t ERROR");
+                            Logger("received InitCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.StayingAliveCommand):
-                            Logger("received StayingAliveCommand\t ERROR");
+                            Logger("received StayingAliveCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.MeasuredDataAnswer):
-                            Logger("received MeasuredDataAnswer\t ERROR");
+                            Logger("received MeasuredDataAnswer" + Logger_Error);
                             break;
                         case (BT_Protocoll.MotorAdjustingCommand):
-                            Logger("received MotorAdjustingCommand\t ERROR");
+                            Logger("received MotorAdjustingCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.StatusRequestCommand):
-                            Logger("received StatusRequestCommand\t ERROR");
+                            Logger("received StatusRequestCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.PositionRequestCommand):
-                            Logger("received PositionRequestCommand\t ERROR");
+                            Logger("received PositionRequestCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.MaxGapRequestCommand):
-                            Logger("received MaxGapRequestCommand\t ERROR");
+                            Logger("received MaxGapRequestCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.ReferenzPlacementCommand):
-                            Logger("received ReferenzPlacementCommand");
+                            Logger("received ReferenzPlacementCommand" + Logger_Error);
                             break;
                         case (BT_Protocoll.StopCommand):
-                            Logger("recieved StopCommand\t ERROR");
+                            Logger("recieved StopCommand" + Logger_Error);
                             break;
                         #endregion
 
@@ -361,7 +389,7 @@ namespace BluetoothUtilities
             {
                 if (bc.Connected)   //if it was able to connect to the device
                 {
-                    Logger("connected to Device: " + ConnectedDevice.DeviceName + " with Address " + ConnectedDevice.DeviceAddress);
+                    Logger("connected to Device: " + ConnectedDevice.DeviceName + " with Address " + ConnectedDevice.DeviceAddress +Logger_DeviceConnected);
                     if (s != null)
                         s.Close();      //close the old one
                     s = bc.GetStream(); //get the Stream to read and write on
@@ -372,7 +400,11 @@ namespace BluetoothUtilities
                 }
             }
             if (!bc.Connected)
-                OnDeviceConnectedFailed();
+            {
+                Logger("Unable to connect to Device (AsyncCallback): " + ConnectedDevice.DeviceName + Logger_DeviceConnectedFailed);
+                ConnectedDevice = null;
+                OnDeviceConnectedFailed();                
+            }
         }
 
         /// <summary>
@@ -383,6 +415,7 @@ namespace BluetoothUtilities
         {
             if (infos == null)
             {
+                Logger("No devices in Info"+Logger_DeviceConnectedFailed);
                 OnDeviceConnectedFailed();
                 return;
             }
@@ -413,12 +446,13 @@ namespace BluetoothUtilities
         private void ConnectToDeviceAsync(BluetoothDeviceInfo DevName)
         {
             ConnectedDevice = DevName;      //set the deviceinfo of the connected device
-            if (DevName.LastSeen.Date != DateTime.Today.Date)
-            {
-                Logger(ConnectedDevice.DeviceName + "not last seen today");
-                OnDeviceConnectedFailed();
-                return;
-            }
+            //if ((DateTime.Now - ConnectedDevice.LastSeen).TotalMinutes > MaxMinutesAsAvailable)    not needed, because they don't show up in UI
+            //{
+            //    Logger("Tried to connect to "+ ConnectedDevice.DeviceName + ", but is not in range");
+            //    MessageBox.Show(ConnectedDevice.DeviceName + " not in range (is remebered)");
+            //    OnDeviceConnectedFailed();
+            //    return;
+            //}
             try
             {
                 BluetoothSecurity.PairRequest(ConnectedDevice.DeviceAddress, pin);   //pairing with the given pin
@@ -428,10 +462,14 @@ namespace BluetoothUtilities
                     bc.BeginConnect(ConnectedDevice.DeviceAddress, BluetoothService.SerialPort, new AsyncCallback(Connect_ac), ConnectedDevice); //connect 
                 }
                 else
+                {
+                    Logger("Device not Authenticated" + Logger_DeviceConnectedFailed);
                     OnDeviceConnectedFailed();
+                }
             }
             catch (Exception)
             {
+                Logger("Throw while trying to pair and connect"+ Logger_DeviceConnectedFailed);
                 OnDeviceConnectedFailed();
             }
 
@@ -449,7 +487,13 @@ namespace BluetoothUtilities
                 s.Close();
                 bc.Close();                
             }
-            finally { s = null; ConnectedDevice = null; OnDeviceDisconnected(); }
+            finally
+            {
+                s = null;
+                ConnectedDevice = null;
+                Logger("Disconnected from Device" + Logger_DeviceDisconnected);
+                OnDeviceDisconnected();
+            }
         }
         #endregion
 
@@ -543,7 +587,7 @@ namespace BluetoothUtilities
             b[packetlength - 2] = crc_ComputeChecksum(b); //set the checksum
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;  //set the cr
             if(Send(b))
-                Logger("sending Init");
+                Logger("sending Init" + Logger_SendData);
         }
 
         public void SendStayingAlive()
@@ -557,7 +601,7 @@ namespace BluetoothUtilities
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending StayingAlive");
+                Logger("sending StayingAlive" + Logger_SendData);
         }
 
         /// <summary>
@@ -578,7 +622,7 @@ namespace BluetoothUtilities
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending MeasuredDataAnswer");
+                Logger("sending MeasuredDataAnswer" + Logger_SendData);
         }
 
         /// <summary>
@@ -600,7 +644,7 @@ namespace BluetoothUtilities
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending MotorAdjusting");
+                Logger("sending MotorAdjusting: Gap="+gap.ToString() + Logger_SendData);
         }
 
         public void SendStatusRequest()
@@ -615,7 +659,7 @@ namespace BluetoothUtilities
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending StatusRequest");
+                Logger("sending StatusRequest" + Logger_SendData);
         }
 
         public void SendPositionRequest()
@@ -630,7 +674,7 @@ namespace BluetoothUtilities
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending PositionRequest");
+                Logger("sending PositionRequest" + Logger_SendData);
         }
 
         public void SendMaxGapRequest()
@@ -646,7 +690,7 @@ namespace BluetoothUtilities
             b[packetlength-2] = crc_ComputeChecksum(b);
             b[packetlength-1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending MaxGapRequest");
+                Logger("sending MaxGapRequest" + Logger_SendData);
         }
 
         public void SendReferenzPlacement()
@@ -662,7 +706,7 @@ namespace BluetoothUtilities
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending ReferenzPlacement");
+                Logger("sending ReferenzPlacement" + Logger_SendData);
         }
 
         public void SendRun()
@@ -678,7 +722,7 @@ namespace BluetoothUtilities
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending Stop");
+                Logger("sending Run" + Logger_SendData);
         }
 
         public void SendStop()
@@ -694,7 +738,7 @@ namespace BluetoothUtilities
             b[packetlength - 2] = crc_ComputeChecksum(b);
             b[packetlength - 1] = BT_Protocoll.CarriageReturn;
             if(Send(b))
-                Logger("sending Stop");
+                Logger("sending Stop" + Logger_SendData);
         }
 
         public bool Send(byte[] b)
@@ -705,7 +749,7 @@ namespace BluetoothUtilities
                 BytesSend += b.Length;
                 return true; 
             }
-            Logger("Trying to Send, not Connected");
+            Logger("Trying to Send, not Connected"+ Logger_Error);
             return false;
         }
         #endregion
@@ -723,6 +767,7 @@ namespace BluetoothUtilities
 
         protected virtual void OnDeviceConnectedFailed()    //not able to connect to device
         {
+            ConnectedDevice = null;
             if (DeviceConnectedFailed != null)
                 DeviceConnectedFailed(this, new EventArgs());
         }
@@ -731,7 +776,6 @@ namespace BluetoothUtilities
 
         protected virtual void OnDeviceDisconnected()   //device not not reachable (stayingAlive)
         {
-            DisconnectFromDevice(); 
             if (DeviceDisconnected != null)
                 DeviceDisconnected(this, new EventArgs());
         }

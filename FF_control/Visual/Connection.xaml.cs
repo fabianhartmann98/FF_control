@@ -81,7 +81,9 @@ namespace FF_control.Visual
             infinitygif.Visibility = Visibility.Visible;
             Connection_DeviceModule cdm = (Connection_DeviceModule)((Button)sender).Tag;
             if (cdm.Device == parent.bt_connection.ConnectedDevice && cdm.Device.Connected)        //if it is the same device which is connected to the bt_connection  => disconnect
+            {
                 parent.bt_connection.DisconnectFromDevice();
+            }
             if (cdm.Device.Connected && cdm.Device != parent.bt_connection.ConnectedDevice)
             {
                 MessageBox.Show("Device is connectet but not with this application, disconnect first to connect to this app");
