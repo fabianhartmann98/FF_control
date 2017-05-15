@@ -19,6 +19,7 @@
     <System:String x:Key="s_PositionSettings">Position:</System:String>
     <System:String x:Key="s_UpdateStateSettings">update State</System:String>
     <System:String x:Key="s_StopSettings">STOP</System:String>
+    <System:String x:Key="s_RunSettings">Run</System:String>
     <System:String x:Key="s_XminProp">Xmin</System:String>
     <System:String x:Key="s_XmaxProp">Xmax</System:String>
     <System:String x:Key="s_YminProp">Ymin</System:String>

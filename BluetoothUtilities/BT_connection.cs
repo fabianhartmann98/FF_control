@@ -48,6 +48,7 @@ namespace BluetoothUtilities
         public double Maxgap { get; private set; }                                       //saves the max gap in mm
         public long BytesSend { get; set; }
         public long BytesReceived { get; set; }
+        public bool Stopped_Movement { get; set; } = false;
 
 
         public BluetoothClient bc {get; private set;}                 //the client which it is going to be connected to 
@@ -334,10 +335,12 @@ namespace BluetoothUtilities
                             break;
                         case (BT_Protocoll.RunAnswer):
                             OnRunReceived();
+                            Stopped_Movement = false;
                             Logger("received RunAnswer" + Logger_ReceiveData);
                             break;
                         case (BT_Protocoll.StopAnswer):
                             OnStopReceived();
+                            Stopped_Movement = true;
                             Logger("received StopAnswer" + Logger_ReceiveData);
                             break;
                         #region shouldn't receive any of this

@@ -71,7 +71,7 @@
                     <Button Content="{DynamicResource s_UpdateStateSettings}" Name="b_status" Click="b_status_Click"/>
                 </StackPanel>
                 <Border Grid.ColumnSpan="3" Grid.Row="4"  Style="{StaticResource Style_ModulBorder}"/>
-                <Button Grid.Column="1" Grid.Row="4" Content="{DynamicResource s_StopSettings}" Click="button_stop_Click"  Name="button_stop"/>
+                <Button Grid.Column="1" Grid.Row="4" Content="{DynamicResource s_StopSettings}" Click="button_stop_run_Click"  Name="button_stop_run"/>
 
             </Grid>
         </ScrollViewer>

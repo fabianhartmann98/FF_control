@@ -64,12 +64,26 @@ namespace FF_control.Visual
 
         private void Bt_connection_RunReceived(object sender, EventArgs e)
         {
-            //todo: implement RunReceived
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke((Action<object, EventArgs>)Bt_connection_RunReceived, sender, e);
+            }
+            else
+            {
+                button_stop_run.Content = (String)FindResource("s_StopSettings");
+            }
         }
 
         private void Bt_connection_StopReceived(object sender, EventArgs e)
         {
-            //todo: implement StopReceived
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke((Action<object, EventArgs>)Bt_connection_StopReceived, sender, e);
+            }
+            else
+            {
+                button_stop_run.Content = (String)FindResource("s_RunSettings");
+            }
         }
 
         private void Bt_connection_ReferenzPlacementReceived(object sender, EventArgs e)
@@ -135,9 +149,12 @@ namespace FF_control.Visual
                 l.Content = text;                   //else, set text
         }
 
-        private void button_stop_Click(object sender, RoutedEventArgs e)
+        private void button_stop_run_Click(object sender, RoutedEventArgs e)
         {
-            parent.bt_connection.SendStop();
+            if (parent.bt_connection.Stopped_Movement)
+                parent.bt_connection.SendRun();
+            else
+                parent.bt_connection.SendStop();
         }
 
         private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -160,7 +177,7 @@ namespace FF_control.Visual
                 {
                     slider_gap.Value = Convert.ToDouble(((TextBox)sender).Text.Replace('.',',')); //use , as Komma (seperator)to Convert
                 }
-                catch (Exception)
+                catch (Exception)   //if not able to do this, load slider value into textbox
                 {
                     ((TextBox)sender).Text = slider_gap.Value.ToString("F2").Replace(',','.');  //always display . as seperator (komma)
                 }
