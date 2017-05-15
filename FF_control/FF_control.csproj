@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Visual\Pics\logo_v10_zw_5Co_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="InTheHand.Net.Personal">
       <HintPath>..\..\Bluetooth\InTheHand.Net.Personal.dll</HintPath>
@@ -198,6 +201,9 @@
       <Project>{6b4c9afa-3e89-43af-a833-dba5aac8d6e2}</Project>
       <Name>MeasureUtilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Visual\Pics\logo_v10_zw_5Co_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

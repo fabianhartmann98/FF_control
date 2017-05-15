@@ -69,6 +69,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_57E7820FC1E74F8CBAA9B46EC0C914AC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_605AFB838D2944B0B515B689045FD78E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -238,12 +244,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_65322472F5CBFC702D8EE05B2AAB25F2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -263,6 +263,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_0BD3784D6EF7C75F402F23019DAA77E9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_65322472F5CBFC702D8EE05B2AAB25F2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -517,6 +523,26 @@
             "TargetName" = "8:Connection.xaml.cs"
             "Tag" = "8:"
             "Folder" = "8:_9ED007BDC43345B6AB466B81875A83CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57E7820FC1E74F8CBAA9B46EC0C914AC"
+            {
+            "SourcePath" = "8:..\\FF_control\\Visual\\Pics\\logo_v10_zw_5Co_icon.ico"
+            "TargetName" = "8:logo_v10_zw_5Co_icon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_18B1BB39177D4C449FCD2B19CE2D5A0B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1107,6 +1133,29 @@
         }
         "FileType"
         {
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_6B539C97467B46F5855F1D7AA688A50C"
+            {
+            "Name" = "8:FFControl"
+            "Description" = "8:"
+            "Extensions" = "8:.h2b2"
+            "MIME" = "8:"
+            "Icon" = "8:_57E7820FC1E74F8CBAA9B46EC0C914AC"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_142A614D066D4CDD99D3258D888F0A99"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
         }
         "Folder"
         {
@@ -1216,7 +1265,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FFControl"
         "ProductCode" = "8:{A5CAF607-B770-46B9-ABF1-ED9D57AB29B6}"
-        "PackageCode" = "8:{134A7528-9AC0-4FA5-89D9-C607A364DE4F}"
+        "PackageCode" = "8:{825D2528-CA2A-4F83-A1D2-2EEB748B0CE2}"
         "UpgradeCode" = "8:{BA94C42C-1020-4C0E-AB42-202F3FD7C45D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1233,7 +1282,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_57E7820FC1E74F8CBAA9B46EC0C914AC"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -1336,6 +1385,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1B603FEDABE84CD6B053F57D4249C85D"
+            {
+            "Name" = "8:FFControl"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_2CE735BC763E4B2DB6FC07278A507F63"
+            "Folder" = "8:_D9E330F3DA294A418E7F68940E567A62"
+            "WorkingFolder" = "8:_6384621C719A4F69A05A6FC5412248EF"
+            "Icon" = "8:_57E7820FC1E74F8CBAA9B46EC0C914AC"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
