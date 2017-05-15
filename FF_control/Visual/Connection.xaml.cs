@@ -18,6 +18,7 @@ using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
 using BluetoothUtilities;
 using System.Diagnostics;
+using System.Threading;
 
 namespace FF_control.Visual
 {
@@ -80,17 +81,23 @@ namespace FF_control.Visual
         {
             infinitygif.Visibility = Visibility.Visible;
             Connection_DeviceModule cdm = (Connection_DeviceModule)((Button)sender).Tag;
-            if (cdm.Device == parent.bt_connection.ConnectedDevice && cdm.Device.Connected)        //if it is the same device which is connected to the bt_connection  => disconnect
+            if (cdm.Device == parent.bt_connection.ConnectedDevice)        //if it is the same device which is connected to the bt_connection  => disconnect
             {
                 parent.bt_connection.DisconnectFromDevice();
             }
-            if (cdm.Device.Connected && cdm.Device != parent.bt_connection.ConnectedDevice)
+            else
             {
-                MessageBox.Show("Device is connectet but not with this application, disconnect first to connect to this app");
-                infinitygif.Visibility = Visibility.Collapsed;
+                if (cdm.Device.Connected && cdm.Device != parent.bt_connection.ConnectedDevice)
+                {
+                    MessageBox.Show("Device is connectet but not with this application, disconnect first to connect to this app");
+                    infinitygif.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    if (!cdm.Device.Connected)                                                             // if the device is not connected
+                        parent.bt_connection.ConnectToDevice(cdm.Device);                      //connect to the Device if possible  
+                }
             }
-            if (!cdm.Device.Connected)                                                             // if the device is not connected
-                parent.bt_connection.ConnectToDevice(cdm.Device.DeviceName);                      //connect to the Device if possible  
         }
 
         void bt_DeviceConnected(object sender, EventArgs e)
@@ -102,17 +109,20 @@ namespace FF_control.Visual
             else
             {
                 infinitygif.Visibility = Visibility.Collapsed;
-                stackpanel.Children.Clear();        //delete all Moduls, add the one which it is connected now
-                stackpanel.Children.Add(new Connection_DeviceModule(parent.bt_connection.ConnectedDevice));
+                //stackpanel.Children.RemoveRange(0, stackpanel.Children.Count-1);
+                stackpanel.Children.Clear();
+                Connection_DeviceModule cdm = new Connection_DeviceModule(parent.bt_connection.ConnectedDevice,true);
+                cdm.Dis_ConnectDevice += cdm_Dis_ConnectDevice;
+                stackpanel.Children.Add(cdm);
+                button_refresh.Visibility = Visibility.Collapsed;
             }
  
         }
 
         void bt_DeviceDisconnected(object sender, EventArgs e)          //the connection is lost
         {
-            infinitygif.Visibility = Visibility.Visible;
-            scrollviewer.ScrollToBottom();
-            parent.bt_connection.GetAvailableDevicesAsync();        //search for available devices
+            button_refresh_Click(this, new RoutedEventArgs());
+            button_refresh.Visibility = Visibility.Visible;
         }
 
         private void button_refresh_Click(object sender, RoutedEventArgs e)

@@ -59,7 +59,7 @@ namespace BluetoothUtilities
         int rx_head = 0;                    //what we have already read (should always be 0)
         int rx_tail = 0;                    //the length in the array thath is filled but not read yet 
 
-        const int MaxMinutesAsAvailable = 20;
+        const int MaxMinutesAsAvailable = 2;
 
         private System.Threading.Thread ConnectThread;
 
@@ -176,14 +176,14 @@ namespace BluetoothUtilities
                 int i = 0; 
                 foreach (var item in infos_)
                 {
-                    if ((DateTime.Now-item.LastSeen).TotalMinutes< MaxMinutesAsAvailable)
+                    if ((DateTime.Now.ToUniversalTime()-item.LastSeen.ToUniversalTime()).TotalMinutes< MaxMinutesAsAvailable||item.Connected)
                         i++;
                 }
                 infos = new BluetoothDeviceInfo[i];
                 i = 0; 
                 foreach (var item in infos_)
                 {
-                    if ((DateTime.Now - item.LastSeen).TotalMinutes < MaxMinutesAsAvailable)
+                    if ((DateTime.Now.ToUniversalTime() - item.LastSeen.ToUniversalTime()).TotalMinutes < MaxMinutesAsAvailable||item.Connected)
                     {
                         infos[i] = item;
                         i++;
@@ -203,6 +203,8 @@ namespace BluetoothUtilities
         /// <param name="ar"></param>
         private void beginRead_cal(IAsyncResult ar)
         {
+            if (!s.CanRead)
+                return;
             int read = s.EndRead(ar);
             rx_tail += read;
             BytesReceived += read;
@@ -483,13 +485,16 @@ namespace BluetoothUtilities
         {
             try
             {
-                staying_alive_timer.Stop();
                 s.Close();
-                bc.Close();                
+                bc.Close();
+                staying_alive_timer.Stop();
             }
+            catch { }
             finally
             {
                 s = null;
+                bc.Dispose();
+                bc = new BluetoothClient();
                 ConnectedDevice = null;
                 Logger("Disconnected from Device" + Logger_DeviceDisconnected);
                 OnDeviceDisconnected();

@@ -43,6 +43,17 @@ namespace FF_control.Visual
             wp.DataContext = this;      //set the data context (Layout uses Props (DeviceName, DeviceAddress, ClassOfDevice, Connected
         }
 
+        public Connection_DeviceModule(BluetoothDeviceInfo device, bool connected) : this(device)
+        {
+            Connected = "not connected";
+            if (connected)
+            {
+                Connected = "Connected";
+                button.Style = (Style)FindResource("Style_DisconnectButton");   //overwrite the default Style
+                button.Content = (String)FindResource("s_DisconnectDevice");
+            }
+        }
+
         public string DeviceName { get;private set; }
         public string DeviceAddress { get; private set; }
         public string ClassOfDevice { get; private set; }

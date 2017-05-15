@@ -40,12 +40,26 @@ namespace FF_control.Visual
 
         private void Bt_connection_DeviceDisconnected(object sender, EventArgs e)
         {
-            control_grid.IsEnabled = false;
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke((Action<object, EventArgs>)bt_connection_DeviceConnected, sender, e);
+            }
+            else
+            {
+                control_grid.IsEnabled = false;
+            }
         }
 
         private void bt_connection_DeviceConnected(object sender, EventArgs e)
         {
-            control_grid.IsEnabled = true;
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke((Action<object, EventArgs>)bt_connection_DeviceConnected, sender, e);
+            }
+            else
+            {
+                control_grid.IsEnabled = true;
+            }
         }
 
         private void Bt_connection_RunReceived(object sender, EventArgs e)
